@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 
 @WebServlet(value = "/login")
@@ -19,18 +18,25 @@ public class LogServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<User> users = User.getUsers();
-        PrintWriter writer = resp.getWriter();
         String name = req.getParameter("name");
         String password = req.getParameter("password");
         User user = new User(name, password);
+        if (checkUser(user).equals("welcomeback.jsp")) {
+            req.setAttribute("name", name);
+        }
+        req.getRequestDispatcher(checkUser(user)).forward(req, resp);
+    }
+
+    protected String checkUser(User user) {
+        List<User> users = User.getUsers();
         if (users.contains(user)) {
             if (User.getUser(user).getPassword().equals(user.getPassword())) {
-                writer.println("Hello " + name + ", welcome back!");
+                return "welcomeback.jsp";
             } else {
-                writer.println("Wrong password!");
+                return "wrongpass.jsp";
             }
         } else {
-            writer.println("Account with name " + name + " doesn't exist yet!");
+            return "notexist.jsp";
         }
     }
 }

@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 @WebServlet(value = "/registration")
 public class RegServlet extends HttpServlet {
@@ -17,15 +16,26 @@ public class RegServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter writer = resp.getWriter();
         String name = req.getParameter("name");
         String password = req.getParameter("password");
         User user = new User(name, password);
-        if (User.getUsers().contains(user)) {
-            writer.println("Account with name " + name + " already exists!");
+        String page = checkUser(user);
+        if (page.equals("greeting.jsp")) {
+            req.setAttribute("name", name);
+        }
+        req.getRequestDispatcher(page).forward(req, resp);
+    }
+
+    protected String checkUser(User user) {
+        if (user.getName().length() < 4 || user.getPassword().length() < 6) {
+            return "wrongreg.jsp";
         } else {
-            User.addUser(user);
-            writer.println("Hello and welcome, " + name + "!");
+            if (User.getUsers().contains(user)) {
+                return "exist.jsp";
+            } else {
+                User.addUser(user);
+                return "greeting.jsp";
+            }
         }
     }
 }
