@@ -1,25 +1,42 @@
 package mate.academy;
 
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 public class LogServletTest {
-    @Test
-    public void checkUser() {
-        User userOk = new User("fluriko", "123456");
-        User userWrong = new User("fluriko", "1234");
-        User userNotExist = new User("freya", "123456");
+    User userOk;
+    User userWrong;
+    User userNotExist;
+    LogServlet logServlet;
+
+    @Before
+    public void initialization() {
+        logServlet = new LogServlet();
+        userOk = new User("fluriko", "123456");
+        userWrong = new User("fluriko", "1234");
+        userNotExist = new User("freya", "123456");
         User.addUser(userOk);
-        LogServlet logServlet = new LogServlet();
+    }
+
+    @Test
+    public void checkUserOk() {
         String expected = logServlet.checkUser(userOk);
         String actual = "welcomeback.jsp";
-        assertEquals(actual, expected);
-        expected = logServlet.checkUser(userWrong);
-        actual = "wrongpass.jsp";
-        assertEquals(actual, expected);
-        expected = logServlet.checkUser(userNotExist);
-        actual = "notexist.jsp";
-        assertEquals(actual, expected);
+        Assert.assertEquals(actual, expected);
+    }
+
+    @Test
+    public void checkUserWrong() {
+        String expected = logServlet.checkUser(userWrong);
+        String actual = "wrongpass.jsp";
+        Assert.assertEquals(actual, expected);
+    }
+
+    @Test
+    public void checkUserNotExist() {
+        String expected = logServlet.checkUser(userNotExist);
+        String actual = "notexist.jsp";
+        Assert.assertEquals(actual, expected);
     }
 }

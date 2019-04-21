@@ -3,11 +3,8 @@ package mate.academy;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 public class UserTest {
     User user;
@@ -24,13 +21,13 @@ public class UserTest {
         User.addUser(secondUser);
         User.addUser(user);
         User expected = new User("Nathan", "123456");
-        assertEquals(expected, User.getUsers().get(1));
+        Assert.assertEquals(expected, User.getUsers().get(1));
     }
 
     @Test
     public void getUser() {
         User expected = new User("Eliot", "123457");
-        assertEquals(expected, User.getUser(secondUser));
+        Assert.assertEquals(expected, User.getUser(secondUser));
     }
 
     @Test
@@ -39,20 +36,20 @@ public class UserTest {
         expected.add(secondUser);
         expected.add(user);
         List<User> actual = User.getUsers();
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
     public void getName() {
         String expected = "Nathan";
         String actual = user.getName();
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
     public void getPassword() {
         String expected = "123456";
         String actual = user.getPassword();
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 }
