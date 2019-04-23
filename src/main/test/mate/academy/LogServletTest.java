@@ -1,22 +1,28 @@
 package mate.academy;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class LogServletTest {
-    User userOk;
-    User userWrong;
-    User userNotExist;
-    LogServlet logServlet;
+    static User userOk;
+    static User userWrong;
+    static User userNotExist;
+    static LogServlet logServlet;
 
-    @Before
-    public void initialization() {
+    @BeforeClass
+    public static void initialization() {
         logServlet = new LogServlet();
         userOk = new User("fluriko", "123456");
         userWrong = new User("fluriko", "1234");
         userNotExist = new User("freya", "123456");
-        User.addUser(userOk);
+        Database.addUser(userOk);
+    }
+
+    @AfterClass
+    public static void clean() {
+        Database.removeUser(userOk);
     }
 
     @Test

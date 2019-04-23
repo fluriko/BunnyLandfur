@@ -17,7 +17,6 @@ public class LogServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<User> users = User.getUsers();
         String name = req.getParameter("name");
         String password = req.getParameter("password");
         User user = new User(name, password);
@@ -28,9 +27,8 @@ public class LogServlet extends HttpServlet {
     }
 
     protected String checkUser(User user) {
-        List<User> users = User.getUsers();
-        if (users.contains(user)) {
-            if (User.getUser(user).getPassword().equals(user.getPassword())) {
+        if (Database.contains(user)) {
+            if (Database.getUser(user).getPassword().equals(user.getPassword())) {
                 return "welcomeback.jsp";
             } else {
                 return "wrongpass.jsp";

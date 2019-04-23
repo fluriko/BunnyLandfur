@@ -30,10 +30,10 @@ public class RegServlet extends HttpServlet {
         if (user.getName().length() < 4 || user.getPassword().length() < 6) {
             return "wrongreg.jsp";
         } else {
-            if (User.getUsers().contains(user)) {
+            if (Database.contains(user)) {
                 return "exist.jsp";
             } else {
-                User.addUser(user);
+                Database.addUser(user);
                 return "greeting.jsp";
             }
         }
