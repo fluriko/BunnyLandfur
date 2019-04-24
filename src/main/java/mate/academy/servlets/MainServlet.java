@@ -1,4 +1,4 @@
-package mate.academy;
+package mate.academy.servlets;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

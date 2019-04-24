@@ -1,20 +1,30 @@
-package mate.academy;
+package mate.academy.model;
 
 public class User {
     private String name;
     private String password;
 
-    protected User(String name, String password) {
+    public User(String name) {
+        this(name, "standard");
+    }
+
+    public User(String name, String password) {
         this.name = name;
         this.password = password;
     }
 
-    protected String getName() {
+    public String getName() {
         return name;
     }
 
-    protected String getPassword() {
+    public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        if (password.length() > 5) {
+            this.password = password;
+        }
     }
 
     @Override

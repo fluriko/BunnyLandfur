@@ -1,5 +1,8 @@
 package mate.academy;
 
+import mate.academy.database.Database;
+import mate.academy.model.User;
+import mate.academy.servlets.LogServlet;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;

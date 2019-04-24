@@ -1,4 +1,7 @@
-package mate.academy;
+package mate.academy.database;
+
+import mate.academy.exceptions.NoSuchUserException;
+import mate.academy.model.User;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -28,7 +31,6 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
     public static User getUser(User user) {
@@ -44,6 +46,17 @@ public class Database {
             e.printStackTrace();
         }
         throw new NoSuchUserException();
+    }
+
+    public static void editUser(User user, String newPass) {
+        String insert = String.format("UPDATE homework.users SET password = '%s' WHERE name = '%s';", newPass, user.getName());
+        Connection connection = DatabaseConnector.connect();
+        try {
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(insert);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public static List<User> getUsers() {

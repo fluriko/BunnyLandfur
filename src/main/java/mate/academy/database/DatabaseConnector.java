@@ -1,4 +1,6 @@
-package mate.academy;
+package mate.academy.database;
+
+import mate.academy.exceptions.MysqlConnectionException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

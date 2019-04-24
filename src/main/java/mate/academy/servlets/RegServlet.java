@@ -1,4 +1,7 @@
-package mate.academy;
+package mate.academy.servlets;
+
+import mate.academy.database.Database;
+import mate.academy.model.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -26,7 +29,7 @@ public class RegServlet extends HttpServlet {
         req.getRequestDispatcher(page).forward(req, resp);
     }
 
-    protected String checkUser(User user) {
+    public String checkUser(User user) {
         if (user.getName().length() < 4 || user.getPassword().length() < 6) {
             return "wrongreg.jsp";
         } else {
