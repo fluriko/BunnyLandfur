@@ -12,6 +12,7 @@
     <title>Edit</title>
 </head>
 <body>
+<h1><%=request.getAttribute("error")%></h1>
 <h2>Enter new password for user: <%=request.getParameter("name")%> </h2>
 <form method="post" class="w3-selection w3-light-blue w3-padding">
 <label> Password:

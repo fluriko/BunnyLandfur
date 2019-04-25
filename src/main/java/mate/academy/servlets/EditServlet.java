@@ -16,6 +16,7 @@ public class EditServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter("name");
+        req.setAttribute("error", "");
         req.getRequestDispatcher("edit.jsp").forward(req, resp);
     }
 
@@ -25,10 +26,8 @@ public class EditServlet extends HttpServlet {
         String name = req.getParameter("name");
         String newPass = req.getParameter("password");
         if (newPass.length() < 6) {
-            out.println("You entered too short password!<br /><br />");
-            resp.setContentType("text/html");
-            out.println("<a href='list'>Back to list of users</a><br /><br />");
-            out.println("<a href='index.jsp'>Back to main</a><br /><br />");
+            req.setAttribute("error", "Too short password, try again");
+            req.getRequestDispatcher("/edit.jsp").forward(req, resp);
         } else {
             Database.editUser(new User(name), newPass);
             resp.setContentType("text/html");
