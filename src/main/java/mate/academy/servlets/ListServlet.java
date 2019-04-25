@@ -28,7 +28,9 @@ public class ListServlet extends HttpServlet {
                     "<td><a href='edit?name=" + user.getName() +"'>edit</a></td>" +
                     "<td><a href='delete?name=" + user.getName() +"'>delete</a></td></tr>");
         }
-        out.print("</table>");
+        out.print("</table><br /><br />");
+        out.println("<a href='registration'>Add new user</a><br /><br />");
+        out.println("<a href='index.jsp'>Back to main</a><br /><br />");
         out.close();
     }
 }

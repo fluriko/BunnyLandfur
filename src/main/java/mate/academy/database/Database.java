@@ -12,7 +12,8 @@ import java.util.List;
 
 public class Database {
     public static void addUser(User user) {
-        String insert = String.format("INSERT INTO homework.users(name,password) VALUES('%s','%s');", user.getName(), user.getPassword());
+        String insert = "INSERT INTO homework.users(name,password) VALUES('"
+                + user.getName() + "','" +user.getPassword() + "');";
         Connection connection = DatabaseConnector.connect();
         try {
             Statement statement = connection.createStatement();
@@ -23,7 +24,8 @@ public class Database {
     }
 
     public static void removeUser(User user) {
-        String delete = String.format("DELETE FROM homework.users WHERE name = '%s';", user.getName());
+        String delete = "DELETE FROM homework.users WHERE name = '"
+                + user.getName() + "';";
         Connection connection = DatabaseConnector.connect();
         try {
             Statement statement = connection.createStatement();
@@ -34,7 +36,8 @@ public class Database {
     }
 
     public static User getUser(User user) {
-        String select = String.format("SELECT * FROM homework.users WHERE name = '%s';", user.getName());
+        String select = "SELECT * FROM homework.users WHERE name = '"
+                + user.getName() + "';";
         Connection connection = DatabaseConnector.connect();
         try {
             Statement statement = connection.createStatement();
@@ -49,7 +52,8 @@ public class Database {
     }
 
     public static void editUser(User user, String newPass) {
-        String insert = String.format("UPDATE homework.users SET password = '%s' WHERE name = '%s';", newPass, user.getName());
+        String insert = "UPDATE homework.users SET password = '"
+                + newPass + "' WHERE name = '" + user.getName() + "';";
         Connection connection = DatabaseConnector.connect();
         try {
             Statement statement = connection.createStatement();
@@ -76,7 +80,8 @@ public class Database {
     }
 
     public static boolean contains(User user) {
-        String select = String.format("SELECT * FROM homework.users WHERE name = '%s';", user.getName());
+        String select = "SELECT * FROM homework.users WHERE name = '"
+                + user.getName() + "';";
         Connection connection = DatabaseConnector.connect();
         try {
             Statement statement = connection.createStatement();

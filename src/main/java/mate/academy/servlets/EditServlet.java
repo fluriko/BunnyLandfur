@@ -21,16 +21,19 @@ public class EditServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        PrintWriter out = resp.getWriter();
+        String name = req.getParameter("name");
         String newPass = req.getParameter("password");
         if (newPass.length() < 6) {
-            req.getRequestDispatcher("shortPass.jsp").forward(req, resp);
+            out.println("You entered too short password!<br /><br />");
+            resp.setContentType("text/html");
+            out.println("<a href='list'>Back to list of users</a><br /><br />");
+            out.println("<a href='index.jsp'>Back to main</a><br /><br />");
         } else {
-            String name = req.getParameter("name");
             Database.editUser(new User(name), newPass);
-            PrintWriter out = resp.getWriter();
             resp.setContentType("text/html");
             out.println("User " + name + " was edited successfully!<br /><br />");
-            out.println("<a href='list'>Back list of users</a><br /><br />");
+            out.println("<a href='list'>Back to list of users</a><br /><br />");
             out.println("<a href='index.jsp'>Back to main</a><br /><br />");
         }
     }

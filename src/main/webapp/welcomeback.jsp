@@ -13,13 +13,7 @@
 </head>
 <body class="w3-light-blue">
 <div class="w3-container w3-blue w3-opacity w3-right-align">
-    <h1>
-        <%
-            request.getAttribute("name");
-            PrintWriter writer = response.getWriter();
-            writer.println("Welcome back " + request.getAttribute("name") + "!");
-        %>
-    </h1>
+    <h1>Welcome back <%=request.getAttribute("name")%>!</h1>
     <h1>We are glad to see you again on BunnyLand!</h1>
 </div>
 <div class="w3-container w3-center">
