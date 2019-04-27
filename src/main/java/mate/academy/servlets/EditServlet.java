@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 
 @WebServlet(value = "/edit")
@@ -21,12 +20,11 @@ public class EditServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter out = resp.getWriter();
         String name = req.getParameter("name");
         String newPass = req.getParameter("password");
         if (newPass.length() < 6) {
             req.setAttribute("error", "Too short password, try again");
-            req.getRequestDispatcher("/edit.jsp").forward(req, resp);
+            req.getRequestDispatcher("edit.jsp").forward(req, resp);
         } else {
             Database.editUser(new User(name), newPass);
             List<User> users = Database.getUsers();

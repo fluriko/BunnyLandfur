@@ -2,7 +2,6 @@ package mate.academy.servlets;
 
 import mate.academy.database.Database;
 import mate.academy.model.User;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

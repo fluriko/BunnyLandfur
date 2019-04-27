@@ -2,7 +2,6 @@ package mate.academy.database;
 
 import mate.academy.exceptions.NoSuchUserException;
 import mate.academy.model.User;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,26 +11,30 @@ import java.util.List;
 
 public class Database {
     public static void addUser(User user) {
-        String insert = "INSERT INTO homework.users(name,password) VALUES('"
-                + user.getName() + "','" +user.getPassword() + "');";
-        Connection connection = DatabaseConnector.connect();
-        try {
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(insert);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (!Database.contains(user)) {
+            String insert = "INSERT INTO homework.users(name,password) VALUES('"
+                    + user.getName() + "','" + user.getPassword() + "');";
+            Connection connection = DatabaseConnector.connect();
+            try {
+                Statement statement = connection.createStatement();
+                statement.executeUpdate(insert);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public static void removeUser(User user) {
-        String delete = "DELETE FROM homework.users WHERE name = '"
-                + user.getName() + "';";
-        Connection connection = DatabaseConnector.connect();
-        try {
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(delete);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (Database.contains(user)) {
+            String delete = "DELETE FROM homework.users WHERE name = '"
+                    + user.getName() + "';";
+            Connection connection = DatabaseConnector.connect();
+            try {
+                Statement statement = connection.createStatement();
+                statement.executeUpdate(delete);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -52,14 +55,16 @@ public class Database {
     }
 
     public static void editUser(User user, String newPass) {
-        String insert = "UPDATE homework.users SET password = '"
-                + newPass + "' WHERE name = '" + user.getName() + "';";
-        Connection connection = DatabaseConnector.connect();
-        try {
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(insert);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (Database.contains(user)) {
+            String insert = "UPDATE homework.users SET password = '"
+                    + newPass + "' WHERE name = '" + user.getName() + "';";
+            Connection connection = DatabaseConnector.connect();
+            try {
+                Statement statement = connection.createStatement();
+                statement.executeUpdate(insert);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -91,5 +96,16 @@ public class Database {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static void removeAll() {
+        String delete = "DELETE FROM homework.users WHERE 1=1;";
+        Connection connection = DatabaseConnector.connect();
+        try {
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(delete);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
