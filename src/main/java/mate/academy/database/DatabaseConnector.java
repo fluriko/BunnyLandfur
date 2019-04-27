@@ -8,7 +8,7 @@ import java.sql.DriverManager;
 public class DatabaseConnector {
     private static final String userName = "root";
     private static final String password = "root";
-    private static final String connectionUrl = "jdbc:mysql://localhost:3306/mysql";
+    private static final String connectionUrl = "jdbc:mysql://localhost:3306/mysql?serverTimezone=Europe/Kiev";
 
     public static Connection connect() {
         Connection connection;

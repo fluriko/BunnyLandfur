@@ -1,5 +1,6 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page isELIgnored="false"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>BunnyLand.fur</title>
@@ -7,7 +8,8 @@
 </head>
 <body class="w3-light-blue">
 <div class="w3-container w3-blue w3-opacity w3-right-align">
-<h1>Hello and welcome to BunnyLand! You can register or log in!</h1>
+    <h1>We are glad to see you in BunnyLand!</h1>
+    <h2><c:out value="${message}"/></h2>
 </div>
 <div class="w3-container w3-center">
     <div class="w3-bar w3-padding-large w3-padding-24">

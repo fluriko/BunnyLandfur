@@ -14,6 +14,7 @@ import java.io.IOException;
 public class RegServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute("message", "");
         req.getRequestDispatcher("registration.jsp").forward(req, resp);
     }
 
@@ -22,22 +23,25 @@ public class RegServlet extends HttpServlet {
         String name = req.getParameter("name");
         String password = req.getParameter("password");
         User user = new User(name, password);
-        String page = checkUser(user);
-        if (page.equals("greeting.jsp")) {
-            req.setAttribute("name", name);
-        }
-        req.getRequestDispatcher(page).forward(req, resp);
-    }
-
-    public String checkUser(User user) {
-        if (user.getName().length() < 4 || user.getPassword().length() < 6) {
-            return "wrongreg.jsp";
+        String message;
+        if (user.getName().length() < 4) {
+            message = "Name " + user.getName() + " is too short, enter 4 symbols at least";
+            req.setAttribute("message", message);
+            req.getRequestDispatcher("registration.jsp").forward(req, resp);
+        } else if (user.getPassword().length() < 6) {
+            message = "Password is too short, enter 6 symbols at least";
+            req.setAttribute("message", message);
+            req.getRequestDispatcher("registration.jsp").forward(req, resp);
         } else {
             if (Database.contains(user)) {
-                return "exist.jsp";
+                message = "User with name" + user.getName() + " already exists";
+                req.setAttribute("message", message);
+                req.getRequestDispatcher("registration.jsp").forward(req, resp);
             } else {
                 Database.addUser(user);
-                return "greeting.jsp";
+                message = "Hello and welcome " + user.getName();
+                req.setAttribute("message", message);
+                req.getRequestDispatcher("index.jsp").forward(req, resp);
             }
         }
     }

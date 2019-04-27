@@ -14,6 +14,7 @@ import java.io.IOException;
 public class LogServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute("message", "");
         req.getRequestDispatcher("login.jsp").forward(req, resp);
     }
 
@@ -22,21 +23,21 @@ public class LogServlet extends HttpServlet {
         String name = req.getParameter("name");
         String password = req.getParameter("password");
         User user = new User(name, password);
-        if (checkUser(user).equals("welcomeback.jsp")) {
-            req.setAttribute("name", name);
-        }
-        req.getRequestDispatcher(checkUser(user)).forward(req, resp);
-    }
-
-    public String checkUser(User user) {
+        String message;
         if (Database.contains(user)) {
             if (Database.getUser(user).getPassword().equals(user.getPassword())) {
-                return "welcomeback.jsp";
+                message = "Welcome back " + user.getName();
+                req.setAttribute("message", message);
+                req.getRequestDispatcher("index.jsp").forward(req, resp);
             } else {
-                return "wrongpass.jsp";
+                message = "Wrong login or password";
+                req.setAttribute("message", message);
+                req.getRequestDispatcher("login.jsp").forward(req, resp);
             }
         } else {
-            return "notexist.jsp";
+            message = "No user in base with name " + user.getName();
+            req.setAttribute("message", message);
+            req.getRequestDispatcher("login.jsp").forward(req, resp);
         }
     }
 }

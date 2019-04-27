@@ -2,7 +2,6 @@ package mate.academy.servlets;
 
 import mate.academy.database.Database;
 import mate.academy.model.User;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,12 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 @WebServlet(value = "/edit")
 public class EditServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String name = req.getParameter("name");
         req.setAttribute("error", "");
         req.getRequestDispatcher("edit.jsp").forward(req, resp);
     }
@@ -30,10 +29,10 @@ public class EditServlet extends HttpServlet {
             req.getRequestDispatcher("/edit.jsp").forward(req, resp);
         } else {
             Database.editUser(new User(name), newPass);
-            resp.setContentType("text/html");
-            out.println("User " + name + " was edited successfully!<br /><br />");
-            out.println("<a href='list'>Back to list of users</a><br /><br />");
-            out.println("<a href='index.jsp'>Back to main</a><br /><br />");
+            List<User> users = Database.getUsers();
+            req.setAttribute("users", users);
+            req.setAttribute("message", "User " + name + " was edited successfully!");
+            req.getRequestDispatcher("list.jsp").forward(req, resp);
         }
     }
 }
