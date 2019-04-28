@@ -19,8 +19,8 @@ public class RegServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String name = req.getParameter("name");
-        String password = req.getParameter("password");
+        String name = req.getParameter("name").trim();
+        String password = req.getParameter("password").trim();
         User user = new User(name, password);
         String message;
         if (user.getName().length() < 4) {
@@ -33,7 +33,7 @@ public class RegServlet extends HttpServlet {
             req.getRequestDispatcher("registration.jsp").forward(req, resp);
         } else {
             if (Database.contains(user)) {
-                message = "User with name" + user.getName() + " already exists";
+                message = "User with name " + user.getName() + " already exists";
                 req.setAttribute("message", message);
                 req.getRequestDispatcher("registration.jsp").forward(req, resp);
             } else {

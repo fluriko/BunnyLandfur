@@ -2,22 +2,22 @@ package mate.academy.database;
 
 import mate.academy.exceptions.NoSuchUserException;
 import mate.academy.model.User;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Database {
     public static void addUser(User user) {
         if (!Database.contains(user)) {
-            String insert = "INSERT INTO homework.users(name,password) VALUES('"
-                    + user.getName() + "','" + user.getPassword() + "');";
+            String insert = "INSERT INTO homework.users(name,password) VALUES(?,?);";
             Connection connection = DatabaseConnector.connect();
             try {
-                Statement statement = connection.createStatement();
-                statement.executeUpdate(insert);
+                PreparedStatement preparedStatement = connection.prepareStatement(insert);
+                preparedStatement.setString(1, user.getName());
+                preparedStatement.setString(2, user.getPassword());
+                preparedStatement.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -26,12 +26,12 @@ public class Database {
 
     public static void removeUser(User user) {
         if (Database.contains(user)) {
-            String delete = "DELETE FROM homework.users WHERE name = '"
-                    + user.getName() + "';";
+            String delete = "DELETE FROM homework.users WHERE name = ?;";
             Connection connection = DatabaseConnector.connect();
             try {
-                Statement statement = connection.createStatement();
-                statement.executeUpdate(delete);
+                PreparedStatement preparedStatement = connection.prepareStatement(delete);
+                preparedStatement.setString(1, user.getName());
+                preparedStatement.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -39,12 +39,12 @@ public class Database {
     }
 
     public static User getUser(User user) {
-        String select = "SELECT * FROM homework.users WHERE name = '"
-                + user.getName() + "';";
+        String select = "SELECT * FROM homework.users WHERE name = ?;";
         Connection connection = DatabaseConnector.connect();
         try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(select);
+            PreparedStatement preparedStatement = connection.prepareStatement(select);
+            preparedStatement.setString(1, user.getName());
+            ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 return new User(resultSet.getString("name"), resultSet.getString("password"));
             }
@@ -56,12 +56,13 @@ public class Database {
 
     public static void editUser(User user, String newPass) {
         if (Database.contains(user)) {
-            String insert = "UPDATE homework.users SET password = '"
-                    + newPass + "' WHERE name = '" + user.getName() + "';";
+            String insert = "UPDATE homework.users SET password = ? WHERE name = ?;";
             Connection connection = DatabaseConnector.connect();
             try {
-                Statement statement = connection.createStatement();
-                statement.executeUpdate(insert);
+                PreparedStatement preparedStatement = connection.prepareStatement(insert);
+                preparedStatement.setString(1, newPass);
+                preparedStatement.setString(2, user.getName());
+                preparedStatement.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -85,12 +86,12 @@ public class Database {
     }
 
     public static boolean contains(User user) {
-        String select = "SELECT * FROM homework.users WHERE name = '"
-                + user.getName() + "';";
+        String select = "SELECT * FROM homework.users WHERE name = ?;";
         Connection connection = DatabaseConnector.connect();
         try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(select);
+            PreparedStatement preparedStatement = connection.prepareStatement(select);
+            preparedStatement.setString(1, user.getName());
+            ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next();
         } catch (SQLException e) {
             e.printStackTrace();

@@ -19,8 +19,8 @@ public class LogServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String name = req.getParameter("name");
-        String password = req.getParameter("password");
+        String name = req.getParameter("name").trim();
+        String password = req.getParameter("password").trim();
         User user = new User(name, password);
         String message;
         if (Database.contains(user)) {

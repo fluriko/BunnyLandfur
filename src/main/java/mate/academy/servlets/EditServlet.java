@@ -15,13 +15,14 @@ public class EditServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("error", "");
+        req.setAttribute("name", req.getParameter("name"));
         req.getRequestDispatcher("edit.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter("name");
-        String newPass = req.getParameter("password");
+        String newPass = req.getParameter("password").trim();
         if (newPass.length() < 6) {
             req.setAttribute("error", "Too short password, try again");
             req.getRequestDispatcher("edit.jsp").forward(req, resp);

@@ -11,10 +11,13 @@
 <html>
 <head>
     <title>Edit</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
-<body>
-<h2>Enter new password for user: <%=request.getParameter("name")%> </h2>
+<body class="w3-light-blue">
+<div class="w3-container w3-blue w3-opacity w3-right-align">
+<h2>Enter new password for user: <c:out value="${name}"/> </h2>
 <h2><c:out value="${error}"/></h2>
+</div>
 <form method="post" class="w3-selection w3-light-blue w3-padding">
 <label> Password:
     <input type="password" name="password" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
