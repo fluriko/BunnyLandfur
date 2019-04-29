@@ -2,11 +2,13 @@ package mate.academy.database;
 
 import mate.academy.exceptions.NoSuchUserException;
 import mate.academy.model.User;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class Database {
     public static void addUser(User user) {
