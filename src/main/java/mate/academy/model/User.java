@@ -6,27 +6,27 @@ public class User {
     private int id;
     private String name;
     private String password;
-    private Role role;
+    private Roles role;
 
-    public User(int id, String name, String password, Role role) {
+    public User(int id, String name, String password, Roles role) {
         this.id = id;
         this.name = name;
         this.password = password;
         this.role = role;
     }
 
-    public User(String name, String password, Role role) {
+    public User(String name, String password, Roles role) {
         this.name = name;
         this.password = password;
         this.role = role;
     }
 
     public User(String name, String password) {
-        this(name, password, new Role());
+        this(name, password, Roles.USER);
     }
 
     public User(String name) {
-        this(name, "password", new Role());
+        this(name, "password", Roles.USER);
     }
 
     public int getId() {
@@ -53,11 +53,11 @@ public class User {
         this.password = password;
     }
 
-    public Role getRole() {
+    public Roles getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(Roles role) {
         this.role = role;
     }
 
@@ -69,7 +69,7 @@ public class User {
         return id == user.id &&
                 Objects.equals(name, user.name) &&
                 Objects.equals(password, user.password) &&
-                Objects.equals(role, user.role);
+                role == user.role;
     }
 
     @Override

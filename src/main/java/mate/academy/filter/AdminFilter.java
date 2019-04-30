@@ -12,7 +12,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-@WebFilter("/admin")
+@WebFilter(value = {"/admin", "/admindelete", "/adminedit"})
 public class AdminFilter implements Filter {
     private static final Logger logger = Logger.getLogger(AdminFilter.class);
 

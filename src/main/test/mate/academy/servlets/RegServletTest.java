@@ -27,9 +27,6 @@ public class RegServletTest {
     @Mock
     RequestDispatcher requestDispatcher;
 
-    @Mock
-    HttpSession session;
-
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
@@ -42,7 +39,6 @@ public class RegServletTest {
         Mockito.when(request.getParameter("name")).thenReturn("alpha");
         Mockito.when(request.getParameter("password")).thenReturn("111qqq");
         Mockito.when(request.getRequestDispatcher("index.jsp")).thenReturn(requestDispatcher);
-        Mockito.when(request.getSession()).thenReturn(session);
         regServlet.doPost(request, response);
         Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("index.jsp");
     }

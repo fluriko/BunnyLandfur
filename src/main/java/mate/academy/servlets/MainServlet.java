@@ -1,7 +1,7 @@
 package mate.academy.servlets;
 
 import mate.academy.database.UserDao;
-import mate.academy.model.Role;
+import mate.academy.model.Roles;
 import mate.academy.model.User;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
@@ -15,7 +15,7 @@ import java.io.IOException;
 public class MainServlet extends HttpServlet {
     private static final UserDao USER_DAO = new UserDao();
     private static final Logger logger = Logger.getLogger(MainServlet.class);
-    private static final User ADMIN_FLURIKO = new User("fluriko", "123123", new Role(1));
+    private static final User ADMIN_FLURIKO = new User("fluriko", "123123", Roles.ADMIN);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

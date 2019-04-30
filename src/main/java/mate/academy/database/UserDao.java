@@ -1,10 +1,8 @@
 package mate.academy.database;
 
-import mate.academy.model.Role;
 import mate.academy.model.Roles;
 import mate.academy.model.User;
 import org.apache.log4j.Logger;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -59,7 +57,7 @@ public class UserDao {
     }
 
     public Optional<User> getUser(String name) {
-        String select = "SELECT * FROM ma.users WHERE login = ?;";
+        String select = "SELECT * FROM ma.users INNER JOIN ma.roles ON ma.users.role_id = ma.roles.id WHERE login = ?;";
         Connection connection = DatabaseConnector.connect();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(select);
@@ -68,7 +66,7 @@ public class UserDao {
             if (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String password = resultSet.getString("password");
-                Role role = new Role(resultSet.getInt("role_id"));
+                Roles role = Roles.valueOf(resultSet.getString("name"));
                 User userToGet = new User(id, name, password, role);
                 return Optional.of(userToGet);
             }
@@ -113,7 +111,7 @@ public class UserDao {
     }
 
     public List<User> getUsers() {
-        String select = "SELECT * FROM ma.users;";
+        String select = "SELECT * FROM ma.users INNER JOIN ma.roles ON ma.users.role_id = ma.roles.id";
         List<User> users = new ArrayList<>();
         Connection connection = DatabaseConnector.connect();
         try {
@@ -123,8 +121,8 @@ public class UserDao {
                 int id = resultSet.getInt("id");
                 String name = resultSet.getString("login");
                 String password = resultSet.getString("password");
-                int roleId = resultSet.getInt("role_id");
-                users.add(new User(id, name, password, new Role(roleId)));
+                Roles role = Roles.valueOf(resultSet.getString("name"));
+                users.add(new User(id, name, password, role));
             }
         } catch (SQLException e) {
             logger.error("getting all users failed", e);

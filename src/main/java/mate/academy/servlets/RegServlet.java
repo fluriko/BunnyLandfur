@@ -49,9 +49,8 @@ public class RegServlet extends HttpServlet {
                 User user = new User(name, password);
                 USER_DAO.addUser(user);
                 User userGet = USER_DAO.getUser(name).get();
-                req.getSession().setAttribute("user", userGet);
                 logger.debug("User " + userGet.getId() + " registered successfully");
-                message = "Hello and welcome " + name;
+                message = "Hello and welcome " + name + ", now you can log in";
                 req.setAttribute("message", message);
                 req.getRequestDispatcher("index.jsp").forward(req, resp);
             }
