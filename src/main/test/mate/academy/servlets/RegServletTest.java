@@ -1,6 +1,6 @@
 package mate.academy.servlets;
 
-import mate.academy.database.Database;
+import mate.academy.database.UserDao;
 import mate.academy.model.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,9 +11,11 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class RegServletTest {
+    private static final UserDao USER_DAO = new UserDao();
     RegServlet regServlet;
 
     @Mock
@@ -25,10 +27,13 @@ public class RegServletTest {
     @Mock
     RequestDispatcher requestDispatcher;
 
+    @Mock
+    HttpSession session;
+
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        Database.removeAll();
+        USER_DAO.removeAll();
         regServlet = new RegServlet();
     }
 
@@ -37,6 +42,7 @@ public class RegServletTest {
         Mockito.when(request.getParameter("name")).thenReturn("alpha");
         Mockito.when(request.getParameter("password")).thenReturn("111qqq");
         Mockito.when(request.getRequestDispatcher("index.jsp")).thenReturn(requestDispatcher);
+        Mockito.when(request.getSession()).thenReturn(session);
         regServlet.doPost(request, response);
         Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("index.jsp");
     }
@@ -44,7 +50,7 @@ public class RegServletTest {
     @Test
     public void doPostExist() throws IOException, ServletException {
         User user = new User("betta", "111qqq");
-        Database.addUser(user);
+        USER_DAO.addUser(user);
         Mockito.when(request.getParameter("name")).thenReturn("betta");
         Mockito.when(request.getParameter("password")).thenReturn("111qqq");
         Mockito.when(request.getRequestDispatcher("registration.jsp")).thenReturn(requestDispatcher);

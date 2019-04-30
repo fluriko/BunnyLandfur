@@ -1,5 +1,9 @@
 package mate.academy.servlets;
 
+import mate.academy.database.UserDao;
+import mate.academy.model.Role;
+import mate.academy.model.User;
+import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -9,9 +13,14 @@ import java.io.IOException;
 
 @WebServlet(value = "/")
 public class MainServlet extends HttpServlet {
+    private static final UserDao USER_DAO = new UserDao();
+    private static final Logger logger = Logger.getLogger(MainServlet.class);
+    private static final User ADMIN_FLURIKO = new User("fluriko", "123123", new Role(1));
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("message", "");
+        USER_DAO.addUser(ADMIN_FLURIKO);
+        logger.debug("User is on main page");
         req.getRequestDispatcher("index.jsp").forward(req, resp);
     }
 }

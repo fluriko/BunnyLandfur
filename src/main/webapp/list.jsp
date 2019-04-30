@@ -21,17 +21,21 @@
 <div class="w3-container w3-left-align">
 <table border='2' width='100%'>
 <tr>
+    <th>ID</th>
     <th>Name</th>
     <th>Password</th>
+    <th>Role</th>
     <th>Edit</th>
     <th>Delete</th>
 </tr>
     <c:forEach items="${users}" var="user">
     <tr>
+        <td><c:out value="${user.getId()}"/></td>
         <td><c:out value="${user.getName()}"/></td>
         <td><c:out value="${user.getPassword()}"/></td>
-        <td><a href='edit?name=${user.getName()}'>edit</a></td>
-        <td><a href='delete?name=${user.getName()}'>delete</a></td>
+        <td><c:out value="${user.getRole()}"/></td>
+        <td><a href='adminedit?name=${user.getName()}'>edit</a></td>
+        <td><a href='admindelete?name=${user.getName()}'>delete</a></td>
     </tr>
     </c:forEach>
 </table>

@@ -1,6 +1,6 @@
 package mate.academy.servlets;
 
-import mate.academy.database.Database;
+import mate.academy.database.UserDao;
 import mate.academy.model.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class EditServletTest {
+    private static final UserDao USER_DAO = new UserDao();
     EditServlet editServlet;
 
     @Mock
@@ -30,7 +31,7 @@ public class EditServletTest {
         MockitoAnnotations.initMocks(this);
         editServlet = new EditServlet();
         User user = new User("alpha", "111qqq");
-        Database.addUser(user);
+        USER_DAO.addUser(user);
     }
 
     @Test
@@ -46,8 +47,8 @@ public class EditServletTest {
     public void doPostOk() throws IOException, ServletException {
         Mockito.when(request.getParameter("name")).thenReturn("alpha");
         Mockito.when(request.getParameter("password")).thenReturn("111qqq");
-        Mockito.when(request.getRequestDispatcher("list.jsp")).thenReturn(requestDispatcher);
+        Mockito.when(request.getRequestDispatcher("/admin")).thenReturn(requestDispatcher);
         editServlet.doPost(request, response);
-        Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("list.jsp");
+        Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("/admin");
     }
 }
