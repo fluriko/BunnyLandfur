@@ -11,15 +11,27 @@
     <h1>We are glad to see you in BunnyLand!</h1>
     <h2><c:out value="${message}"/></h2>
 </div>
+<c:if test = "${user == null}">
 <div class="w3-container w3-center">
     <div class="w3-bar w3-padding-large w3-padding-24">
     <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/registration'">Register</button><br /><br />
     <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/login'">Log in</button><br /><br />
 </div>
-    <h2>Some cool paragraph</h2> <br /><br />
+    </c:if>
+    <div class="w3-container w3-center">
+    <h2>Some cool paragraph</h2> <br />
     Some interesting text about bunnies, <br />
     And more...<br />
     And more...<br />
+    </div>
+<c:if test = "${user != null}">
+    <div class="w3-container w3-center">
+        <h2>Some special content for user</h2> <br />
+        Secret information <br />
+        <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/logout'">Log out</button><br /><br />
+    </div>
+    </c:if>
+
 </div>
 </body>
 </html>

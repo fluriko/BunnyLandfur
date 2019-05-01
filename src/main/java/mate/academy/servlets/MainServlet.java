@@ -20,7 +20,12 @@ public class MainServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         USER_DAO.addUser(ADMIN_FLURIKO);
-        logger.debug("User is on main page");
+        User user = (User) req.getSession().getAttribute("user");
+        if (user != null) {
+            logger.debug("User " + user.getName() + " is on main page");
+        } else {
+            logger.debug("Not logged user is on main page");
+        }
         req.getRequestDispatcher("index.jsp").forward(req, resp);
     }
 }
