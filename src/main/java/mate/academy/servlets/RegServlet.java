@@ -26,7 +26,8 @@ public class RegServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter("name").trim();
         String password = req.getParameter("password").trim();
-        logger.debug("User entered data " + name + " " + password);
+        String mail = req.getParameter("mail").trim();
+        logger.debug("User entered data " + name + " " + password + " " + mail);
         String message;
         if (name.length() < 4) {
             logger.debug("Login " + name + " is too short");
@@ -38,6 +39,11 @@ public class RegServlet extends HttpServlet {
             message = "Password is too short, enter 6 symbols at least";
             req.setAttribute("message", message);
             req.getRequestDispatcher("registration.jsp").forward(req, resp);
+        } else if (!mail.endsWith("@gmail.com") || mail.length() < 16) {
+            logger.debug("Mail " + mail + " is not correct");
+            message = "Your mail should be real and end with @gmail.com";
+            req.setAttribute("message", message);
+            req.getRequestDispatcher("registration.jsp").forward(req, resp);
         } else {
             logger.debug("Data is correct");
             if (USER_DAO.contains(name)) {
@@ -45,8 +51,13 @@ public class RegServlet extends HttpServlet {
                 message = "User with name " + name + " already exists";
                 req.setAttribute("message", message);
                 req.getRequestDispatcher("registration.jsp").forward(req, resp);
-            } else {
-                User user = new User(name, password);
+            } else if (USER_DAO.containsMail(mail)) {
+                logger.debug("User tried to register with existing mail");
+                message = "User with mail " + mail + " already exists";
+                req.setAttribute("message", message);
+                req.getRequestDispatcher("registration.jsp").forward(req, resp);
+            }  else {
+                User user = new User(name, password, mail);
                 USER_DAO.addUser(user);
                 User userGet = USER_DAO.getUser(name).get();
                 logger.debug("User " + userGet.getId() + " registered successfully");

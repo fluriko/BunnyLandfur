@@ -30,7 +30,7 @@ public class EditServletTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         editServlet = new EditServlet();
-        User user = new User("alpha", "111qqq");
+        User user = new User("alpha", "111qqq", "alphaa@gmail.com");
         USER_DAO.addUser(user);
     }
 

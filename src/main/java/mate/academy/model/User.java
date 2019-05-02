@@ -7,26 +7,25 @@ public class User {
     private String name;
     private String password;
     private Roles role;
+    private String mail;
 
-    public User(int id, String name, String password, Roles role) {
+    public User(int id, String name, String password, Roles role, String mail) {
         this.id = id;
         this.name = name;
         this.password = password;
         this.role = role;
+        this.mail = mail;
     }
 
-    public User(String name, String password, Roles role) {
+    public User(String name, String password, Roles role, String mail) {
         this.name = name;
         this.password = password;
         this.role = role;
+        this.mail = mail;
     }
 
-    public User(String name, String password) {
-        this(name, password, Roles.USER);
-    }
-
-    public User(String name) {
-        this(name, "password", Roles.USER);
+    public User(String name, String password, String mail) {
+        this(name, password, Roles.USER, mail);
     }
 
     public int getId() {
@@ -61,6 +60,14 @@ public class User {
         this.role = role;
     }
 
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -69,12 +76,13 @@ public class User {
         return id == user.id &&
                 Objects.equals(name, user.name) &&
                 Objects.equals(password, user.password) &&
-                role == user.role;
+                role == user.role &&
+                Objects.equals(mail, user.mail);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, password, role);
+        return Objects.hash(id, name, password, role, mail);
     }
 
     @Override
@@ -84,6 +92,7 @@ public class User {
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
                 ", role=" + role +
+                ", mail='" + mail + '\'' +
                 '}';
     }
 }

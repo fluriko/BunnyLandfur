@@ -18,9 +18,9 @@ public class UserDaoTest {
 
     @Before
     public void initialization() {
-        user = new User("Alice", "123456");
-        userToRemove = new User("Mary", "111111");
-        userToAdd = new User("Sophie", "232323");
+        user = new User("Alice", "123456", "123456@gmail.com");
+        userToRemove = new User("Mary", "111111", "234567@gmail.com");
+        userToAdd = new User("Sophie", "232323", "345678@gmail.com");
         USER_DAO.addUser(user);
     }
 
@@ -57,7 +57,7 @@ public class UserDaoTest {
 
     @Test
     public void editUser() {
-        Assert.assertNotEquals(USER_DAO.editUser(user.getName(), "password"), 0);
+        Assert.assertNotEquals(USER_DAO.editPassword(user.getName(), "password"), 0);
     }
 
     @Test

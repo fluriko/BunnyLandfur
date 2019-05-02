@@ -41,7 +41,7 @@ public class LogServlet extends HttpServlet {
                     logger.debug("User " + user.getName() + " logged in and started session");
                     message = "Welcome back " + name;
                     req.setAttribute("message", message);
-                    req.getRequestDispatcher("index.jsp").forward(req, resp);
+                    req.getRequestDispatcher("/goods").forward(req, resp);
                 }
             } else {
                 logger.debug("User entered wrong login or password");

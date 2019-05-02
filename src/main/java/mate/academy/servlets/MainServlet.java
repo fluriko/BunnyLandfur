@@ -15,7 +15,7 @@ import java.io.IOException;
 public class MainServlet extends HttpServlet {
     private static final UserDao USER_DAO = new UserDao();
     private static final Logger logger = Logger.getLogger(MainServlet.class);
-    private static final User ADMIN_FLURIKO = new User("fluriko", "123123", Roles.ADMIN);
+    private static final User ADMIN_FLURIKO = new User("fluriko", "123123", Roles.ADMIN, "fluricode@gmail.com");
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
