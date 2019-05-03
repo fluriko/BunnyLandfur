@@ -13,15 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CodeDao {
-    private static final Logger logger = Logger.getLogger(CodeDao.class);
+public class PurchaseCodeDao {
+    private static final Logger logger = Logger.getLogger(PurchaseCodeDao.class);
     private static final UserDao userDao = new UserDao();
     private static final GoodDao goodDao = new GoodDao();
+    private Connection connection = DatabaseConnector.connect();
 
     public int addCode(Code code) {
         if (!this.contains(code)) {
             String sql = "INSERT INTO ma.codes(value,user_id,good_id) VALUES(?,?,?);";
-            Connection connection = DatabaseConnector.connect();
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setString(1, code.getValue());
@@ -41,7 +41,6 @@ public class CodeDao {
         if (this.contains(code)) {
             Code codeToRemove = code;
             String sql = "DELETE FROM ma.codes WHERE id = ?;";
-            Connection connection = DatabaseConnector.connect();
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setInt(1, code.getId());
@@ -57,7 +56,6 @@ public class CodeDao {
 
     public int removeCodeById(int id) {
             String sql = "DELETE FROM ma.codes WHERE id = ?;";
-            Connection connection = DatabaseConnector.connect();
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setInt(1, id);
@@ -72,7 +70,6 @@ public class CodeDao {
 
     public int removeCodeForUser(User user) {
         String sql = "DELETE FROM ma.codes WHERE user_id = ?;";
-        Connection connection = DatabaseConnector.connect();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, user.getId());
@@ -87,7 +84,6 @@ public class CodeDao {
 
     private Optional<Code> getCode(String value) {
         String sql = "SELECT * FROM ma.codes WHERE value = ?;";
-        Connection connection = DatabaseConnector.connect();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, value);
@@ -105,7 +101,6 @@ public class CodeDao {
 
     public Optional<Code> getCode(int id) {
         String sql = "SELECT * FROM ma.codes WHERE id = ?;";
-        Connection connection = DatabaseConnector.connect();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, id);
@@ -125,7 +120,6 @@ public class CodeDao {
     public List<Code> getCodes() {
         String sql = "SELECT * FROM ma.codes";
         List<Code> codes = new ArrayList<>();
-        Connection connection = DatabaseConnector.connect();
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
@@ -152,7 +146,6 @@ public class CodeDao {
 
     public boolean contains(Code code) {
         String sql = "SELECT * FROM ma.codes WHERE value = ? AND user_id = ? AND good_id = ?";
-        Connection connection = DatabaseConnector.connect();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, code.getValue());
@@ -169,7 +162,6 @@ public class CodeDao {
 
     public void removeAll() {
         String sql = "DELETE FROM ma.codes WHERE 1=1;";
-        Connection connection = DatabaseConnector.connect();
         try {
             Statement statement = connection.createStatement();
             statement.executeUpdate(sql);

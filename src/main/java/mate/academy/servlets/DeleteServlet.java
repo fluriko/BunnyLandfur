@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(value = "/delete")
+@WebServlet(value = "/admin/delete")
 public class DeleteServlet extends HttpServlet {
     private static final UserDao USER_DAO = new UserDao();
     private static final Logger logger = Logger.getLogger(DeleteServlet.class);
@@ -27,6 +27,6 @@ public class DeleteServlet extends HttpServlet {
             message = "User " + name + " was deleted successfully!";
         }
         req.setAttribute("message", message);
-        req.getRequestDispatcher("/admin").forward(req, resp);
+        req.getRequestDispatcher("delete.jsp").forward(req, resp);
     }
 }

@@ -1,6 +1,6 @@
 package mate.academy.servlets;
 
-import mate.academy.database.CodeDao;
+import mate.academy.database.PurchaseCodeDao;
 import mate.academy.database.GoodDao;
 import mate.academy.model.Code;
 import mate.academy.model.Good;
@@ -18,7 +18,7 @@ import java.io.IOException;
 @WebServlet(value = "/buy")
 public class BuyServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(BuyServlet.class);
-    private static final CodeDao CODE_DAO = new CodeDao();
+    private static final PurchaseCodeDao PURCHASE_CODE_DAO = new PurchaseCodeDao();
     private static final GoodDao GOOD_DAO = new GoodDao();
     private static final MailService MAIL_SERVICE = new MailService();
     private static Good good;
@@ -31,12 +31,12 @@ public class BuyServlet extends HttpServlet {
         logger.info(user);
         logger.info(good);
         Code code = new Code(codeId, codeValue, user, good);
-        if (CODE_DAO.contains(code)) {
+        if (PURCHASE_CODE_DAO.contains(code)) {
             request.setAttribute("message", "your purchase is successful");
         } else {
             request.setAttribute("message", "you entered wrong code");
         }
-        CODE_DAO.removeCodeById(codeId);
+        PURCHASE_CODE_DAO.removeCodeById(codeId);
         good = null;
         codeId = 0;
         request.getRequestDispatcher("result.jsp").forward(request, response);
@@ -54,7 +54,7 @@ public class BuyServlet extends HttpServlet {
         logger.info(codeValue);
         Code code = new Code(codeValue, user, good);
         logger.info(code);
-        codeId = CODE_DAO.addCode(code);
+        codeId = PURCHASE_CODE_DAO.addCode(code);
         logger.info("codeId " + codeId);
         request.getRequestDispatcher("buy.jsp").forward(request, response);
     }

@@ -36,8 +36,8 @@
         <td><c:out value="${user.password}"/></td>
         <td><c:out value="${user.role}"/></td>
         <td><c:out value="${user.mail}"/></td>
-        <td><a href='/edit?id=${user.id}'>edit all</a></td>
-        <td><a href='/delete?name=${user.name}'>delete</a></td>
+        <td><a href='/admin/edit?id=${user.id}'>edit</a></td>
+        <td><a href='/admin/delete?name=${user.name}'>delete</a></td>
     </tr>
     </c:forEach>
 </table>

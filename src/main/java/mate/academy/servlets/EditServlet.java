@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(value = "/edit")
+@WebServlet(value = "/admin/edit")
 public class EditServlet extends HttpServlet {
     private static final UserDao USER_DAO = new UserDao();
     private static final Logger logger = Logger.getLogger(EditServlet.class);
@@ -29,19 +29,29 @@ public class EditServlet extends HttpServlet {
         String newLog = req.getParameter("login").trim();
         String newPass = req.getParameter("password").trim();
         String newMail = req.getParameter("mail").trim();
+        String message = "For user " + userId;
         logger.debug("Admin tried to set " + userId + " new data ");
         if (newPass.length() < 6) {
             newPass = user.getPassword();
+            message += ": password didn't changed, ";
+        } else {
+            message += ": password changed, ";
         }
         if (newLog.length() < 4 || USER_DAO.contains(newLog)) {
             newLog = user.getName();
+            message += " login didn't changed, ";
+        } else {
+            message += " login changed, ";
         }
         if (!newMail.endsWith("@gmail.com") || newMail.length() < 16 || USER_DAO.containsMail(newMail)) {
             newMail = user.getMail();
+            message += " mail didn't changed. ";
+        } else {
+            message += " mail changed. ";
         }
         logger.info("Admin changed user data for " + userId);
         USER_DAO.editUser(userId, newLog, newPass, newMail);
-        req.setAttribute("message", "User with id " + userId + " was edited successfully!");
+        req.setAttribute("message", message);
         userId = 0;
         req.getRequestDispatcher("/admin").forward(req, resp);
     }

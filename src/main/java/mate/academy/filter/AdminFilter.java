@@ -12,7 +12,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-@WebFilter(value = {"/admin", "/delete", "/edit"})
+@WebFilter("/admin/*")
 public class AdminFilter implements Filter {
     private static final Logger logger = Logger.getLogger(AdminFilter.class);
 
@@ -32,7 +32,7 @@ public class AdminFilter implements Filter {
         } else {
             logger.debug("filter denied user");
             request.setAttribute("message", "You are not admin, access denied!");
-            request.getRequestDispatcher("index.jsp").forward(servletRequest, servletResponse);
+            request.getRequestDispatcher("/index.jsp").forward(servletRequest, servletResponse);
         }
     }
 

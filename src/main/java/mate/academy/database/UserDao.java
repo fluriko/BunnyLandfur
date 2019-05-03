@@ -15,12 +15,12 @@ import java.util.Optional;
 
 public class UserDao {
     private static final Logger logger = Logger.getLogger(UserDao.class);
-    private static final CodeDao CODE_DAO = new CodeDao();
+    private static final PurchaseCodeDao PURCHASE_CODE_DAO = new PurchaseCodeDao();
+    private Connection connection = DatabaseConnector.connect();
 
     public int addUser(User user) {
         if (!this.contains(user.getName())) {
             String sql = "INSERT INTO ma.users(login,password,role_id,mail) VALUES(?,?,?,?);";
-            Connection connection = DatabaseConnector.connect();
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setString(1, user.getName());
@@ -40,11 +40,10 @@ public class UserDao {
     public int removeUser(String login) {
         if (this.contains(login)) {
             User userToRemove = this.getUser(login).get();
-            CODE_DAO.removeCodeForUser(userToRemove);
+            PURCHASE_CODE_DAO.removeCodeForUser(userToRemove);
             if (userToRemove.getRole() != Roles.ADMIN) {
                 int id = userToRemove.getId();
                 String sql = "DELETE FROM `ma`.`users` WHERE (`login` = ?);";
-                Connection connection = DatabaseConnector.connect();
                 try {
                     PreparedStatement preparedStatement = connection.prepareStatement(sql);
                     preparedStatement.setString(1, login);
@@ -70,7 +69,6 @@ public class UserDao {
 
     public Optional<User> getUser(String login) {
         String sql = "SELECT * FROM ma.users INNER JOIN ma.roles ON ma.users.role_id = ma.roles.id WHERE login = ?;";
-        Connection connection = DatabaseConnector.connect();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, login);
@@ -88,7 +86,6 @@ public class UserDao {
 
     public Optional<User> getUserById(int id) {
         String sql = "SELECT * FROM ma.users INNER JOIN ma.roles ON ma.users.role_id = ma.roles.id WHERE ma.users.id = ?;";
-        Connection connection = DatabaseConnector.connect();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, id);
@@ -106,7 +103,6 @@ public class UserDao {
 
     public int editPassword(String login, String newPass) {
         String sql = "UPDATE ma.users SET password = ? WHERE login = ?;";
-        Connection connection = DatabaseConnector.connect();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, newPass);
@@ -122,7 +118,6 @@ public class UserDao {
 
     public int editUser(int id, String newLog, String newPass, String newMail) {
         String sql = "UPDATE ma.users SET login = ?, password = ?, mail = ? WHERE id = ?;";
-        Connection connection = DatabaseConnector.connect();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, newLog);
@@ -141,7 +136,6 @@ public class UserDao {
     public boolean setRole(String login, int roleId) {
         if (this.contains(login) && roleId <= Roles.values().length) {
             String sql = "UPDATE ma.users SET role_id = ? WHERE login = ?;";
-            Connection connection = DatabaseConnector.connect();
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setInt(1, roleId);
@@ -159,7 +153,6 @@ public class UserDao {
     public List<User> getUsers() {
         String sql = "SELECT * FROM ma.users INNER JOIN ma.roles ON ma.users.role_id = ma.roles.id";
         List<User> users = new ArrayList<>();
-        Connection connection = DatabaseConnector.connect();
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
@@ -176,7 +169,6 @@ public class UserDao {
 
     public boolean contains(String login) {
         String sql = "SELECT * FROM ma.users WHERE login = ?;";
-        Connection connection = DatabaseConnector.connect();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, login);
@@ -191,7 +183,6 @@ public class UserDao {
 
     public boolean containsMail(String mail) {
         String sql = "SELECT * FROM ma.users WHERE mail = ?;";
-        Connection connection = DatabaseConnector.connect();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, mail);
@@ -206,7 +197,6 @@ public class UserDao {
 
     public void removeAll() {
         String sql = "DELETE FROM ma.users WHERE 1=1;";
-        Connection connection = DatabaseConnector.connect();
         try {
             Statement statement = connection.createStatement();
             statement.executeUpdate(sql);

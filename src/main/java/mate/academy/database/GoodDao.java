@@ -13,10 +13,10 @@ import java.util.Optional;
 
 public class GoodDao {
     private static final Logger logger = Logger.getLogger(GoodDao.class);
+    private Connection connection = DatabaseConnector.connect();
 
     public Long addGood(Good good) {
         String sql = "INSERT INTO ma.goods(label,description,category,price) VALUES(?,?,?,?);";
-        Connection connection = DatabaseConnector.connect();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, good.getLabel());
@@ -36,7 +36,6 @@ public class GoodDao {
         if (this.contains(id)) {
             Good goodToRemove = this.getGood(id).get();
             String sql = "DELETE FROM ma.goods WHERE id = ?;";
-            Connection connection = DatabaseConnector.connect();
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setLong(1, id);
@@ -61,7 +60,6 @@ public class GoodDao {
 
     public Optional<Good> getGood(Long id) {
         String sql = "SELECT * FROM ma.goods WHERE id = ?;";
-        Connection connection = DatabaseConnector.connect();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setLong(1, id);
@@ -79,7 +77,6 @@ public class GoodDao {
 
     private Optional<Good> getGood(String label) {
         String sql = "SELECT * FROM ma.goods WHERE label = ?;";
-        Connection connection = DatabaseConnector.connect();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, label);
@@ -98,7 +95,6 @@ public class GoodDao {
     public Long editGood(Long id, String label, String description, String category, double price) {
         if (this.contains(id)) {
             String sql = "UPDATE ma.goods SET label = ?, description = ?, category = ?, price = ? WHERE id = ?;";
-            Connection connection = DatabaseConnector.connect();
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setString(1, label);
@@ -119,7 +115,6 @@ public class GoodDao {
     public List<Good> getGoods() {
         String sql = "SELECT * FROM ma.goods";
         List<Good> goods = new ArrayList<>();
-        Connection connection = DatabaseConnector.connect();
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
@@ -136,7 +131,6 @@ public class GoodDao {
 
     public boolean contains(Long id) {
         String sql = "SELECT * FROM ma.goods WHERE id = ?;";
-        Connection connection = DatabaseConnector.connect();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setLong(1, id);
@@ -151,7 +145,6 @@ public class GoodDao {
 
     public void removeAll() {
         String sql = "DELETE FROM ma.goods WHERE 1=1;";
-        Connection connection = DatabaseConnector.connect();
         try {
             Statement statement = connection.createStatement();
             statement.executeUpdate(sql);
