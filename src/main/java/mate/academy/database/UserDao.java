@@ -3,6 +3,7 @@ package mate.academy.database;
 import mate.academy.model.Roles;
 import mate.academy.model.User;
 import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,6 +15,7 @@ import java.util.Optional;
 
 public class UserDao {
     private static final Logger logger = Logger.getLogger(UserDao.class);
+    private static final CodeDao CODE_DAO = new CodeDao();
 
     public int addUser(User user) {
         if (!this.contains(user.getName())) {
@@ -35,21 +37,22 @@ public class UserDao {
         return 0;
     }
 
-    public int removeUser(String name) {
-        if (this.contains(name)) {
-            User userToRemove = this.getUser(name).get();
-            if (userToRemove.getRole().getId() != 1) {
+    public int removeUser(String login) {
+        if (this.contains(login)) {
+            User userToRemove = this.getUser(login).get();
+            CODE_DAO.removeCodeForUser(userToRemove);
+            if (userToRemove.getRole() != Roles.ADMIN) {
                 int id = userToRemove.getId();
-                String sql = "DELETE FROM ma.users WHERE login = ?;";
+                String sql = "DELETE FROM `ma`.`users` WHERE (`login` = ?);";
                 Connection connection = DatabaseConnector.connect();
                 try {
                     PreparedStatement preparedStatement = connection.prepareStatement(sql);
-                    preparedStatement.setString(1, name);
+                    preparedStatement.setString(1, login);
                     preparedStatement.executeUpdate();
                     logger.debug(sql);
                     return id;
                 } catch (SQLException e) {
-                    logger.error("removing failed for user: " + name, e);
+                    logger.error("removing failed for user: " + login, e);
                 }
             }
         }
@@ -102,19 +105,35 @@ public class UserDao {
     }
 
     public int editPassword(String login, String newPass) {
-        if (this.contains(login)) {
-            String sql = "UPDATE ma.users SET password = ? WHERE login = ?;";
-            Connection connection = DatabaseConnector.connect();
-            try {
-                PreparedStatement preparedStatement = connection.prepareStatement(sql);
-                preparedStatement.setString(1, newPass);
-                preparedStatement.setString(2, login);
-                preparedStatement.executeUpdate();
-                logger.debug(sql);
-                return this.getUser(login).get().getId();
-            } catch (SQLException e) {
-                logger.error("editing failed for user: " + login, e);
-            }
+        String sql = "UPDATE ma.users SET password = ? WHERE login = ?;";
+        Connection connection = DatabaseConnector.connect();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, newPass);
+            preparedStatement.setString(2, login);
+            preparedStatement.executeUpdate();
+            logger.debug(sql);
+            return this.getUser(login).get().getId();
+        } catch (SQLException e) {
+            logger.error("editing password failed for user: " + login, e);
+        }
+        return 0;
+    }
+
+    public int editUser(int id, String newLog, String newPass, String newMail) {
+        String sql = "UPDATE ma.users SET login = ?, password = ?, mail = ? WHERE id = ?;";
+        Connection connection = DatabaseConnector.connect();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, newLog);
+            preparedStatement.setString(2, newPass);
+            preparedStatement.setString(3, newMail);
+            preparedStatement.setInt(4, id);
+            preparedStatement.executeUpdate();
+            logger.debug(sql);
+            return id;
+        } catch (SQLException e) {
+            logger.error("editing failed for user: " + id, e);
         }
         return 0;
     }

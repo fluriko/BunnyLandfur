@@ -36,6 +36,9 @@ public class BuyServlet extends HttpServlet {
         } else {
             request.setAttribute("message", "you entered wrong code");
         }
+        CODE_DAO.removeCodeById(codeId);
+        good = null;
+        codeId = 0;
         request.getRequestDispatcher("result.jsp").forward(request, response);
     }
 

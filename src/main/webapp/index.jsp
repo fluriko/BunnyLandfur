@@ -27,11 +27,10 @@
 <c:if test = "${user != null}">
     <div class="w3-container w3-center">
         <h2>Some special content for user</h2> <br />
-        Secret information <br />
+        Secret information <br /><br /><br />
         <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/logout'">Log out</button><br /><br />
     </div>
     </c:if>
-
 </div>
 </body>
 </html>

@@ -22,7 +22,7 @@ public class MainServlet extends HttpServlet {
         USER_DAO.addUser(ADMIN_FLURIKO);
         User user = (User) req.getSession().getAttribute("user");
         if (user != null) {
-            logger.debug("User " + user.getName() + " is on main page");
+            logger.debug(user.getRole() + " " + user.getName() + " is on main page");
         } else {
             logger.debug("Not logged user is on main page");
         }

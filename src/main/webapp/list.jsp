@@ -31,13 +31,13 @@
 </tr>
     <c:forEach items="${users}" var="user">
     <tr>
-        <td><c:out value="${user.getId()}"/></td>
-        <td><c:out value="${user.getName()}"/></td>
-        <td><c:out value="${user.getPassword()}"/></td>
-        <td><c:out value="${user.getRole()}"/></td>
-        <td><c:out value="${user.getMail()}"/></td>
-        <td><a href='edit?name=${user.getName()}'>edit</a></td>
-        <td><a href='delete?name=${user.getName()}'>delete</a></td>
+        <td><c:out value="${user.id}"/></td>
+        <td><c:out value="${user.name}"/></td>
+        <td><c:out value="${user.password}"/></td>
+        <td><c:out value="${user.role}"/></td>
+        <td><c:out value="${user.mail}"/></td>
+        <td><a href='/edit?id=${user.id}'>edit all</a></td>
+        <td><a href='/delete?name=${user.name}'>delete</a></td>
     </tr>
     </c:forEach>
 </table>

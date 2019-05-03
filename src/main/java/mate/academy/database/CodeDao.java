@@ -70,6 +70,21 @@ public class CodeDao {
         return 0;
     }
 
+    public int removeCodeForUser(User user) {
+        String sql = "DELETE FROM ma.codes WHERE user_id = ?;";
+        Connection connection = DatabaseConnector.connect();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, user.getId());
+            preparedStatement.executeUpdate();
+            logger.debug(sql);
+            return user.getId();
+        } catch (SQLException e) {
+            logger.error("removing code failed for user: " + user.getId(), e);
+        }
+        return 0;
+    }
+
     private Optional<Code> getCode(String value) {
         String sql = "SELECT * FROM ma.codes WHERE value = ?;";
         Connection connection = DatabaseConnector.connect();

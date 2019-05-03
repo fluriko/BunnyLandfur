@@ -52,10 +52,10 @@ public class LogServletTest {
         USER_DAO.addUser(user);
         Mockito.when(request.getParameter("name")).thenReturn("betta");
         Mockito.when(request.getParameter("password")).thenReturn("111qqq");
-        Mockito.when(request.getRequestDispatcher("index.jsp")).thenReturn(requestDispatcher);
+        Mockito.when(request.getRequestDispatcher("/goods")).thenReturn(requestDispatcher);
         Mockito.when(request.getSession()).thenReturn(session);
         logServlet.doPost(request, response);
-        Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("index.jsp");
+        Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("/goods");
     }
 
     @Test
