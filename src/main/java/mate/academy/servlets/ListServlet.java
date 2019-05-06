@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(value = "/admin")
+@WebServlet(value = "/admin/list")
 public class ListServlet extends HttpServlet {
     private static final UserDao USER_DAO = new UserDao();
     private static final Logger logger = Logger.getLogger(ListServlet.class);

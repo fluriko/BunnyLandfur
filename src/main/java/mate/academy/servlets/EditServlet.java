@@ -53,6 +53,6 @@ public class EditServlet extends HttpServlet {
         USER_DAO.editUser(userId, newLog, newPass, newMail);
         req.setAttribute("message", message);
         userId = 0;
-        req.getRequestDispatcher("/admin").forward(req, resp);
+        req.getRequestDispatcher("/admin/list").forward(req, resp);
     }
 }
