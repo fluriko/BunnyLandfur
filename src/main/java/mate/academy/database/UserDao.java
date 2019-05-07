@@ -2,6 +2,7 @@ package mate.academy.database;
 
 import mate.academy.model.Roles;
 import mate.academy.model.User;
+import mate.academy.util.HashUtil;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -20,13 +21,15 @@ public class UserDao {
 
     public int addUser(User user) {
         if (!this.contains(user.getName())) {
-            String sql = "INSERT INTO ma.users(login,password,role_id,mail) VALUES(?,?,?,?);";
+            String sql = "INSERT INTO ma.users(login,password,role_id,mail, salt) VALUES(?,?,?,?,?);";
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 preparedStatement.setString(1, user.getName());
-                preparedStatement.setString(2, user.getPassword());
+                String hashPass = HashUtil.getSha512SecurePassword(user.getPassword(), user.getSalt());
+                preparedStatement.setString(2, hashPass);
                 preparedStatement.setInt(3, user.getRole().getId());
                 preparedStatement.setString(4, user.getMail());
+                preparedStatement.setString(5, user.getSalt());
                 preparedStatement.executeUpdate();
                 logger.debug(sql);
                 return 1;
@@ -58,13 +61,32 @@ public class UserDao {
         return 0;
     }
 
+    public int removeUserById(int id) {
+        User userToRemove = this.getUserById(id).get();
+        PURCHASE_CODE_DAO.removeCodeForUser(userToRemove);
+        if (userToRemove.getRole() != Roles.ADMIN) {
+            String sql = "DELETE FROM `ma`.`users` WHERE (`id` = ?);";
+            try {
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setInt(1, id);
+                preparedStatement.executeUpdate();
+                logger.debug(sql);
+                return id;
+            } catch (SQLException e) {
+                logger.error("removing failed for user: " + id, e);
+            }
+        }
+        return 0;
+    }
+
     private User getFromResultSet(ResultSet resultSet) throws SQLException {
         int id = resultSet.getInt("id");
         String login = resultSet.getString("login");
         String password = resultSet.getString("password");
         Roles role = Roles.valueOf(resultSet.getString("name"));
         String mail = resultSet.getString("mail");
-        return new User(id, login, password, role, mail);
+        String salt = resultSet.getString("salt");
+        return new User(id, login, password, role, mail, salt);
     }
 
     public Optional<User> getUser(String login) {
@@ -101,29 +123,17 @@ public class UserDao {
         return Optional.empty();
     }
 
-    public int editPassword(String login, String newPass) {
-        String sql = "UPDATE ma.users SET password = ? WHERE login = ?;";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, newPass);
-            preparedStatement.setString(2, login);
-            preparedStatement.executeUpdate();
-            logger.debug(sql);
-            return this.getUser(login).get().getId();
-        } catch (SQLException e) {
-            logger.error("editing password failed for user: " + login, e);
-        }
-        return 0;
-    }
-
     public int editUser(int id, String newLog, String newPass, String newMail) {
-        String sql = "UPDATE ma.users SET login = ?, password = ?, mail = ? WHERE id = ?;";
+        String sql = "UPDATE ma.users SET login = ?, password = ?, mail = ?, salt = ? WHERE id = ?;";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, newLog);
-            preparedStatement.setString(2, newPass);
+            String newSalt = HashUtil.getRandomSalt();
+            String hashPass = HashUtil.getSha512SecurePassword(newPass, newSalt);
+            preparedStatement.setString(2, hashPass);
             preparedStatement.setString(3, newMail);
-            preparedStatement.setInt(4, id);
+            preparedStatement.setString(4, newSalt);
+            preparedStatement.setInt(5, id);
             preparedStatement.executeUpdate();
             logger.debug(sql);
             return id;
@@ -133,19 +143,17 @@ public class UserDao {
         return 0;
     }
 
-    public boolean setRole(String login, int roleId) {
-        if (this.contains(login) && roleId <= Roles.values().length) {
-            String sql = "UPDATE ma.users SET role_id = ? WHERE login = ?;";
-            try {
-                PreparedStatement preparedStatement = connection.prepareStatement(sql);
-                preparedStatement.setInt(1, roleId);
-                preparedStatement.setString(2, login);
-                preparedStatement.executeUpdate();
-                logger.debug(sql);
-                return true;
-            } catch (SQLException e) {
-                logger.error("setting role failed for user: " + login, e);
-            }
+    public boolean setRole(int id, int roleId) {
+        String sql = "UPDATE ma.users SET role_id = ? WHERE id = ?;";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, roleId);
+            preparedStatement.setInt(2, id);
+            preparedStatement.executeUpdate();
+            logger.debug(sql);
+            return true;
+        } catch (SQLException e) {
+            logger.error("setting role failed for user: " + id, e);
         }
         return false;
     }
@@ -165,6 +173,20 @@ public class UserDao {
             logger.error("getting all users failed", e);
         }
         return users;
+    }
+
+    public boolean contains(int id) {
+        String sql = "SELECT * FROM ma.users WHERE id = ?;";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            logger.debug(sql);
+            return resultSet.next();
+        } catch (SQLException e) {
+            logger.error("checking presence failed for user: " + id, e);
+        }
+        return false;
     }
 
     public boolean contains(String login) {

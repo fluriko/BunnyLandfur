@@ -16,15 +16,15 @@ public class DeleteServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String name = req.getParameter("name");
-        logger.debug("Admin tried to delete " + name);
+        int id = Integer.parseInt(req.getParameter("id"));
+        logger.debug("Admin tried to delete " + id);
         String message;
-        if (USER_DAO.removeUser(name) == 0) {
-            logger.debug("Admin can't delete " + name);
-            message = "You can't delete user " + name;
+        if (USER_DAO.removeUserById(id) == 0) {
+            logger.debug("Admin can't delete " + id);
+            message = "You can't delete user " + id;
         } else {
-            logger.info("Admin deleted " + name);
-            message = "User " + name + " was deleted successfully!";
+            logger.info("Admin deleted " + id);
+            message = "User " + id + " was deleted successfully!";
         }
         req.setAttribute("message", message);
         req.getRequestDispatcher("delete.jsp").forward(req, resp);

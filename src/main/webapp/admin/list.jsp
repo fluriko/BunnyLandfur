@@ -23,7 +23,7 @@
 <tr>
     <th>ID</th>
     <th>Name</th>
-    <th>Password</th>
+    <th width="50px">Password</th>
     <th>Role</th>
     <th>Mail</th>
     <th>Edit</th>
@@ -33,16 +33,16 @@
     <tr>
         <td><c:out value="${user.id}"/></td>
         <td><c:out value="${user.name}"/></td>
-        <td><c:out value="${user.password}"/></td>
+        <td><a href='/admin/showPass?id=${user.id}'>show password</a></td>
         <td><c:out value="${user.role}"/></td>
         <td><c:out value="${user.mail}"/></td>
         <td><a href='/admin/edit?id=${user.id}'>edit</a></td>
-        <td><a href='/admin/delete?name=${user.name}'>delete</a></td>
+        <td><a href='/admin/delete?id=${user.id}'>delete</a></td>
     </tr>
     </c:forEach>
 </table>
 </div><br />
 <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/registration'">Add new user</button><br /><br />
-<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='..'">Back to main</button>
+<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/admin'">Back to admin</button>
 </body>
 </html>

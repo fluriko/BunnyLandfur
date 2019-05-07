@@ -31,17 +31,17 @@ public class RegServlet extends HttpServlet {
         String message;
         if (name.length() < 4) {
             logger.debug("Login " + name + " is too short");
-            message = "Name " + name + " is too short, enter 4 symbols at least";
+            message = "Name " + name + " is too short, enter 4 symbols at least\n";
             req.setAttribute("message", message);
             req.getRequestDispatcher("registration.jsp").forward(req, resp);
         } else if (password.length() < 6) {
             logger.debug("Password " + password + " is too short");
-            message = "Password is too short, enter 6 symbols at least";
+            message = "Password is too short, enter 6 symbols at least\n";
             req.setAttribute("message", message);
             req.getRequestDispatcher("registration.jsp").forward(req, resp);
         } else if (!mail.endsWith("@gmail.com") || mail.length() < 16) {
             logger.debug("Mail " + mail + " is not correct");
-            message = "Your mail should be real and end with @gmail.com";
+            message = "Your mail should be real and end with @gmail.com\n";
             req.setAttribute("message", message);
             req.getRequestDispatcher("registration.jsp").forward(req, resp);
         } else {

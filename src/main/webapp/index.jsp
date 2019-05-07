@@ -32,5 +32,8 @@
     </div>
     </c:if>
 </div>
+<div class="w3-container w3-center">
+    <button class="w3-btn w3-round-large" onclick="location.href='/goods'">ALL GOODS</button><br /><br />
+</div>
 </body>
 </html>

@@ -56,13 +56,8 @@ public class UserDaoTest {
     }
 
     @Test
-    public void editUser() {
-        Assert.assertNotEquals(USER_DAO.editPassword(user.getName(), "password"), 0);
-    }
-
-    @Test
     public void setRole() {
-        Assert.assertTrue(USER_DAO.setRole(user.getName(), 2));
+        Assert.assertTrue(USER_DAO.setRole(user.getId(), 2));
     }
 
     @Test

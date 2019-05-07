@@ -2,6 +2,7 @@ package mate.academy.servlets;
 
 import mate.academy.database.UserDao;
 import mate.academy.model.User;
+import mate.academy.util.HashUtil;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -29,8 +30,9 @@ public class LogServlet extends HttpServlet {
         logger.debug("User entered data " + name + " " + password);
         String message;
         if (USER_DAO.contains(name)) {
-            if (USER_DAO.getUser(name).get().getPassword().equals(password)) {
-                User user = USER_DAO.getUser(name).get();
+            User user = USER_DAO.getUser(name).get();
+            String hashPass = HashUtil.getSha512SecurePassword(password, user.getSalt());
+            if (user.getPassword().equals(hashPass)) {
                 req.getSession().setAttribute("user", user);
                 if (user.getRole().getId() == 1) {
                     logger.debug("Admin " + user.getName() + " logged in and started session");

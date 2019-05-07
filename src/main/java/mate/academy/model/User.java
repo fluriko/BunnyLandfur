@@ -1,5 +1,6 @@
 package mate.academy.model;
 
+import mate.academy.util.HashUtil;
 import java.util.Objects;
 
 public class User {
@@ -8,13 +9,15 @@ public class User {
     private String password;
     private Roles role;
     private String mail;
+    private String salt;
 
-    public User(int id, String name, String password, Roles role, String mail) {
+    public User(int id, String name, String password, Roles role, String mail, String salt) {
         this.id = id;
         this.name = name;
         this.password = password;
         this.role = role;
         this.mail = mail;
+        this.salt = salt;
     }
 
     public User(String name, String password, Roles role, String mail) {
@@ -22,6 +25,7 @@ public class User {
         this.password = password;
         this.role = role;
         this.mail = mail;
+        this.salt = HashUtil.getRandomSalt();
     }
 
     public User(String name, String password, String mail) {
@@ -68,6 +72,14 @@ public class User {
         this.mail = mail;
     }
 
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -77,12 +89,13 @@ public class User {
                 Objects.equals(name, user.name) &&
                 Objects.equals(password, user.password) &&
                 role == user.role &&
-                Objects.equals(mail, user.mail);
+                Objects.equals(mail, user.mail) &&
+                Objects.equals(salt, user.salt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, password, role, mail);
+        return Objects.hash(id, name, password, role, mail, salt);
     }
 
     @Override
@@ -93,6 +106,7 @@ public class User {
                 ", password='" + password + '\'' +
                 ", role=" + role +
                 ", mail='" + mail + '\'' +
+                ", salt='" + salt + '\'' +
                 '}';
     }
 }
