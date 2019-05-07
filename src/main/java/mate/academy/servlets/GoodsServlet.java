@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(value = "/goods")
+@WebServlet(value = "/user/goods")
 public class GoodsServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(GoodsServlet.class);
     private static final GoodDao GOOD_DAO = new GoodDao();

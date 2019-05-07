@@ -35,11 +35,11 @@
                 <td><c:out value="${good.description}"/></td>
                 <td><c:out value="${good.category}"/></td>
                 <td><c:out value="${good.price}"/></td>
-                <td><a href='buy?goodId=${good.id}'>BUY IT!</a></td>
+                <td><a href='/user/buy?goodId=${good.id}'>BUY IT!</a></td>
             </tr>
         </c:forEach>
     </table>
 </div><br />
-<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/'">Back to main</button>
+<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='..'">Back to main</button>
 </body>
 </html>

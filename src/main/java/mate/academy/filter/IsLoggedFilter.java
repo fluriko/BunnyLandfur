@@ -12,32 +12,32 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-@WebFilter("/admin/*")
-public class AdminFilter implements Filter {
+@WebFilter("/user/*")
+public class IsLoggedFilter implements Filter {
     private static final Logger logger = Logger.getLogger(AdminFilter.class);
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        logger.debug("admin filter init");
+        logger.debug("logged in filter init");
     }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         User user = (User) request.getSession().getAttribute("user");
-        logger.debug("doing admin filter");
-        if (user != null && user.getRole().getId() == 1) {
-            logger.debug("admin filter accepted admin");
+        logger.debug("doing logged in filter");
+        if (user != null) {
+            logger.debug("logged in filter accepted user");
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
-            logger.debug("admin filter denied user");
-            request.setAttribute("message", "You are not admin, access denied!");
+            logger.debug("logged in filter denied user");
+            request.setAttribute("message", "You are not logged in, access denied!");
             request.getRequestDispatcher("/index.jsp").forward(servletRequest, servletResponse);
         }
     }
 
     @Override
     public void destroy() {
-        logger.debug("admin filter destroy");
+        logger.debug("logged in filter destroy");
     }
 }

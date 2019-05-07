@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(value = "/buy")
+@WebServlet(value = "/user/buy")
 public class BuyServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(BuyServlet.class);
     private static final PurchaseCodeDao PURCHASE_CODE_DAO = new PurchaseCodeDao();
