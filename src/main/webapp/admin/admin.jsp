@@ -18,8 +18,10 @@
     <h2><c:out value="${message}"/></h2>
     <h1>Main admin page, chose action</h1>
 </div>
+<div class="w3-container w3-center">
 <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/admin/list'">List of users</button><br /><br />
 <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/admin/goods'">List of goods</button><br /><br />
 <button class="w3-btn w3-round-large" onclick="location.href='/'">Back to main</button>
+</div>
 </body>
 </html>
