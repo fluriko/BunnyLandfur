@@ -6,6 +6,7 @@ import mate.academy.model.Code;
 import mate.academy.model.Good;
 import mate.academy.model.User;
 import mate.academy.service.MailService;
+import mate.academy.util.PurchaseCodeCleaner;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -56,6 +57,7 @@ public class BuyServlet extends HttpServlet {
         logger.info(code);
         codeId = PURCHASE_CODE_DAO.addCode(code);
         logger.info("codeId " + codeId);
+        PurchaseCodeCleaner.clean(code);
         request.getRequestDispatcher("buy.jsp").forward(request, response);
     }
 }
