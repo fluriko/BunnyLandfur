@@ -9,7 +9,8 @@ import java.util.TimerTask;
 public class PurchaseCodeCleaner {
     private static final Logger logger = Logger.getLogger(PurchaseCodeCleaner.class);
     private static final PurchaseCodeDao PURCHASE_CODE_DAO = new PurchaseCodeDao();
-    private static final long delay = 1800000;
+    private static final long DELAY_30_MIN = 1800000;
+    private static final long DELAY_5_MIN = 300000;
 
     public static void clean(Code code) {
         Timer timer = new Timer();
@@ -19,6 +20,6 @@ public class PurchaseCodeCleaner {
                 PURCHASE_CODE_DAO.removeCode(code);
                 logger.info("Code " + code.getValue() + " died!");
             }
-        }, delay);
+        }, DELAY_5_MIN);
     }
 }
