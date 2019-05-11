@@ -1,6 +1,7 @@
 package mate.academy.servlets;
 
-import mate.academy.database.UserDao;
+import mate.academy.database.user.UserDao;
+import mate.academy.database.user.UserDaoJdbc;
 import mate.academy.model.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,11 +12,10 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class RegServletTest {
-    private static final UserDao USER_DAO = new UserDao();
+    private static final UserDao USER_DAO = new UserDaoJdbc();
     RegServlet regServlet;
 
     @Mock
@@ -30,7 +30,6 @@ public class RegServletTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        USER_DAO.removeAll();
         regServlet = new RegServlet();
     }
 

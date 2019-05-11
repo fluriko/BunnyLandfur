@@ -1,5 +1,6 @@
-package mate.academy.database;
+package mate.academy.database.good;
 
+import mate.academy.database.DatabaseConnector;
 import mate.academy.model.Good;
 import org.apache.log4j.Logger;
 import java.sql.Connection;

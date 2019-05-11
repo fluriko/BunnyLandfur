@@ -1,5 +1,8 @@
-package mate.academy.database;
+package mate.academy.database.good;
 
+import mate.academy.database.DatabaseConnector;
+import mate.academy.database.user.UserDao;
+import mate.academy.database.user.UserDaoJdbc;
 import mate.academy.model.Code;
 import mate.academy.model.Good;
 import mate.academy.model.User;
@@ -15,7 +18,7 @@ import java.util.Optional;
 
 public class PurchaseCodeDao {
     private static final Logger logger = Logger.getLogger(PurchaseCodeDao.class);
-    private static final UserDao userDao = new UserDao();
+    private static final UserDao userDao = new UserDaoJdbc();
     private static final GoodDao goodDao = new GoodDao();
     private Connection connection = DatabaseConnector.connect();
 

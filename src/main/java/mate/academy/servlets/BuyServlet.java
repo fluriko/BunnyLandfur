@@ -1,7 +1,7 @@
 package mate.academy.servlets;
 
-import mate.academy.database.PurchaseCodeDao;
-import mate.academy.database.GoodDao;
+import mate.academy.database.good.PurchaseCodeDao;
+import mate.academy.database.good.GoodDao;
 import mate.academy.model.Code;
 import mate.academy.model.Good;
 import mate.academy.model.User;
@@ -40,7 +40,7 @@ public class BuyServlet extends HttpServlet {
         PURCHASE_CODE_DAO.removeCodeById(codeId);
         good = null;
         codeId = 0;
-        request.getRequestDispatcher("result.jsp").forward(request, response);
+        request.getRequestDispatcher("/user/result.jsp").forward(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -50,7 +50,7 @@ public class BuyServlet extends HttpServlet {
         logger.info("goodId " + goodId);
         good = GOOD_DAO.getGood(goodId).get();
         logger.info(good);
-        logger.info("User " + user.getName() + " is on buy good " + goodId +" page");
+        logger.info("User " + user.getLogin() + " is on buy good " + goodId +" page");
         String codeValue = MAIL_SERVICE.sendMail(user.getMail());
         logger.info(codeValue);
         Code code = new Code(codeValue, user, good);
@@ -58,6 +58,6 @@ public class BuyServlet extends HttpServlet {
         codeId = PURCHASE_CODE_DAO.addCode(code);
         logger.info("codeId " + codeId);
         PurchaseCodeCleaner.clean(code);
-        request.getRequestDispatcher("buy.jsp").forward(request, response);
+        request.getRequestDispatcher("/user/buy.jsp").forward(request, response);
     }
 }

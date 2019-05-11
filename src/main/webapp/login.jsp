@@ -19,8 +19,8 @@
     <h2><c:out value="${message}"/></h2>
 </div>
 <form method="post" class="w3-selection w3-light-blue w3-padding">
-    <label> Name:
-        <input type="text" name="name" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
+    <label> Login:
+        <input type="text" name="login" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>
     <label> Password:
         <input type="password" name="password" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />

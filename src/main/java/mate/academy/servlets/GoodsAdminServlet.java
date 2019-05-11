@@ -1,6 +1,6 @@
 package mate.academy.servlets;
 
-import mate.academy.database.GoodDao;
+import mate.academy.database.good.GoodDao;
 import mate.academy.model.Good;
 import mate.academy.model.User;
 import org.apache.log4j.Logger;
@@ -19,10 +19,10 @@ public class GoodsAdminServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
-        logger.info("Admin " + user.getName() + " is on goods page");
+        logger.info("Admin " + user.getLogin() + " is on goods page");
         List<Good> goods = GOOD_DAO.getGoods();
         request.setAttribute("goods", goods);
-        request.getRequestDispatcher("goods.jsp").forward(request, response);
+        request.getRequestDispatcher("/admin/goods.jsp").forward(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

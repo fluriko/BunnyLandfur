@@ -23,7 +23,6 @@
 <tr>
     <th>ID</th>
     <th>Name</th>
-    <th width="50px">Password</th>
     <th>Role</th>
     <th>Mail</th>
     <th>Edit</th>
@@ -32,9 +31,8 @@
     <c:forEach items="${users}" var="user">
     <tr>
         <td><c:out value="${user.id}"/></td>
-        <td><c:out value="${user.name}"/></td>
-        <td><a href='/admin/showPass?id=${user.id}'>show password</a></td>
-        <td><c:out value="${user.role}"/></td>
+        <td><c:out value="${user.login}"/></td>
+        <td><c:out value="${user.roleId}"/></td>
         <td><c:out value="${user.mail}"/></td>
         <td><a href='/admin/edit?id=${user.id}'>edit</a></td>
         <td><a href='/admin/delete?id=${user.id}'>delete</a></td>

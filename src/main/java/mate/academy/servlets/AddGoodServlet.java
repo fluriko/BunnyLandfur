@@ -1,6 +1,6 @@
 package mate.academy.servlets;
 
-import mate.academy.database.GoodDao;
+import mate.academy.database.good.GoodDao;
 import mate.academy.model.Good;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
@@ -56,6 +56,6 @@ public class AddGoodServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         logger.debug("Admin tried to add good");
-        request.getRequestDispatcher("addGood.jsp").forward(request, response);
+        request.getRequestDispatcher("/admin/addGood.jsp").forward(request, response);
     }
 }

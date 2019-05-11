@@ -1,6 +1,7 @@
 package mate.academy.servlets;
 
-import mate.academy.database.UserDao;
+import mate.academy.database.user.UserDao;
+import mate.academy.database.user.UserDaoJdbc;
 import mate.academy.model.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class EditServletTest {
-    private static final UserDao USER_DAO = new UserDao();
+    private static final UserDao USER_DAO = new UserDaoJdbc();
     EditServlet editServlet;
 
     @Mock

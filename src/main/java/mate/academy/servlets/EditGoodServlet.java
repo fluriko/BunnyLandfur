@@ -1,6 +1,6 @@
 package mate.academy.servlets;
 
-import mate.academy.database.GoodDao;
+import mate.academy.database.good.GoodDao;
 import mate.academy.model.Good;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;

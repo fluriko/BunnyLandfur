@@ -1,6 +1,6 @@
 package mate.academy.util;
 
-import mate.academy.database.PurchaseCodeDao;
+import mate.academy.database.good.PurchaseCodeDao;
 import mate.academy.model.Code;
 import org.apache.log4j.Logger;
 import java.util.Timer;

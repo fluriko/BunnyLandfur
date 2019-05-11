@@ -1,17 +1,18 @@
 package mate.academy.database;
 
+import mate.academy.database.user.UserDao;
+import mate.academy.database.user.UserDaoJdbc;
 import mate.academy.model.User;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Optional;
 
 public class UserDaoTest {
-    private static final UserDao USER_DAO = new UserDao();
+    private static final UserDao USER_DAO = new UserDaoJdbc();
     static User user;
     static User userToRemove;
     static User userToAdd;
@@ -26,42 +27,37 @@ public class UserDaoTest {
 
     @After
     public void cleanPart() {
-        USER_DAO.removeUser(userToRemove.getName());
-        USER_DAO.removeUser(userToAdd.getName());
+        USER_DAO.removeUser(userToRemove);
+        USER_DAO.removeUser(userToAdd);
     }
 
     @AfterClass
     public static void clean() {
-        USER_DAO.removeUser(user.getName());
-        USER_DAO.removeUser(userToRemove.getName());
-        USER_DAO.removeUser(userToAdd.getName());
+        USER_DAO.removeUser(user);
+        USER_DAO.removeUser(userToRemove);
+        USER_DAO.removeUser(userToAdd);
     }
 
     @Test
     public void addUser() {
         USER_DAO.addUser(userToAdd);
-        Assert.assertTrue(USER_DAO.contains(userToAdd.getName()));
+        Assert.assertTrue(USER_DAO.containsLogin(userToAdd.getLogin()));
     }
 
     @Test
     public void removeUser() {
         USER_DAO.addUser(userToRemove);
-        Assert.assertNotEquals(USER_DAO.removeUser(userToRemove.getName()), 0);
+        Assert.assertNotEquals(USER_DAO.removeUser(userToRemove), 0);
     }
 
     @Test
     public void getUser() {
-        Optional<User> userOptional = USER_DAO.getUser(user.getName());
+        Optional<User> userOptional = USER_DAO.getUserByLogin(user.getLogin());
         Assert.assertTrue(userOptional.isPresent());
     }
 
     @Test
-    public void setRole() {
-        Assert.assertTrue(USER_DAO.setRole(user.getId(), 2));
-    }
-
-    @Test
     public void contains() {
-        Assert.assertTrue(USER_DAO.contains(user.getName()));
+        Assert.assertTrue(USER_DAO.containsLogin(user.getLogin()));
     }
 }

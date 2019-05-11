@@ -1,6 +1,6 @@
 package mate.academy.servlets;
 
-import mate.academy.database.PurchaseCodeDao;
+import mate.academy.database.good.PurchaseCodeDao;
 import mate.academy.model.User;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
@@ -18,8 +18,8 @@ public class LogoutServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
         PURCHASE_CODE_DAO.removeCodeForUser(user);
-        logger.debug("user " + user.getName() + " logged out");
-        request.getSession().setAttribute("user", null);
-        request.getRequestDispatcher("index.jsp").forward(request, response);
+        logger.debug("user " + user.getLogin() + " logged out");
+        request.getSession().invalidate();
+        request.getRequestDispatcher("/index.jsp").forward(request, response);
     }
 }

@@ -1,6 +1,6 @@
 package mate.academy.servlets;
 
-import mate.academy.database.GoodDao;
+import mate.academy.database.good.GoodDao;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,6 +27,6 @@ public class DeleteGoodServlet extends HttpServlet {
             message = "Good " + id + " was deleted successfully!";
         }
         req.setAttribute("message", message);
-        req.getRequestDispatcher("deleteGood.jsp").forward(req, resp);
+        req.getRequestDispatcher("/admin/deleteGood.jsp").forward(req, resp);
     }
 }

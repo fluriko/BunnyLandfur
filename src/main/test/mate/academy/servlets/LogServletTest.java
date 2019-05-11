@@ -1,6 +1,7 @@
 package mate.academy.servlets;
 
-import mate.academy.database.UserDao;
+import mate.academy.database.user.UserDao;
+import mate.academy.database.user.UserDaoJdbc;
 import mate.academy.model.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +16,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class LogServletTest {
-    private static final UserDao USER_DAO = new UserDao();
+    private static final UserDao USER_DAO = new UserDaoJdbc();
     LogServlet logServlet;
 
     @Mock
@@ -33,7 +34,6 @@ public class LogServletTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        USER_DAO.removeAll();
         logServlet = new LogServlet();
     }
 
