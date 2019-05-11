@@ -24,6 +24,8 @@ public class EditServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         logger.info("Admin started edit page");
         userId = Integer.parseInt(req.getParameter("id"));
+        User user = USER_DAO.getUserById(userId).get();
+        req.setAttribute("user", user);
         req.getRequestDispatcher("/admin/edit.jsp").forward(req, resp);
     }
 

@@ -21,16 +21,16 @@
 </div>
 <form method="post" class="w3-selection w3-light-blue w3-padding">
     <label> label:
-        <input type="text" name="label" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
+        <input type="text" name="label" value = "<c:out value="${good.label}"/>" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>
     <label> description:
-        <input type="text" name="description" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
+        <input type="text" name="description" value = "<c:out value="${good.description}"/>" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>
     <label> category:
-        <input type="text" name="category" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
+        <input type="text" name="category" value = "<c:out value="${good.category}"/>" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>
     <label> price:
-        <input type="text" name="price" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
+        <input type="text" name="price" value = "<c:out value="${good.price}"/>" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>
     <button type="submit" class="w3-btn w3-blue w3-round-large w3-margin-bottom">Submit</button>
 </form>

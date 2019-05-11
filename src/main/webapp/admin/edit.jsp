@@ -21,13 +21,13 @@
 </div>
 <form method="post" class="w3-selection w3-light-blue w3-padding">
     <label> login:
-        <input type="text" name="login" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
+        <input type="text" name="login" value = "<c:out value="${user.login}"/>" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>
 <label> password:
     <input type="password" name="password" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
 </label>
     <label> mail:
-        <input type="text" name="mail" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
+        <input type="text" name="mail" value = "<c:out value="${user.mail}"/>" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>
     <label> set admin:
     <input type="checkbox" name="setAdmin" value="admin"><br /><br />

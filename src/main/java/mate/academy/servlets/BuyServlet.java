@@ -1,7 +1,7 @@
 package mate.academy.servlets;
 
+import mate.academy.database.good.GoodDaoJdbc;
 import mate.academy.database.good.PurchaseCodeDao;
-import mate.academy.database.good.GoodDao;
 import mate.academy.model.Code;
 import mate.academy.model.Good;
 import mate.academy.model.User;
@@ -20,7 +20,7 @@ import java.io.IOException;
 public class BuyServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(BuyServlet.class);
     private static final PurchaseCodeDao PURCHASE_CODE_DAO = new PurchaseCodeDao();
-    private static final GoodDao GOOD_DAO = new GoodDao();
+    private static final GoodDaoJdbc GOOD_DAO = new GoodDaoJdbc();
     private static final MailService MAIL_SERVICE = new MailService();
     private static Good good;
     private static int codeId;

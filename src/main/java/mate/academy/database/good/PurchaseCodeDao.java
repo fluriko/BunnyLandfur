@@ -19,7 +19,7 @@ import java.util.Optional;
 public class PurchaseCodeDao {
     private static final Logger logger = Logger.getLogger(PurchaseCodeDao.class);
     private static final UserDao userDao = new UserDaoJdbc();
-    private static final GoodDao goodDao = new GoodDao();
+    private static final GoodDaoJdbc GOOD_DAO_JDBC = new GoodDaoJdbc();
     private Connection connection = DatabaseConnector.connect();
 
     public int addCode(Code code) {
@@ -143,7 +143,7 @@ public class PurchaseCodeDao {
         int user_id = resultSet.getInt("user_id");
         Long good_id = resultSet.getLong("good_id");
         User user = userDao.getUserById(user_id).get();
-        Good good = goodDao.getGood(good_id).get();
+        Good good = GOOD_DAO_JDBC.getGood(good_id).get();
         return new Code(id, value, user, good);
     }
 

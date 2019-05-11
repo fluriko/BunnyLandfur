@@ -1,6 +1,8 @@
 package mate.academy.servlets;
 
 import mate.academy.database.good.GoodDao;
+import mate.academy.database.good.GoodDaoHib;
+import mate.academy.database.good.GoodDaoJdbc;
 import mate.academy.model.Good;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
@@ -12,7 +14,7 @@ import java.io.IOException;
 
 @WebServlet(value = "/admin/addGood")
 public class AddGoodServlet extends HttpServlet {
-    private static final GoodDao GOOD_DAO = new GoodDao();
+    private static final GoodDao GOOD_DAO = new GoodDaoHib();
     private static final Logger logger = Logger.getLogger(DeleteGoodServlet.class);
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -47,8 +49,8 @@ public class AddGoodServlet extends HttpServlet {
             request.getRequestDispatcher("addGood.jsp").forward(request, response);
         }
         Good good = new Good(label, description, category, price);
-        Long goodId = GOOD_DAO.addGood(good);
-        message = "successfully added good " + goodId + ": " + label;
+        GOOD_DAO.addGood(good);
+        message = "successfully added good: " + label;
         logger.debug(message);
         request.setAttribute("message", message);
         request.getRequestDispatcher("/admin/goods").forward(request, response);

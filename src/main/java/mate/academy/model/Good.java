@@ -1,12 +1,32 @@
 package mate.academy.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 
+@Entity
+@Table(name = "goods")
 public class Good {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+
+    @Column(name = "label")
     private String label;
+
+    @Column(name = "description")
     private String description;
+
+    @Column(name = "category")
     private String category;
+
+    @Column(name = "price")
     private double price;
 
     public Good(Long id, String label, String description, String category, double price) {
@@ -22,6 +42,9 @@ public class Good {
         this.description = description;
         this.category = category;
         this.price = price;
+    }
+
+    public Good() {
     }
 
     public Long getId() {

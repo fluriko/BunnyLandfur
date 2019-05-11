@@ -1,6 +1,8 @@
 package mate.academy.servlets;
 
 import mate.academy.database.good.GoodDao;
+import mate.academy.database.good.GoodDaoHib;
+import mate.academy.database.good.GoodDaoJdbc;
 import mate.academy.model.Good;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
@@ -13,19 +15,21 @@ import java.io.IOException;
 @WebServlet(value = "/admin/editGood")
 public class EditGoodServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(EditGoodServlet.class);
-    private static final GoodDao GOOD_DAO = new GoodDao();
+    private static final GoodDao GOOD_DAO = new GoodDaoHib();
     private static Long goodId;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         logger.info("Admin started edit good page");
         goodId = Long.parseLong(req.getParameter("id"));
-        req.getRequestDispatcher("editGood.jsp").forward(req, resp);
+        Good good = GOOD_DAO.getGood(goodId).get();
+        req.setAttribute("good", good);
+        req.getRequestDispatcher("/admin/editGood.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Good good = GOOD_DAO.getGood(goodId).get();
+        Good goodOld = GOOD_DAO.getGood(goodId).get();
         String newLabel = req.getParameter("label").trim();
         String newDescription = req.getParameter("description").trim();
         String newCategory = req.getParameter("category").trim();
@@ -36,22 +40,23 @@ public class EditGoodServlet extends HttpServlet {
             newPrice = 0.0;
             logger.debug("Not correct data in field price", e);
         }
-        String message = "successfully edited good " + goodId + ": " + good.getLabel();
-        logger.debug("Admin tried to edit good " + goodId + ": " + good.getLabel());
+        String message = "successfully edited good " + goodId + ": " + goodOld.getLabel();
+        logger.debug("Admin tried to edit good " + goodId + ": " + goodOld.getLabel());
         if (newLabel.length() < 3) {
-            newLabel = good.getLabel();
+            newLabel = goodOld.getLabel();
         }
         if (newDescription.length() < 5) {
-            newDescription = good.getDescription();
+            newDescription = goodOld.getDescription();
         }
         if (newCategory.length() < 3) {
-            newCategory = good.getCategory();
+            newCategory = goodOld.getCategory();
         }
-        if (newPrice <= good.getPrice() / 2) {
-            newPrice = good.getPrice();
+        if (newPrice <= goodOld.getPrice() / 2) {
+            newPrice = goodOld.getPrice();
         }
         logger.info("Admin changed good " + goodId);
-        GOOD_DAO.editGood(goodId, newLabel, newDescription, newCategory, newPrice);
+        Good goodNew = new Good(goodId, newLabel, newDescription, newCategory, newPrice);
+        GOOD_DAO.editGood(goodNew);
         req.setAttribute("message", message);
         goodId = 0L;
         req.getRequestDispatcher("/admin/goods").forward(req, resp);
