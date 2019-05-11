@@ -1,9 +1,20 @@
 package mate.academy.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
-//этот класс нужен для следующих заданий по hibernate
+
+@Entity
+@Table(name = "roles")
 public class Role {
+
+    @Id
+    @Column(name = "id")
     private int id;
+
+    @Column(name = "name")
     private String name;
 
     public Role(int id, String name) {
@@ -13,6 +24,9 @@ public class Role {
 
     public Role(String name) {
         this.name = name;
+    }
+
+    public Role() {
     }
 
     public int getId() {

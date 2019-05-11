@@ -1,7 +1,6 @@
 package mate.academy.database.user;
 
 import mate.academy.database.DatabaseConnector;
-import mate.academy.database.good.PurchaseCodeDao;
 import mate.academy.model.Roles;
 import mate.academy.model.User;
 import mate.academy.util.HashUtil;
@@ -17,7 +16,6 @@ import java.util.Optional;
 
 public class UserDaoJdbc implements UserDao {
     private static final Logger logger = Logger.getLogger(UserDaoJdbc.class);
-    private static final PurchaseCodeDao PURCHASE_CODE_DAO = new PurchaseCodeDao();
     private Connection connection = DatabaseConnector.connect();
 
     @Override
@@ -44,7 +42,6 @@ public class UserDaoJdbc implements UserDao {
 
     @Override
     public int removeUser(User user) {
-        PURCHASE_CODE_DAO.removeCodeForUser(user);
         if (user.getRoleId() != Roles.ADMIN.getId()) {
             String sql = "DELETE FROM `ma`.`users` WHERE (`id` = ?);";
             try {

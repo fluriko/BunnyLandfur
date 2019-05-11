@@ -36,7 +36,7 @@ public class GoodDaoHib implements GoodDao {
             session.close();
             return 1L;
         } catch (Exception e) {
-            logger.debug("Error in removing user " + good.getId(), e);
+            logger.debug("Error in removing good " + good.getId(), e);
             return 0L;
         }
     }
@@ -47,7 +47,7 @@ public class GoodDaoHib implements GoodDao {
             Good good = HibernateSessionFactoryUtil.getSessionFactory().openSession().get(Good.class, id);
             return Optional.of(good);
         } catch (Exception e) {
-            logger.debug("Error in getting user " + id, e);
+            logger.debug("Error in getting good " + id, e);
             return Optional.empty();
         }
     }
@@ -62,7 +62,7 @@ public class GoodDaoHib implements GoodDao {
             session.close();
             return 1L;
         } catch (Exception e) {
-            logger.debug("Error in getting user " + good.getId(), e);
+            logger.debug("Error in getting good " + good.getId(), e);
             return 0L;
         }
     }

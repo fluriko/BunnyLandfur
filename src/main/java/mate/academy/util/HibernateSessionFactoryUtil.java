@@ -1,6 +1,8 @@
 package mate.academy.util;
 
+import mate.academy.model.Code;
 import mate.academy.model.Good;
+import mate.academy.model.Role;
 import mate.academy.model.User;
 import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
@@ -19,6 +21,8 @@ public class HibernateSessionFactoryUtil {
                 Configuration configuration = new Configuration().configure();
                 configuration.addAnnotatedClass(User.class);
                 configuration.addAnnotatedClass(Good.class);
+                configuration.addAnnotatedClass(Role.class);
+                configuration.addAnnotatedClass(Code.class);
                 StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
                         .applySettings(configuration.getProperties());
                 sessionFactory = configuration.buildSessionFactory(builder.build());

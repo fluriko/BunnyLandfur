@@ -1,7 +1,6 @@
 package mate.academy.database.good;
 
 import mate.academy.model.Good;
-
 import java.util.List;
 import java.util.Optional;
 

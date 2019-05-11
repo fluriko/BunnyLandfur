@@ -2,6 +2,8 @@ package mate.academy.servlets;
 
 import mate.academy.database.good.GoodDaoJdbc;
 import mate.academy.database.good.PurchaseCodeDao;
+import mate.academy.database.good.PurchaseCodeDaoHib;
+import mate.academy.database.good.PurchaseCodeDaoJdbc;
 import mate.academy.model.Code;
 import mate.academy.model.Good;
 import mate.academy.model.User;
@@ -15,11 +17,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet(value = "/user/buy")
 public class BuyServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(BuyServlet.class);
-    private static final PurchaseCodeDao PURCHASE_CODE_DAO = new PurchaseCodeDao();
+    private static final PurchaseCodeDao PURCHASE_CODE_DAO = new PurchaseCodeDaoHib();
     private static final GoodDaoJdbc GOOD_DAO = new GoodDaoJdbc();
     private static final MailService MAIL_SERVICE = new MailService();
     private static Good good;
@@ -32,12 +35,13 @@ public class BuyServlet extends HttpServlet {
         logger.info(user);
         logger.info(good);
         Code code = new Code(codeId, codeValue, user, good);
-        if (PURCHASE_CODE_DAO.contains(code)) {
-            request.setAttribute("message", "your purchase is successful");
+        Code codeFromDb = PURCHASE_CODE_DAO.getCode(codeId).get();
+        if (codeFromDb.equals(code)) {
+            request.setAttribute("message", "successful purchase");
         } else {
             request.setAttribute("message", "you entered wrong code");
         }
-        PURCHASE_CODE_DAO.removeCodeById(codeId);
+        PURCHASE_CODE_DAO.removeCode(code);
         good = null;
         codeId = 0;
         request.getRequestDispatcher("/user/result.jsp").forward(request, response);
@@ -55,7 +59,8 @@ public class BuyServlet extends HttpServlet {
         logger.info(codeValue);
         Code code = new Code(codeValue, user, good);
         logger.info(code);
-        codeId = PURCHASE_CODE_DAO.addCode(code);
+        PURCHASE_CODE_DAO.addCode(code);
+        codeId = PURCHASE_CODE_DAO.getCode(codeValue).get().getId();
         logger.info("codeId " + codeId);
         PurchaseCodeCleaner.clean(code);
         request.getRequestDispatcher("/user/buy.jsp").forward(request, response);
