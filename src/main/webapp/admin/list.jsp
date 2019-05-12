@@ -40,7 +40,8 @@
     </c:forEach>
 </table>
 </div><br />
-<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/registration'">Add new user</button><br /><br />
-<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/admin'">Back to admin</button>
+<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/admin/addUser'">Add new user</button><br /><br />
+<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/admin'">Back to admin</button><br /><br />
+<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/'">Back to main</button><br /><br />
 </body>
 </html>

@@ -21,7 +21,6 @@ public class RegServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         logger.debug("User started registration");
-        req.setAttribute("message", "");
         req.getRequestDispatcher("registration.jsp").forward(req, resp);
     }
 
@@ -34,7 +33,7 @@ public class RegServlet extends HttpServlet {
         String message;
         if (login.length() < 4) {
             logger.debug("Login " + login + " is too short");
-            message = "Name " + login + " is too short, enter 4 symbols at least\n";
+            message = "Login " + login + " is too short, enter 4 symbols at least\n";
             req.setAttribute("message", message);
             req.getRequestDispatcher("/registration.jsp").forward(req, resp);
         } else if (password.length() < 6) {

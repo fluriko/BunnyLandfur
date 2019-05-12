@@ -114,6 +114,10 @@ public class UserDaoHib implements UserDao {
         } catch (Exception e) {
             logger.debug("Error in getting user " + id, e);
             return Optional.empty();
+        } finally {
+            if (session.isOpen()){
+                session.close();
+            }
         }
     }
 

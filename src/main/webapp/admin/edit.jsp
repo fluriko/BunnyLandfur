@@ -37,6 +37,6 @@
     </label>
     <button type="submit" class="w3-btn w3-blue w3-round-large w3-margin-bottom">Submit</button>
 </form>
-<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/admin'">Back to list</button><br /><br />
+<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/admin'">Back to admin page</button><br /><br />
 </body>
 </html>
