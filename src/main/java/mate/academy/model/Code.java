@@ -83,8 +83,8 @@ public class Code {
         Code code = (Code) o;
         return id == code.id &&
                 Objects.equals(value, code.value) &&
-                Objects.equals(user, code.user) &&
-                Objects.equals(good, code.good);
+                Objects.equals(user.getId(), code.user.getId()) &&
+                Objects.equals(good.getId(), code.good.getId());
     }
 
     @Override

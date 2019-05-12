@@ -1,6 +1,11 @@
 package mate.academy.database.good;
 
+import mate.academy.database.user.UserDao;
+import mate.academy.database.user.UserDaoHib;
 import mate.academy.model.Code;
+import mate.academy.model.Good;
+import mate.academy.model.User;
+import mate.academy.service.MailService;
 import mate.academy.util.HibernateSessionFactoryUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;

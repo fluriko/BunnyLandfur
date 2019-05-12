@@ -21,7 +21,7 @@ public class EditServlet extends HttpServlet {
     private static final UserDao USER_DAO = new UserDaoHib();
     private static final RoleDao ROLE_DAO = new RoleDaoHib();
     private static final Logger logger = Logger.getLogger(EditServlet.class);
-    private static int userId;
+    private int userId;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

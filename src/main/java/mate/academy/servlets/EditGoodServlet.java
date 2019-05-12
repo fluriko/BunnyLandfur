@@ -16,7 +16,7 @@ import java.io.IOException;
 public class EditGoodServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(EditGoodServlet.class);
     private static final GoodDao GOOD_DAO = new GoodDaoHib();
-    private static Long goodId;
+    private Long goodId;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
