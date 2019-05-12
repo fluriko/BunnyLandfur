@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet(value = "/admin/edit")
 public class EditServlet extends HttpServlet {
@@ -25,10 +26,12 @@ public class EditServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        logger.info("Admin started edit page");
+        logger.debug("Admin started edit page");
         userId = Integer.parseInt(req.getParameter("id"));
         User user = USER_DAO.getUserById(userId).get();
         req.setAttribute("user", user);
+        List<Role> roles = ROLE_DAO.getRoles();
+        req.setAttribute("roles", roles);
         req.getRequestDispatcher("/admin/edit.jsp").forward(req, resp);
     }
 
@@ -64,15 +67,11 @@ public class EditServlet extends HttpServlet {
         } else {
             message += " mail changed. ";
         }
-        String setAdmin = req.getParameter("setAdmin");
-        if (setAdmin != null && setAdmin.equals("admin")) {
-            role = ROLE_DAO.getRole(1).get();
-            message += " User " + userId + " got admin rights. ";
-        }
-        String setUser = req.getParameter("setUser");
-        if (setUser != null && setUser.equals("user")) {
-            role = ROLE_DAO.getRole(2).get();
-            message += " User " + userId + " got user rights. ";
+        String roleIdString = req.getParameter("role");
+        if (roleIdString != null) {
+            int roleId = Integer.parseInt(roleIdString);
+            role = ROLE_DAO.getRole(roleId).get();
+            message += " Got " + role.getName() + " rights!";
         }
         logger.info("Admin changed user data for " + userId);
         User userNew = new User(userId, newLog, newPassHash, role, newMail, newSalt);

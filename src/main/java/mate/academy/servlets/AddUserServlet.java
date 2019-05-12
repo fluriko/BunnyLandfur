@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet(value = "/admin/addUser")
 public class AddUserServlet extends HttpServlet {
@@ -49,9 +50,10 @@ public class AddUserServlet extends HttpServlet {
                 request.setAttribute("message", message);
                 request.getRequestDispatcher("/admin/addUser.jsp").forward(request, response);
             }  else {
-                String setAdmin = request.getParameter("setAdmin");
-                if (setAdmin != null && setAdmin.equals("admin")) {
-                    role = ROLE_DAO.getRole(1).get();
+                String roleIdString = request.getParameter("role");
+                if (roleIdString != null) {
+                    int roleId = Integer.parseInt(roleIdString);
+                    role = ROLE_DAO.getRole(roleId).get();
                 }
                 String salt = HashUtil.getRandomSalt();
                 String hashPass = HashUtil.getSha512SecurePassword(password, salt);
@@ -68,6 +70,8 @@ public class AddUserServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         logger.debug("Admin started adding user");
+        List<Role> roles = ROLE_DAO.getRoles();
+        request.setAttribute("roles", roles);
         request.getRequestDispatcher("/admin/addUser.jsp").forward(request, response);
     }
 }

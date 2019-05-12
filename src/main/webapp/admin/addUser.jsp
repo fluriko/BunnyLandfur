@@ -27,9 +27,10 @@
     <label> Gmail:
         <input type="text" name="mail" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>
-    <label> set admin:
-        <input type="checkbox" name="setAdmin" value="admin"><br /><br />
-    </label>
+    <label>Set role:</label><br /><br />
+    <c:forEach items="${roles}" var="role">
+        <input type="radio" name="role" value="<c:out value="${role.id}"/>">   <c:out value="${role.name}"/><br /><br />
+    </c:forEach>
     <button type="submit" class="w3-btn w3-blue w3-round-large w3-margin-bottom">Submit</button>
 </form>
 <div class="w3-container w3-blue w3-opacity w3-right-align w3-padding">
