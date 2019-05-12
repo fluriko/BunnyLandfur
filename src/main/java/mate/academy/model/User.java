@@ -1,9 +1,11 @@
 package mate.academy.model;
 
-import mate.academy.util.HashUtil;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.Objects;
 
@@ -21,8 +23,9 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "role_id")
-    private int roleId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id")
+    private Role role;
 
     @Column(name = "mail")
     private String mail;
@@ -30,25 +33,25 @@ public class User {
     @Column(name = "salt")
     private String salt;
 
-    public User(int id, String login, String password, int roleId, String mail, String salt) {
+    public User(int id, String login, String password, Role role, String mail, String salt) {
         this.id = id;
         this.login = login;
         this.password = password;
-        this.roleId = roleId;
+        this.role = role;
         this.mail = mail;
         this.salt = salt;
     }
 
-    public User(String login, String password, int roleId, String mail) {
+    public User(String login, String password, Role role, String mail, String salt) {
         this.login = login;
         this.password = password;
-        this.roleId = roleId;
+        this.role = role;
         this.mail = mail;
-        this.salt = HashUtil.getRandomSalt();
+        this.salt = salt;
     }
 
-    public User(String login, String password, String mail) {
-        this(login, password, Roles.USER.getId(), mail);
+    public User(String login, String password, String mail, String salt) {
+        this(login, password, new Role(2, "USER"), mail, salt);
     }
 
     public User() {
@@ -78,12 +81,12 @@ public class User {
         this.password = password;
     }
 
-    public int getRoleId() {
-        return roleId;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoleId(int roleId) {
-        this.roleId = roleId;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getMail() {
@@ -108,16 +111,16 @@ public class User {
         if (!(o instanceof User)) return false;
         User user = (User) o;
         return id == user.id &&
-                roleId == user.roleId &&
                 Objects.equals(login, user.login) &&
                 Objects.equals(password, user.password) &&
+                Objects.equals(role, user.role) &&
                 Objects.equals(mail, user.mail) &&
                 Objects.equals(salt, user.salt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, login, password, roleId, mail, salt);
+        return Objects.hash(id, login, password, role, mail, salt);
     }
 
     @Override
@@ -126,7 +129,7 @@ public class User {
                 "id=" + id +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
-                ", roleId=" + roleId +
+                ", role=" + role +
                 ", mail='" + mail + '\'' +
                 ", salt='" + salt + '\'' +
                 '}';

@@ -1,9 +1,10 @@
 package mate.academy.database.user;
 
 import mate.academy.database.DatabaseConnector;
-import mate.academy.model.Roles;
+import mate.academy.database.role.RoleDao;
+import mate.academy.database.role.RoleDaoHib;
+import mate.academy.model.Role;
 import mate.academy.model.User;
-import mate.academy.util.HashUtil;
 import org.apache.log4j.Logger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,32 +18,31 @@ import java.util.Optional;
 public class UserDaoJdbc implements UserDao {
     private static final Logger logger = Logger.getLogger(UserDaoJdbc.class);
     private Connection connection = DatabaseConnector.connect();
+    private static final RoleDao ROLE_DAO = new RoleDaoHib();
 
     @Override
     public int addUser(User user) {
-        if (!this.containsLogin(user.getLogin())) {
-            String sql = "INSERT INTO ma.users(login,password,role_id,mail, salt) VALUES(?,?,?,?,?);";
-            try {
-                PreparedStatement preparedStatement = connection.prepareStatement(sql);
-                preparedStatement.setString(1, user.getLogin());
-                String hashPass = HashUtil.getSha512SecurePassword(user.getPassword(), user.getSalt());
-                preparedStatement.setString(2, hashPass);
-                preparedStatement.setInt(3, user.getRoleId());
-                preparedStatement.setString(4, user.getMail());
-                preparedStatement.setString(5, user.getSalt());
-                preparedStatement.executeUpdate();
-                logger.debug(sql);
-                return 1;
-            } catch (SQLException e) {
-                logger.error("adding failed for user: " + user.getLogin(), e);
-            }
+        String sql = "INSERT INTO ma.users(login,password,role_id,mail, salt) VALUES(?,?,?,?,?);";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, user.getLogin());
+            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.setInt(3, user.getRole().getId());
+            preparedStatement.setString(4, user.getMail());
+            preparedStatement.setString(5, user.getSalt());
+            preparedStatement.executeUpdate();
+            logger.debug(sql);
+            return 1;
+        } catch (SQLException e) {
+            logger.error("adding failed for user: " + user.getLogin(), e);
         }
+
         return 0;
     }
 
     @Override
     public int removeUser(User user) {
-        if (user.getRoleId() != Roles.ADMIN.getId()) {
+        if (!user.getRole().equals(ROLE_DAO.getRole(1))) {
             String sql = "DELETE FROM `ma`.`users` WHERE (`id` = ?);";
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -62,9 +62,10 @@ public class UserDaoJdbc implements UserDao {
         String login = resultSet.getString("login");
         String password = resultSet.getString("password");
         int roleId = resultSet.getInt("role_id");
+        Role role = ROLE_DAO.getRole(roleId).get();
         String mail = resultSet.getString("mail");
         String salt = resultSet.getString("salt");
-        return new User(id, login, password, roleId, mail, salt);
+        return new User(id, login, password, role, mail, salt);
     }
 
     @Override
@@ -104,14 +105,31 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
+    public Optional<User> getUserByMail(String mail) {
+        String sql = "SELECT * FROM ma.users INNER JOIN ma.roles ON ma.users.role_id = ma.roles.id WHERE mail = ?;";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, mail);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                User userToGet = getFromResultSet(resultSet);
+                logger.debug(sql);
+                return Optional.of(userToGet);
+            }
+        } catch (SQLException e) {
+            logger.error("getting failed for mail: " + mail, e);
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public int editUser(User user) {
         String sql = "UPDATE ma.users SET login = ?, password = ?, role_id = ?, mail = ?, salt = ? WHERE id = ?;";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, user.getLogin());
-            String hashPass = HashUtil.getSha512SecurePassword(user.getPassword(), user.getSalt());
-            preparedStatement.setString(2, hashPass);
-            preparedStatement.setInt(3, user.getRoleId());
+            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.setInt(3, user.getRole().getId());
             preparedStatement.setString(4, user.getMail());
             preparedStatement.setString(5, user.getSalt());
             preparedStatement.setInt(6, user.getId());
@@ -140,36 +158,6 @@ public class UserDaoJdbc implements UserDao {
             logger.error("getting all users failed", e);
         }
         return users;
-    }
-
-    @Override
-    public boolean containsLogin(String login) {
-        String sql = "SELECT * FROM ma.users WHERE login = ?;";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, login);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            logger.debug(sql);
-            return resultSet.next();
-        } catch (SQLException e) {
-            logger.error("checking presence failed for user: " + login, e);
-        }
-        return false;
-    }
-
-    @Override
-    public boolean containsMail(String mail) {
-        String sql = "SELECT * FROM ma.users WHERE mail = ?;";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, mail);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            logger.debug(sql);
-            return resultSet.next();
-        } catch (SQLException e) {
-            logger.error("checking presence failed for mail: " + mail, e);
-        }
-        return false;
     }
 
     public void removeAll() {

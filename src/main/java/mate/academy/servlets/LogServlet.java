@@ -30,12 +30,12 @@ public class LogServlet extends HttpServlet {
         String password = req.getParameter("password").trim();
         logger.debug("User entered data " + login + " " + password);
         String message;
-        if (USER_DAO.containsLogin(login)) {
+        if (USER_DAO.getUserByLogin(login).isPresent()) {
             User user = USER_DAO.getUserByLogin(login).get();
             String hashPass = HashUtil.getSha512SecurePassword(password, user.getSalt());
             if (user.getPassword().equals(hashPass)) {
                 req.getSession().setAttribute("user", user);
-                if (user.getRoleId() == 1) {
+                if (user.getRole().getId() == 1) {
                     logger.debug("Admin " + user.getLogin() + " logged in and started session");
                     message = "Welcome back admin " + login;
                     req.setAttribute("message", message);

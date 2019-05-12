@@ -4,19 +4,26 @@ import mate.academy.model.User;
 import mate.academy.util.HibernateSessionFactoryUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class UserDaoHib implements UserDao {
-    private static final Logger logger = Logger.getLogger(UserDaoJdbc.class);
+    private static final Logger logger = Logger.getLogger(UserDaoHib.class);
 
     @Override
     public int addUser(User user) {
+        Session session;
         try {
-            Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+            session = HibernateSessionFactoryUtil.getSessionFactory().getCurrentSession();
+        } catch (Exception e) {
+            session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        }
+        try {
             Transaction transaction = session.beginTransaction();
             session.save(user);
             transaction.commit();
@@ -25,13 +32,22 @@ public class UserDaoHib implements UserDao {
         } catch (Exception e) {
             logger.debug("Error in adding user " + user.getLogin(), e);
             return 0;
+        } finally {
+            if (session.isOpen()){
+                session.close();
+            }
         }
     }
 
     @Override
     public int removeUser(User user) {
+        Session session;
         try {
-            Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+            session = HibernateSessionFactoryUtil.getSessionFactory().getCurrentSession();
+        } catch (Exception e) {
+            session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        }
+        try {
             Transaction transaction = session.beginTransaction();
             session.delete(user);
             transaction.commit();
@@ -40,13 +56,23 @@ public class UserDaoHib implements UserDao {
         } catch (Exception e) {
             logger.debug("Error in removing user " + user.getId(), e);
             return 0;
+
+        } finally {
+            if (session.isOpen()){
+                session.close();
+            }
         }
     }
 
     @Override
     public Optional<User> getUserByLogin(String login) {
+        Session session;
         try {
-            Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+            session = HibernateSessionFactoryUtil.getSessionFactory().getCurrentSession();
+        } catch (Exception e) {
+            session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        }
+        try {
             Criteria criteria = session.createCriteria(User.class);
             User user = (User) criteria.add(Restrictions.eq("login", login)).uniqueResult();
             return Optional.of(user);
@@ -56,9 +82,15 @@ public class UserDaoHib implements UserDao {
         }
     }
 
+    @Override
     public Optional<User> getUserByMail(String mail) {
+        Session session;
         try {
-            Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+            session = HibernateSessionFactoryUtil.getSessionFactory().getCurrentSession();
+        } catch (Exception e) {
+            session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        }
+        try {
             Criteria criteria = session.createCriteria(User.class);
             User user = (User) criteria.add(Restrictions.eq("mail", mail)).uniqueResult();
             return Optional.of(user);
@@ -70,19 +102,34 @@ public class UserDaoHib implements UserDao {
 
     @Override
     public Optional<User> getUserById(int id) {
+        Session session;
         try {
-            User user = HibernateSessionFactoryUtil.getSessionFactory().openSession().get(User.class, id);
+            session = HibernateSessionFactoryUtil.getSessionFactory().getCurrentSession();
+        } catch (Exception e) {
+            session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        }
+        try {
+            User user = session.get(User.class, id);
             return Optional.of(user);
         } catch (Exception e) {
             logger.debug("Error in getting user " + id, e);
             return Optional.empty();
+        } finally {
+            if (session.isOpen()){
+                session.close();
+            }
         }
     }
 
     @Override
     public int editUser(User user) {
+        Session session;
         try {
-            Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+            session = HibernateSessionFactoryUtil.getSessionFactory().getCurrentSession();
+        } catch (Exception e) {
+            session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        }
+        try {
             Transaction transaction = session.beginTransaction();
             session.update(user);
             transaction.commit();
@@ -91,26 +138,27 @@ public class UserDaoHib implements UserDao {
         } catch (Exception e) {
             logger.debug("Error in getting user " + user.getId(), e);
             return 0;
+        } finally {
+            if (session.isOpen()){
+                session.close();
+            }
         }
     }
 
     @Override
     public List<User> getUsers() {
-        List<User> users = (List<User>)  HibernateSessionFactoryUtil
-                .getSessionFactory()
-                .openSession()
-                .createQuery("From User")
-                .list();
+        Session session;
+        try {
+            session = HibernateSessionFactoryUtil.getSessionFactory().getCurrentSession();
+        } catch (Exception e) {
+            session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        }
+        List<User> users = new ArrayList<>();
+        try {
+            users = session.createQuery("From User").list();
+        } catch (Exception e) {
+            logger.debug("Error in getting all users", e);
+        }
         return users;
-    }
-
-    @Override
-    public boolean containsLogin(String login) {
-        return getUserByLogin(login).isPresent();
-    }
-
-    @Override
-    public boolean containsMail(String mail) {
-        return getUserByMail(mail).isPresent();
     }
 }

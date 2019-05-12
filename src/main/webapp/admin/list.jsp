@@ -32,7 +32,7 @@
     <tr>
         <td><c:out value="${user.id}"/></td>
         <td><c:out value="${user.login}"/></td>
-        <td><c:out value="${user.roleId}"/></td>
+        <td><c:out value="${user.role}"/></td>
         <td><c:out value="${user.mail}"/></td>
         <td><a href='/admin/edit?id=${user.id}'>edit</a></td>
         <td><a href='/admin/delete?id=${user.id}'>delete</a></td>

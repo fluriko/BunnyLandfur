@@ -4,6 +4,7 @@ import mate.academy.database.user.UserDao;
 import mate.academy.database.user.UserDaoHib;
 import mate.academy.database.user.UserDaoJdbc;
 import mate.academy.model.User;
+import mate.academy.util.HashUtil;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -48,18 +49,20 @@ public class RegServlet extends HttpServlet {
             req.getRequestDispatcher("/registration.jsp").forward(req, resp);
         } else {
             logger.debug("Data is correct");
-            if (USER_DAO.containsLogin(login)) {
+            if (USER_DAO.getUserByLogin(login).isPresent()) {
                 logger.debug("User tried to register with existing name");
                 message = "User with name " + login + " already exists";
                 req.setAttribute("message", message);
                 req.getRequestDispatcher("/registration.jsp").forward(req, resp);
-            } else if (USER_DAO.containsMail(mail)) {
+            } else if (USER_DAO.getUserByMail(mail).isPresent()) {
                 logger.debug("User tried to register with existing mail");
                 message = "User with mail " + mail + " already exists";
                 req.setAttribute("message", message);
                 req.getRequestDispatcher("/registration.jsp").forward(req, resp);
             }  else {
-                User user = new User(login, password, mail);
+                String salt = HashUtil.getRandomSalt();
+                String hashPass = HashUtil.getSha512SecurePassword(password, salt);
+                User user = new User(login, hashPass, mail, salt);
                 USER_DAO.addUser(user);
                 User userGet = USER_DAO.getUserByLogin(login).get();
                 logger.debug("User " + userGet.getId() + " registered successfully");

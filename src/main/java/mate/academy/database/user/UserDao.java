@@ -9,8 +9,7 @@ public interface UserDao {
     int removeUser(User user);
     Optional<User> getUserByLogin(String login);
     Optional<User> getUserById(int id);
+    Optional<User> getUserByMail(String mail);
     int editUser(User user);
     List<User> getUsers();
-    boolean containsLogin(String login);
-    boolean containsMail(String mail);
 }

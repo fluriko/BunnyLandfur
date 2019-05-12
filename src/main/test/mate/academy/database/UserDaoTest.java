@@ -19,9 +19,9 @@ public class UserDaoTest {
 
     @Before
     public void initialization() {
-        user = new User("Alice", "123456", "123456@gmail.com");
-        userToRemove = new User("Mary", "111111", "234567@gmail.com");
-        userToAdd = new User("Sophie", "232323", "345678@gmail.com");
+        user = new User("Alice", "123456", "123456@gmail.com", "salt");
+        userToRemove = new User("Mary", "111111", "234567@gmail.com", "salt");
+        userToAdd = new User("Sophie", "232323", "345678@gmail.com", "salt");
         USER_DAO.addUser(user);
     }
 
@@ -41,7 +41,7 @@ public class UserDaoTest {
     @Test
     public void addUser() {
         USER_DAO.addUser(userToAdd);
-        Assert.assertTrue(USER_DAO.containsLogin(userToAdd.getLogin()));
+        Assert.assertTrue(USER_DAO.getUserByLogin(userToAdd.getLogin()).isPresent());
     }
 
     @Test
@@ -58,6 +58,6 @@ public class UserDaoTest {
 
     @Test
     public void contains() {
-        Assert.assertTrue(USER_DAO.containsLogin(user.getLogin()));
+        Assert.assertTrue(USER_DAO.getUserByLogin(user.getLogin()).isPresent());
     }
 }

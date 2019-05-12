@@ -26,7 +26,7 @@ public class AdminFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         User user = (User) request.getSession().getAttribute("user");
         logger.debug("doing admin filter");
-        if (user != null && user.getRoleId() == 1) {
+        if (user != null && user.getRole().getId() == 1) {
             logger.debug("admin filter accepted admin");
             filterChain.doFilter(servletRequest, servletResponse);
         } else {

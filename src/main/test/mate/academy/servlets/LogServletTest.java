@@ -48,7 +48,7 @@ public class LogServletTest {
 
     @Test
     public void doPostHello() throws IOException, ServletException {
-        User user = new User("betta", "111qqq", "insania@gmail.com");
+        User user = new User("betta", "111qqq", "insania@gmail.com", "salt");
         USER_DAO.addUser(user);
         Mockito.when(request.getParameter("name")).thenReturn("betta");
         Mockito.when(request.getParameter("password")).thenReturn("111qqq");
@@ -60,7 +60,7 @@ public class LogServletTest {
 
     @Test
     public void doPostWrong() throws IOException, ServletException {
-        User user = new User("betta", "111qqq", "insania@gmail.com");
+        User user = new User("betta", "111qqq", "insania@gmail.com", "salt");
         USER_DAO.addUser(user);
         Mockito.when(request.getParameter("name")).thenReturn("betta");
         Mockito.when(request.getParameter("password")).thenReturn("222www");
