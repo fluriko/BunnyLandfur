@@ -10,22 +10,22 @@ import javax.persistence.Table;
 import java.util.Objects;
 
 @Entity
-@Table(name = "Codes")
+@Table(name = "CODES")
 public class Code {
 
     @Id
-    @Column(name = "Id")
+    @Column(name = "ID")
     private int id;
 
-    @Column(name = "Value")
+    @Column(name = "VALUE")
     private String value;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "User_id")
+    @JoinColumn(name = "USER_ID")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Good_id")
+    @JoinColumn(name = "GOOD_ID")
     private Good good;
 
     public Code(int id, String value, User user, Good good) {
