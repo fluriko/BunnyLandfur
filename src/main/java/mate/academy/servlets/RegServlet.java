@@ -17,11 +17,15 @@ import java.io.IOException;
 public class RegServlet extends HttpServlet {
     private static final UserDao USER_DAO = new UserDaoHib();
     private static final Logger logger = Logger.getLogger(RegServlet.class);
+    private static final String INSTRUCTION = "login should be 4 chars at least,\n" +
+            "password should be 6 chars at least,\n" +
+            "mail should be real and end with @gmail.com.\n";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         logger.debug("User started registration");
-        req.getRequestDispatcher("registration.jsp").forward(req, resp);
+        req.setAttribute("instruction", INSTRUCTION);
+        req.getRequestDispatcher("/registration.jsp").forward(req, resp);
     }
 
     @Override
@@ -29,46 +33,48 @@ public class RegServlet extends HttpServlet {
         String login = req.getParameter("login").trim();
         String password = req.getParameter("password").trim();
         String mail = req.getParameter("mail").trim();
-        logger.debug("User entered data " + login + " " + password + " " + mail);
-        String message;
-        if (login.length() < 4) {
-            logger.debug("Login " + login + " is too short");
-            message = "Login " + login + " is too short, enter 4 symbols at least\n";
+        String checkLogCorrect = checkCorrect(login.length() < 4, "login");
+        String checkPassCorrect = checkCorrect(password.length() < 6, "password");
+        String checkMailCorrect = checkCorrect(!mail.endsWith("@gmail.com") || mail.length() < 16, "mail");
+        if (checkLogCorrect.length() > 0 || checkPassCorrect.length() > 0 || checkMailCorrect.length() > 0) {
+            String message = checkLogCorrect + checkPassCorrect + checkMailCorrect;
             req.setAttribute("message", message);
-            req.getRequestDispatcher("/registration.jsp").forward(req, resp);
-        } else if (password.length() < 6) {
-            logger.debug("Password " + password + " is too short");
-            message = "Password is too short, enter 6 symbols at least\n";
-            req.setAttribute("message", message);
-            req.getRequestDispatcher("/registration.jsp").forward(req, resp);
-        } else if (!mail.endsWith("@gmail.com") || mail.length() < 16) {
-            logger.debug("Mail " + mail + " is not correct");
-            message = "Your mail should be real and end with @gmail.com\n";
-            req.setAttribute("message", message);
+            req.setAttribute("instruction", INSTRUCTION);
             req.getRequestDispatcher("/registration.jsp").forward(req, resp);
         } else {
-            logger.debug("Data is correct");
-            if (USER_DAO.getUserByLogin(login).isPresent()) {
-                logger.debug("User tried to register with existing name");
-                message = "User with name " + login + " already exists";
+            String checkLogin = checkUniq(USER_DAO.getUserByLogin(login).isPresent(), "login " + login);
+            String checkMail = checkUniq(USER_DAO.getUserByMail(mail).isPresent(), "mail " + mail);
+            if (checkLogin.length() > 0 || checkMail.length() > 0) {
+                String message = checkLogin + checkMail;
                 req.setAttribute("message", message);
                 req.getRequestDispatcher("/registration.jsp").forward(req, resp);
-            } else if (USER_DAO.getUserByMail(mail).isPresent()) {
-                logger.debug("User tried to register with existing mail");
-                message = "User with mail " + mail + " already exists";
-                req.setAttribute("message", message);
-                req.getRequestDispatcher("/registration.jsp").forward(req, resp);
-            }  else {
+            } else {
                 String salt = HashUtil.getRandomSalt();
                 String hashPass = HashUtil.getSha512SecurePassword(password, salt);
                 User user = new User(login, hashPass, mail, salt);
                 USER_DAO.addUser(user);
                 User userGet = USER_DAO.getUserByLogin(login).get();
                 logger.debug("User " + userGet.getId() + " registered successfully");
-                message = "Hello and welcome " + login + ", now you can log in";
+                String message = "Hello and welcome " + login + ", now you can log in";
                 req.setAttribute("message", message);
                 req.getRequestDispatcher("/index.jsp").forward(req, resp);
             }
         }
+    }
+
+    private String checkCorrect(boolean condition, String data) {
+        String message = "";
+        if (condition) {
+            message = data + " is not correct!\n";
+        }
+        return message;
+    }
+
+    private String checkUniq(boolean condition, String data) {
+        String message = "";
+        if (condition) {
+            message = "User with " + data + " already registered!\n";
+        }
+        return message;
     }
 }

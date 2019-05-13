@@ -25,12 +25,14 @@ public class BuyServlet extends HttpServlet {
     private static final PurchaseCodeDao PURCHASE_CODE_DAO = new PurchaseCodeDaoHib();
     private static final GoodDao GOOD_DAO = new GoodDaoHib();
     private static final MailService MAIL_SERVICE = new MailService();
-    private Good good;
-    private int codeId;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String codeValue = request.getParameter("codeValue");
         User user = (User) request.getSession().getAttribute("user");
+        Long goodId = Long.parseLong(request.getParameter("goodId"));
+        Good good = GOOD_DAO.getGood(goodId).get();
+        int codeId = Integer.parseInt(request.getParameter("codeId"));
+        logger.error(codeId);
         Code code = new Code(codeId, codeValue, user, good);
         Code codeFromDb = PURCHASE_CODE_DAO.getCode(codeId).get();
         if (codeFromDb.equals(code)) {
@@ -39,21 +41,20 @@ public class BuyServlet extends HttpServlet {
             request.setAttribute("message", "you entered wrong code");
         }
         PURCHASE_CODE_DAO.removeCode(code);
-        good = null;
-        codeId = 0;
         request.getRequestDispatcher("/user/result.jsp").forward(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
         Long goodId = Long.parseLong(request.getParameter("goodId"));
-        good = GOOD_DAO.getGood(goodId).get();
+        Good good = GOOD_DAO.getGood(goodId).get();
         logger.info("User " + user.getLogin() + " is on buy good " + goodId +" page");
         String codeValue = MAIL_SERVICE.sendMail(user.getMail());
         Code code = new Code(codeValue, user, good);
         PURCHASE_CODE_DAO.addCode(code);
-        codeId = PURCHASE_CODE_DAO.getCode(codeValue).get().getId();
+        int codeId = PURCHASE_CODE_DAO.getCode(codeValue).get().getId();
         PurchaseCodeCleaner.clean(code);
+        request.setAttribute("codeId", codeId);
         request.getRequestDispatcher("/user/buy.jsp").forward(request, response);
     }
 }

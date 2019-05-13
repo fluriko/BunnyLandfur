@@ -27,29 +27,25 @@ public class AddUserServlet extends HttpServlet {
         String password = request.getParameter("password").trim();
         String mail = request.getParameter("mail").trim();
         Role role = ROLE_DAO.getRole(2).get();
-        String message;
-        if (login.length() < 4) {
-            message = "Login " + login + " is too short, enter 4 symbols at least\n";
+        String checkLogCorrect = checkCorrect(login.length() < 4, "login");
+        String checkPassCorrect = checkCorrect(password.length() < 6, "password");
+        String checkMailCorrect = checkCorrect(!mail.endsWith("@gmail.com") || mail.length() < 16, "mail");
+        if (checkLogCorrect.length() > 0 || checkPassCorrect.length() > 0 || checkMailCorrect.length() > 0) {
+            String message = checkLogCorrect + checkPassCorrect + checkMailCorrect;
             request.setAttribute("message", message);
-            request.getRequestDispatcher("/admin/addUser.jsp").forward(request, response);
-        } else if (password.length() < 6) {
-            message = "Password is too short, enter 6 symbols at least\n";
-            request.setAttribute("message", message);
-            request.getRequestDispatcher("/admin/addUser.jsp").forward(request, response);
-        } else if (!mail.endsWith("@gmail.com") || mail.length() < 16) {
-            message = "Mail should be real and end with @gmail.com\n";
-            request.setAttribute("message", message);
+            List<Role> roles = ROLE_DAO.getRoles();
+            request.setAttribute("roles", roles);
             request.getRequestDispatcher("/admin/addUser.jsp").forward(request, response);
         } else {
-            if (USER_DAO.getUserByLogin(login).isPresent()) {
-                message = "User with name " + login + " already exists";
+            String checkLogin = checkUniq(USER_DAO.getUserByLogin(login).isPresent(), "login " + login);
+            String checkMail = checkUniq(USER_DAO.getUserByMail(mail).isPresent(), "mail " + mail);
+            if (checkLogin.length() > 0 || checkMail.length() > 0) {
+                String message = checkLogin + checkMail;
                 request.setAttribute("message", message);
+                List<Role> roles = ROLE_DAO.getRoles();
+                request.setAttribute("roles", roles);
                 request.getRequestDispatcher("/admin/addUser.jsp").forward(request, response);
-            } else if (USER_DAO.getUserByMail(mail).isPresent()) {
-                message = "User with mail " + mail + " already exists";
-                request.setAttribute("message", message);
-                request.getRequestDispatcher("/admin/addUser.jsp").forward(request, response);
-            }  else {
+            } else {
                 String roleIdString = request.getParameter("role");
                 if (roleIdString != null) {
                     int roleId = Integer.parseInt(roleIdString);
@@ -60,7 +56,7 @@ public class AddUserServlet extends HttpServlet {
                 User user = new User(login, hashPass, role, mail, salt);
                 USER_DAO.addUser(user);
                 User userGet = USER_DAO.getUserByLogin(login).get();
-                message = userGet.getRole() + " " + userGet.getId() + " added successfully";
+                String message = userGet.getRole() + " " + userGet.getId() + " added successfully";
                 logger.debug(message);
                 request.setAttribute("message", message);
                 request.getRequestDispatcher("/admin/list").forward(request, response);
@@ -69,9 +65,24 @@ public class AddUserServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.debug("Admin started adding user");
         List<Role> roles = ROLE_DAO.getRoles();
         request.setAttribute("roles", roles);
         request.getRequestDispatcher("/admin/addUser.jsp").forward(request, response);
+    }
+
+    private String checkCorrect(boolean condition, String data) {
+        String message = "";
+        if (condition) {
+            message = data + " is not correct!\n";
+        }
+        return message;
+    }
+
+    private String checkUniq(boolean condition, String data) {
+        String message = "";
+        if (condition) {
+            message = "User with " + data + " already registered!\n";
+        }
+        return message;
     }
 }

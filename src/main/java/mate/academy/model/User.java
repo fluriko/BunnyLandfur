@@ -10,27 +10,27 @@ import javax.persistence.Table;
 import java.util.Objects;
 
 @Entity
-@Table(name = "users")
+@Table(name = "Users")
 public class User {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "Id")
     private int id;
 
-    @Column(name = "login")
+    @Column(name = "Login")
     private String login;
 
-    @Column(name = "password")
+    @Column(name = "Password")
     private String password;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id")
+    @JoinColumn(name = "Role_id")
     private Role role;
 
-    @Column(name = "mail")
+    @Column(name = "Mail")
     private String mail;
 
-    @Column(name = "salt")
+    @Column(name = "Salt")
     private String salt;
 
     public User(int id, String login, String password, Role role, String mail, String salt) {

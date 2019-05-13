@@ -34,19 +34,19 @@ public class AddGoodServlet extends HttpServlet {
             message = "You entered wrong price";
             logger.debug(message);
             request.setAttribute("message", message);
-            request.getRequestDispatcher("addGood.jsp").forward(request, response);
+            request.getRequestDispatcher("/admin/addGood.jsp").forward(request, response);
         }
         if (category.length() < 3) {
             message = "Category is too short";
             logger.debug(message);
             request.setAttribute("message", message);
-            request.getRequestDispatcher("addGood.jsp").forward(request, response);
+            request.getRequestDispatcher("/admin/addGood.jsp").forward(request, response);
         }
         if (label.length() < 3) {
             message = "Label is too short";
             logger.debug(message);
             request.setAttribute("message", message);
-            request.getRequestDispatcher("addGood.jsp").forward(request, response);
+            request.getRequestDispatcher("/admin/addGood.jsp").forward(request, response);
         }
         Good good = new Good(label, description, category, price);
         GOOD_DAO.addGood(good);

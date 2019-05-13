@@ -22,12 +22,11 @@ public class EditServlet extends HttpServlet {
     private static final UserDao USER_DAO = new UserDaoHib();
     private static final RoleDao ROLE_DAO = new RoleDaoHib();
     private static final Logger logger = Logger.getLogger(EditServlet.class);
-    private int userId;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         logger.debug("Admin started edit page");
-        userId = Integer.parseInt(req.getParameter("id"));
+        int userId = Integer.parseInt(req.getParameter("id"));
         User user = USER_DAO.getUserById(userId).get();
         req.setAttribute("user", user);
         List<Role> roles = ROLE_DAO.getRoles();
@@ -37,6 +36,7 @@ public class EditServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int userId = Integer.parseInt(req.getParameter("id"));
         User userOld = USER_DAO.getUserById(userId).get();
         String newLog = req.getParameter("login").trim();
         String newPass = req.getParameter("password").trim();
@@ -44,40 +44,33 @@ public class EditServlet extends HttpServlet {
         String newMail = req.getParameter("mail").trim();
         String newSalt = HashUtil.getRandomSalt();
         String newPassHash = HashUtil.getSha512SecurePassword(newPass, newSalt);
-        String message = "For user " + userId + ": ";
-        logger.debug("Admin tried to set " + userId + " new data ");
+        int changeCount = 3;
         if (newLog.length() < 4 || USER_DAO.getUserByLogin(newLog).isPresent()) {
             newLog = userOld.getLogin();
-            message += " login didn't changed, ";
-        } else {
-            message += " login changed, ";
+            changeCount--;
         }
         if (newPass.length() < 6 || newPass.equals(userOld.getPassword())) {
             newPassHash = userOld.getPassword();
             newSalt = userOld.getSalt();
-            message += " password didn't changed, ";
-        } else {
-            message += " password changed, ";
+            changeCount--;
         }
         if (!newMail.endsWith("@gmail.com")
                 || newMail.length() < 16
                 || USER_DAO.getUserByMail(newMail).isPresent()) {
             newMail = userOld.getMail();
-            message += " mail didn't changed. ";
-        } else {
-            message += " mail changed. ";
+            changeCount--;
         }
         String roleIdString = req.getParameter("role");
         if (roleIdString != null) {
             int roleId = Integer.parseInt(roleIdString);
             role = ROLE_DAO.getRole(roleId).get();
-            message += " Got " + role.getName() + " rights!";
+            changeCount++;
         }
-        logger.info("Admin changed user data for " + userId);
+        logger.warn("Admin changed user data for " + userId);
         User userNew = new User(userId, newLog, newPassHash, role, newMail, newSalt);
         USER_DAO.editUser(userNew);
+        String message = "For user " + userId + " changed fields: " + changeCount;
         req.setAttribute("message", message);
-        userId = 0;
         req.getRequestDispatcher("/admin/list").forward(req, resp);
     }
 }

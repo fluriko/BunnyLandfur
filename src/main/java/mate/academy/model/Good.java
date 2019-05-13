@@ -9,24 +9,24 @@ import javax.persistence.Table;
 import java.util.Objects;
 
 @Entity
-@Table(name = "goods")
+@Table(name = "Goods")
 public class Good {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "Id")
     private Long id;
 
-    @Column(name = "label")
+    @Column(name = "Label")
     private String label;
 
-    @Column(name = "description")
+    @Column(name = "Description")
     private String description;
 
-    @Column(name = "category")
+    @Column(name = "Category")
     private String category;
 
-    @Column(name = "price")
+    @Column(name = "Price")
     private double price;
 
     public Good(Long id, String label, String description, String category, double price) {

@@ -24,6 +24,10 @@
         <input type="password" name="codeValue" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>
 
+
+    <input type="hidden" name="codeId" value="<c:out value="${codeId}"/>">
+
+
     <button type="submit" class="w3-btn w3-blue w3-round-large w3-margin-bottom">Submit</button>
 </form>
 <div class="w3-container w3-blue w3-opacity w3-right-align w3-padding">

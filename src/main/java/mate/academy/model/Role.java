@@ -7,14 +7,14 @@ import javax.persistence.Table;
 import java.util.Objects;
 
 @Entity
-@Table(name = "roles")
+@Table(name = "Roles")
 public class Role {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "Id")
     private int id;
 
-    @Column(name = "name")
+    @Column(name = "Name")
     private String name;
 
     public Role(int id, String name) {

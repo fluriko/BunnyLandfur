@@ -16,12 +16,11 @@ import java.io.IOException;
 public class EditGoodServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(EditGoodServlet.class);
     private static final GoodDao GOOD_DAO = new GoodDaoHib();
-    private Long goodId;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         logger.info("Admin started edit good page");
-        goodId = Long.parseLong(req.getParameter("id"));
+        Long goodId = Long.parseLong(req.getParameter("id"));
         Good good = GOOD_DAO.getGood(goodId).get();
         req.setAttribute("good", good);
         req.getRequestDispatcher("/admin/editGood.jsp").forward(req, resp);
@@ -29,6 +28,7 @@ public class EditGoodServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Long goodId = Long.parseLong(req.getParameter("id"));
         Good goodOld = GOOD_DAO.getGood(goodId).get();
         String newLabel = req.getParameter("label").trim();
         String newDescription = req.getParameter("description").trim();
@@ -58,7 +58,6 @@ public class EditGoodServlet extends HttpServlet {
         Good goodNew = new Good(goodId, newLabel, newDescription, newCategory, newPrice);
         GOOD_DAO.editGood(goodNew);
         req.setAttribute("message", message);
-        goodId = 0L;
         req.getRequestDispatcher("/admin/goods").forward(req, resp);
     }
 }

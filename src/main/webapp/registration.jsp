@@ -16,6 +16,7 @@
 <div class="w3-container w3-blue w3-opacity w3-right-align">
     <h1>Fill the form below to register!</h1>
     <h2><c:out value="${message}"/></h2>
+    <c:out value="${instruction}"/>
 </div>
 <form method="post" class="w3-selection w3-light-blue w3-padding">
     <label> Name:
