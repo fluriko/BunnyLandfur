@@ -2,7 +2,6 @@ package mate.academy.servlets;
 
 import mate.academy.database.user.UserDao;
 import mate.academy.database.user.UserDaoHib;
-import mate.academy.database.user.UserDaoJdbc;
 import mate.academy.model.User;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
@@ -19,7 +18,7 @@ public class DeleteServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int id = Integer.parseInt(req.getParameter("id"));
+        Long id = Long.parseLong(req.getParameter("id"));
         User user = USER_DAO.getUserById(id).get();
         logger.debug("Admin tried to delete " + id);
         String message;

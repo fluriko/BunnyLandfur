@@ -2,10 +2,8 @@ package mate.academy.servlets;
 
 import mate.academy.database.good.GoodDao;
 import mate.academy.database.good.GoodDaoHib;
-import mate.academy.database.good.GoodDaoJdbc;
 import mate.academy.database.good.PurchaseCodeDao;
 import mate.academy.database.good.PurchaseCodeDaoHib;
-import mate.academy.database.good.PurchaseCodeDaoJdbc;
 import mate.academy.model.Code;
 import mate.academy.model.Good;
 import mate.academy.model.User;
@@ -31,7 +29,7 @@ public class BuyServlet extends HttpServlet {
         User user = (User) request.getSession().getAttribute("user");
         Long goodId = Long.parseLong(request.getParameter("goodId"));
         Good good = GOOD_DAO.getGood(goodId).get();
-        int codeId = Integer.parseInt(request.getParameter("codeId"));
+        Long codeId = Long.parseLong(request.getParameter("codeId"));
         logger.error(codeId);
         Code code = new Code(codeId, codeValue, user, good);
         Code codeFromDb = PURCHASE_CODE_DAO.getCode(codeId).get();
@@ -52,7 +50,7 @@ public class BuyServlet extends HttpServlet {
         String codeValue = MAIL_SERVICE.sendMail(user.getMail());
         Code code = new Code(codeValue, user, good);
         PURCHASE_CODE_DAO.addCode(code);
-        int codeId = PURCHASE_CODE_DAO.getCode(codeValue).get().getId();
+        Long codeId = PURCHASE_CODE_DAO.getCode(codeValue).get().getId();
         PurchaseCodeCleaner.clean(code);
         request.setAttribute("codeId", codeId);
         request.getRequestDispatcher("/user/buy.jsp").forward(request, response);

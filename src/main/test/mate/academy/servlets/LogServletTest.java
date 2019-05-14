@@ -1,7 +1,7 @@
 package mate.academy.servlets;
 
 import mate.academy.database.user.UserDao;
-import mate.academy.database.user.UserDaoJdbc;
+import mate.academy.database.user.UserDaoHib;
 import mate.academy.model.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +16,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class LogServletTest {
-    private static final UserDao USER_DAO = new UserDaoJdbc();
+    private static final UserDao USER_DAO = new UserDaoHib();
     LogServlet logServlet;
 
     @Mock

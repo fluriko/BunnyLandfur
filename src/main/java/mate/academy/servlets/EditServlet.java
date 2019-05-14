@@ -24,7 +24,7 @@ public class EditServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         logger.debug("Admin started edit page");
-        int userId = Integer.parseInt(req.getParameter("id"));
+        Long userId = Long.parseLong(req.getParameter("id"));
         User user = USER_DAO.getUserById(userId).get();
         req.setAttribute("user", user);
         List<Role> roles = ROLE_DAO.getRoles();
@@ -34,7 +34,7 @@ public class EditServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int userId = Integer.parseInt(req.getParameter("id"));
+        Long userId = Long.parseLong(req.getParameter("id"));
         User userToEdit = USER_DAO.getUserById(userId).get();
         String newLog = req.getParameter("login").trim();
         String newPass = req.getParameter("password").trim();
@@ -53,7 +53,7 @@ public class EditServlet extends HttpServlet {
         }
         String roleIdString = req.getParameter("role");
         if (roleIdString != null) {
-            int roleId = Integer.parseInt(roleIdString);
+            Long roleId = Long.parseLong(roleIdString);
             userToEdit.setRole(ROLE_DAO.getRole(roleId).get());
         }
         USER_DAO.editUser(userToEdit);

@@ -62,7 +62,7 @@ public class PurchaseCodeDaoHib implements PurchaseCodeDao {
     }
 
     @Override
-    public Optional<Code> getCode(int id) {
+    public Optional<Code> getCode(Long id) {
         try {
             Code code = HibernateSessionFactoryUtil.getSessionFactory().openSession().get(Code.class, id);
             return Optional.of(code);

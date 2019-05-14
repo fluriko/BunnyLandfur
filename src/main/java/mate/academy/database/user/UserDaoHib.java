@@ -101,7 +101,7 @@ public class UserDaoHib implements UserDao {
     }
 
     @Override
-    public Optional<User> getUserById(int id) {
+    public Optional<User> getUserById(Long id) {
         Session session;
         try {
             session = HibernateSessionFactoryUtil.getSessionFactory().getCurrentSession();

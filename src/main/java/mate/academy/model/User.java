@@ -5,6 +5,8 @@ import mate.academy.util.HashUtil;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -16,8 +18,9 @@ import java.util.Objects;
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private int id;
+    private Long id;
 
     @Column(name = "LOGIN")
     private String login;
@@ -35,7 +38,7 @@ public class User {
     @Column(name = "SALT")
     private String salt;
 
-    public User(int id, String login, String password, Role role, String mail, String salt) {
+    public User(Long id, String login, String password, Role role, String mail, String salt) {
         this.id = id;
         this.login = login;
         this.password = password;
@@ -53,17 +56,17 @@ public class User {
     }
 
     public User(String login, String password, String mail) {
-        this(login, password, new Role(2, "USER"), mail);
+        this(login, password, new Role(2L, "USER"), mail);
     }
 
     public User() {
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -116,7 +119,7 @@ public class User {
         if (this == o) return true;
         if (!(o instanceof User)) return false;
         User user = (User) o;
-        return id == user.id &&
+        return Objects.equals(id, user.id) &&
                 Objects.equals(login, user.login) &&
                 Objects.equals(password, user.password) &&
                 Objects.equals(role, user.role) &&

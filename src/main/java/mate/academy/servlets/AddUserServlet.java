@@ -25,7 +25,7 @@ public class AddUserServlet extends HttpServlet {
         String login = request.getParameter("login").trim();
         String password = request.getParameter("password").trim();
         String mail = request.getParameter("mail").trim();
-        Role role = ROLE_DAO.getRole(2).get();
+        Role role = ROLE_DAO.getRole(2L).get();
         String checkLogCorrect = checkCorrect(login.length() < 4, "login");
         String checkPassCorrect = checkCorrect(password.length() < 6, "password");
         String checkMailCorrect = checkCorrect(!mail.endsWith("@gmail.com") || mail.length() < 16, "mail");
@@ -47,11 +47,9 @@ public class AddUserServlet extends HttpServlet {
             } else {
                 String roleIdString = request.getParameter("role");
                 if (roleIdString != null) {
-                    int roleId = Integer.parseInt(roleIdString);
+                    Long roleId = Long.parseLong(roleIdString);
                     role = ROLE_DAO.getRole(roleId).get();
                 }
-//                String salt = HashUtil.getRandomSalt();
-//                String hashPass = HashUtil.getSha512SecurePassword(password, salt);
                 User user = new User(login, password, role, mail);
                 USER_DAO.addUser(user);
                 User userGet = USER_DAO.getUserByLogin(login).get();

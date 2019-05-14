@@ -2,7 +2,6 @@ package mate.academy.servlets;
 
 import mate.academy.database.good.GoodDao;
 import mate.academy.database.good.GoodDaoHib;
-import mate.academy.database.good.GoodDaoJdbc;
 import mate.academy.model.Good;
 import mate.academy.model.User;
 import org.apache.log4j.Logger;

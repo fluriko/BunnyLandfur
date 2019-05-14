@@ -59,7 +59,7 @@ public class RoleDaoHib implements RoleDao {
     }
 
     @Override
-    public Optional<Role> getRole(int id) {
+    public Optional<Role> getRole(Long id) {
         try {
             Role role = HibernateSessionFactoryUtil.getSessionFactory().openSession().get(Role.class, id);
             return Optional.of(role);

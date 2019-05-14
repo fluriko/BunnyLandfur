@@ -3,6 +3,8 @@ package mate.academy.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -14,8 +16,9 @@ import java.util.Objects;
 public class Code {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private int id;
+    private Long id;
 
     @Column(name = "VALUE")
     private String value;
@@ -28,7 +31,7 @@ public class Code {
     @JoinColumn(name = "GOOD_ID")
     private Good good;
 
-    public Code(int id, String value, User user, Good good) {
+    public Code(Long id, String value, User user, Good good) {
         this.id = id;
         this.value = value;
         this.user = user;
@@ -44,11 +47,11 @@ public class Code {
     public Code() {
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -81,10 +84,10 @@ public class Code {
         if (this == o) return true;
         if (!(o instanceof Code)) return false;
         Code code = (Code) o;
-        return id == code.id &&
+        return Objects.equals(id, code.id) &&
                 Objects.equals(value, code.value) &&
-                Objects.equals(user.getId(), code.user.getId()) &&
-                Objects.equals(good.getId(), code.good.getId());
+                Objects.equals(user, code.user) &&
+                Objects.equals(good, code.good);
     }
 
     @Override

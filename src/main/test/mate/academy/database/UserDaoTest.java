@@ -1,7 +1,7 @@
 package mate.academy.database;
 
 import mate.academy.database.user.UserDao;
-import mate.academy.database.user.UserDaoJdbc;
+import mate.academy.database.user.UserDaoHib;
 import mate.academy.model.User;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -12,7 +12,7 @@ import org.junit.Test;
 import java.util.Optional;
 
 public class UserDaoTest {
-    private static final UserDao USER_DAO = new UserDaoJdbc();
+    private static final UserDao USER_DAO = new UserDaoHib();
     static User user;
     static User userToRemove;
     static User userToAdd;

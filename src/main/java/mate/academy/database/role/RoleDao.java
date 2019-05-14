@@ -8,7 +8,7 @@ public interface RoleDao {
     int addRole(Role role);
     int removeRole(Role role);
     int editRole(Role role);
-    Optional<Role> getRole(int id);
+    Optional<Role> getRole(Long id);
     Optional<Role> getRole(String name);
     List<Role> getRoles();
 }

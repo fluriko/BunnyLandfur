@@ -2,7 +2,6 @@ package mate.academy.servlets;
 
 import mate.academy.database.user.UserDao;
 import mate.academy.database.user.UserDaoHib;
-import mate.academy.database.user.UserDaoJdbc;
 import mate.academy.model.User;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;

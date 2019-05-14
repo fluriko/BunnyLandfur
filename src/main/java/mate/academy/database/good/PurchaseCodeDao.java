@@ -9,6 +9,6 @@ public interface PurchaseCodeDao {
     int addCode(Code code);
     int removeCode(Code code);
     Optional<Code> getCode(String value);
-    Optional<Code> getCode(int id);
+    Optional<Code> getCode(Long id);
     List<Code> getCodes();
 }
