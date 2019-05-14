@@ -44,7 +44,7 @@ public class RegServletTest {
 
     @Test
     public void doPostExist() throws IOException, ServletException {
-        User user = new User("betta", "111qqq", "bettaa@gmail.com", "salt");
+        User user = new User("betta", "111qqq", "bettaa@gmail.com");
         USER_DAO.addUser(user);
         Mockito.when(request.getParameter("name")).thenReturn("betta");
         Mockito.when(request.getParameter("password")).thenReturn("111qqq");

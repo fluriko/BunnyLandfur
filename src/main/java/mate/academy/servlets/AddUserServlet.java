@@ -6,7 +6,6 @@ import mate.academy.database.user.UserDao;
 import mate.academy.database.user.UserDaoHib;
 import mate.academy.model.Role;
 import mate.academy.model.User;
-import mate.academy.util.HashUtil;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -51,9 +50,9 @@ public class AddUserServlet extends HttpServlet {
                     int roleId = Integer.parseInt(roleIdString);
                     role = ROLE_DAO.getRole(roleId).get();
                 }
-                String salt = HashUtil.getRandomSalt();
-                String hashPass = HashUtil.getSha512SecurePassword(password, salt);
-                User user = new User(login, hashPass, role, mail, salt);
+//                String salt = HashUtil.getRandomSalt();
+//                String hashPass = HashUtil.getSha512SecurePassword(password, salt);
+                User user = new User(login, password, role, mail);
                 USER_DAO.addUser(user);
                 User userGet = USER_DAO.getUserByLogin(login).get();
                 String message = userGet.getRole() + " " + userGet.getId() + " added successfully";

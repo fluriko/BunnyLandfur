@@ -36,7 +36,6 @@ public class UserDaoJdbc implements UserDao {
         } catch (SQLException e) {
             logger.error("adding failed for user: " + user.getLogin(), e);
         }
-
         return 0;
     }
 

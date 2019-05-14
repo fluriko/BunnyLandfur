@@ -4,10 +4,8 @@ import mate.academy.database.role.RoleDao;
 import mate.academy.database.role.RoleDaoHib;
 import mate.academy.database.user.UserDao;
 import mate.academy.database.user.UserDaoHib;
-import mate.academy.database.user.UserDaoJdbc;
 import mate.academy.model.Role;
 import mate.academy.model.User;
-import mate.academy.util.HashUtil;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -37,39 +35,30 @@ public class EditServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int userId = Integer.parseInt(req.getParameter("id"));
-        User userOld = USER_DAO.getUserById(userId).get();
+        User userToEdit = USER_DAO.getUserById(userId).get();
         String newLog = req.getParameter("login").trim();
         String newPass = req.getParameter("password").trim();
-        Role role = userOld.getRole();
         String newMail = req.getParameter("mail").trim();
-        String newSalt = HashUtil.getRandomSalt();
-        String newPassHash = HashUtil.getSha512SecurePassword(newPass, newSalt);
-        int changeCount = 3;
-        if (newLog.length() < 4 || USER_DAO.getUserByLogin(newLog).isPresent()) {
-            newLog = userOld.getLogin();
-            changeCount--;
+        if (newLog.length() > 3 || !USER_DAO.getUserByLogin(newLog).isPresent()) {
+            userToEdit.setLogin(newLog);
         }
-        if (newPass.length() < 6 || newPass.equals(userOld.getPassword())) {
-            newPassHash = userOld.getPassword();
-            newSalt = userOld.getSalt();
-            changeCount--;
+        if (newPass.length() > 5 || !newPass.equals(userToEdit.getPassword())) {
+            userToEdit.setSalt();
+            userToEdit.setPassword(newPass);
         }
-        if (!newMail.endsWith("@gmail.com")
-                || newMail.length() < 16
-                || USER_DAO.getUserByMail(newMail).isPresent()) {
-            newMail = userOld.getMail();
-            changeCount--;
+        if (newMail.endsWith("@gmail.com")
+                || newMail.length() > 15
+                || !USER_DAO.getUserByMail(newMail).isPresent()) {
+            userToEdit.setMail(newMail);
         }
         String roleIdString = req.getParameter("role");
         if (roleIdString != null) {
             int roleId = Integer.parseInt(roleIdString);
-            role = ROLE_DAO.getRole(roleId).get();
-            changeCount++;
+            userToEdit.setRole(ROLE_DAO.getRole(roleId).get());
         }
-        logger.warn("Admin changed user data for " + userId);
-        User userNew = new User(userId, newLog, newPassHash, role, newMail, newSalt);
-        USER_DAO.editUser(userNew);
-        String message = "For user " + userId + " changed fields: " + changeCount;
+        USER_DAO.editUser(userToEdit);
+        String message = "Admin changed user data for " + userId;
+        logger.warn(message);
         req.setAttribute("message", message);
         req.getRequestDispatcher("/admin/list").forward(req, resp);
     }

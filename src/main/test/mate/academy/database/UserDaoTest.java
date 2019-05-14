@@ -19,9 +19,9 @@ public class UserDaoTest {
 
     @Before
     public void initialization() {
-        user = new User("Alice", "123456", "123456@gmail.com", "salt");
-        userToRemove = new User("Mary", "111111", "234567@gmail.com", "salt");
-        userToAdd = new User("Sophie", "232323", "345678@gmail.com", "salt");
+        user = new User("Alice", "123456", "123456@gmail.com");
+        userToRemove = new User("Mary", "111111", "234567@gmail.com");
+        userToAdd = new User("Sophie", "232323", "345678@gmail.com");
         USER_DAO.addUser(user);
     }
 

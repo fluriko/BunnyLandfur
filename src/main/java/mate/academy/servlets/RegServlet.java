@@ -2,9 +2,7 @@ package mate.academy.servlets;
 
 import mate.academy.database.user.UserDao;
 import mate.academy.database.user.UserDaoHib;
-import mate.academy.database.user.UserDaoJdbc;
 import mate.academy.model.User;
-import mate.academy.util.HashUtil;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -49,9 +47,9 @@ public class RegServlet extends HttpServlet {
                 req.setAttribute("message", message);
                 req.getRequestDispatcher("/registration.jsp").forward(req, resp);
             } else {
-                String salt = HashUtil.getRandomSalt();
-                String hashPass = HashUtil.getSha512SecurePassword(password, salt);
-                User user = new User(login, hashPass, mail, salt);
+//                String salt = HashUtil.getRandomSalt();
+//                String hashPass = HashUtil.getSha512SecurePassword(password, salt);
+                User user = new User(login, password, mail);
                 USER_DAO.addUser(user);
                 User userGet = USER_DAO.getUserByLogin(login).get();
                 logger.debug("User " + userGet.getId() + " registered successfully");

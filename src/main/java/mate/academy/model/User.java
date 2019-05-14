@@ -1,5 +1,7 @@
 package mate.academy.model;
 
+import mate.academy.util.HashUtil;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -42,16 +44,16 @@ public class User {
         this.salt = salt;
     }
 
-    public User(String login, String password, Role role, String mail, String salt) {
+    public User(String login, String password, Role role, String mail) {
+        this.salt = HashUtil.getRandomSalt();
         this.login = login;
-        this.password = password;
+        this.password = HashUtil.getSha512SecurePassword(password, salt);
         this.role = role;
         this.mail = mail;
-        this.salt = salt;
     }
 
-    public User(String login, String password, String mail, String salt) {
-        this(login, password, new Role(2, "USER"), mail, salt);
+    public User(String login, String password, String mail) {
+        this(login, password, new Role(2, "USER"), mail);
     }
 
     public User() {
@@ -78,7 +80,7 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = HashUtil.getSha512SecurePassword(password, salt);
     }
 
     public Role getRole() {
@@ -103,6 +105,10 @@ public class User {
 
     public void setSalt(String salt) {
         this.salt = salt;
+    }
+
+    public void setSalt() {
+        this.salt = HashUtil.getRandomSalt();
     }
 
     @Override
