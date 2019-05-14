@@ -14,10 +14,10 @@ public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "ID", unique = true)
     private Long id;
 
-    @Column(name = "NAME")
+    @Column(name = "NAME", unique = true, nullable = false)
     private String name;
 
     public Role(Long id, String name) {

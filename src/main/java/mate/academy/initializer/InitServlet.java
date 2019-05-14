@@ -40,10 +40,13 @@ public class InitServlet extends HttpServlet {
         Good frenchLop = new Good("french lop", "the best pet", "bunnies", 20.5);
         Good englishAngora = new Good("english angora", "the fluffiest pet", "bunnies", 20.8);
         Good cinnamon = new Good("cinnamon", "amily or cinnamon", "bunnies", 20.2);
+        Good hay = new Good("fresh hay", "good quality hay ", "food", 2.2);
         GOOD_DAO.addGood(frenchLop);
         GOOD_DAO.addGood(englishAngora);
         GOOD_DAO.addGood(cinnamon);
-        Code testCode = new Code(555L, "1212", candy, frenchLop);
+        GOOD_DAO.addGood(hay);
+        Code testCode = new Code(55L, "1212", candy, frenchLop);
+        PURCHASE_CODE_DAO.addCode(testCode);
         PurchaseCodeCleaner.clean(testCode);
     }
 }

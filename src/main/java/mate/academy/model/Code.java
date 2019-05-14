@@ -17,18 +17,18 @@ public class Code {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "ID", unique = true)
     private Long id;
 
-    @Column(name = "VALUE")
+    @Column(name = "VALUE", unique = true, nullable = false)
     private String value;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "GOOD_ID")
+    @JoinColumn(name = "GOOD_ID", nullable = false)
     private Good good;
 
     public Code(Long id, String value, User user, Good good) {
@@ -86,8 +86,8 @@ public class Code {
         Code code = (Code) o;
         return Objects.equals(id, code.id) &&
                 Objects.equals(value, code.value) &&
-                Objects.equals(user, code.user) &&
-                Objects.equals(good, code.good);
+                Objects.equals(user.getId(), code.user.getId()) &&
+                Objects.equals(good.getId(), code.good.getId());
     }
 
     @Override

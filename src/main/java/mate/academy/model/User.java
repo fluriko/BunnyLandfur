@@ -19,23 +19,23 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "ID", unique = true)
     private Long id;
 
-    @Column(name = "LOGIN")
+    @Column(name = "LOGIN", unique = true, nullable = false)
     private String login;
 
-    @Column(name = "PASSWORD")
+    @Column(name = "PASSWORD", nullable = false)
     private String password;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ROLE_ID")
+    @JoinColumn(name = "ROLE_ID", nullable = false)
     private Role role;
 
-    @Column(name = "MAIL")
+    @Column(name = "MAIL", unique = true, nullable = false)
     private String mail;
 
-    @Column(name = "SALT")
+    @Column(name = "SALT", nullable = false)
     private String salt;
 
     public User(Long id, String login, String password, Role role, String mail, String salt) {

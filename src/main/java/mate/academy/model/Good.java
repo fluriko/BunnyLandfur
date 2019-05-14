@@ -14,19 +14,19 @@ public class Good {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "ID", unique = true)
     private Long id;
 
-    @Column(name = "LABEL")
+    @Column(name = "LABEL", nullable = false)
     private String label;
 
     @Column(name = "DESCRIPTION")
     private String description;
 
-    @Column(name = "CATEGORY")
+    @Column(name = "CATEGORY", nullable = false)
     private String category;
 
-    @Column(name = "PRICE")
+    @Column(name = "PRICE", nullable = false)
     private double price;
 
     public Good(Long id, String label, String description, String category, double price) {

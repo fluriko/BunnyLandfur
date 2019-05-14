@@ -9,6 +9,7 @@ import mate.academy.model.Good;
 import mate.academy.model.User;
 import mate.academy.service.MailService;
 import mate.academy.util.PurchaseCodeCleaner;
+import mate.academy.util.RandomGenerator;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -47,7 +48,11 @@ public class BuyServlet extends HttpServlet {
         Long goodId = Long.parseLong(request.getParameter("goodId"));
         Good good = GOOD_DAO.getGood(goodId).get();
         logger.info("User " + user.getLogin() + " is on buy good " + goodId +" page");
-        String codeValue = MAIL_SERVICE.sendMail(user.getMail());
+        String codeValue = RandomGenerator.generateCode();
+        while (PURCHASE_CODE_DAO.getCode(codeValue).isPresent()) {
+            codeValue = RandomGenerator.generateCode();;
+        }
+        MAIL_SERVICE.sendMail(user.getMail(), codeValue);
         Code code = new Code(codeValue, user, good);
         PURCHASE_CODE_DAO.addCode(code);
         Long codeId = PURCHASE_CODE_DAO.getCode(codeValue).get().getId();

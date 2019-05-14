@@ -15,7 +15,7 @@ import java.util.Properties;
 public class MailService {
     private static final Logger logger = Logger.getLogger(MailService.class);
 
-    public String sendMail(String userEmail) {
+    public String sendMail(String userEmail, String code) {
         final String username = "bunnyland.fur@gmail.com";
         final String password = "111qqq---";
         Properties properties = new Properties();
@@ -34,11 +34,10 @@ public class MailService {
             message.setFrom(new InternetAddress(username));
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(userEmail));
             message.setSubject("disposable code");
-            String randomCode = RandomGenerator.generateCode();
-            message.setText("Your disposable code is: " + randomCode);
+            message.setText("Your disposable code is: " + code);
             Transport.send(message);
             logger.debug("message sent to " + userEmail);
-            return randomCode;
+            return code;
         } catch (MessagingException e) {
             logger.error("Error in sending message to " + userEmail, e);
             return "";
