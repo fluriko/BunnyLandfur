@@ -3,6 +3,7 @@ package mate.academy.servlets;
 import mate.academy.database.user.UserDao;
 import mate.academy.database.user.UserDaoHib;
 import mate.academy.model.User;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -16,8 +17,11 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class LogServletTest {
-    private static final UserDao USER_DAO = new UserDaoHib();
+    UserDao userDao;
     LogServlet logServlet;
+    User userOne;
+    User userTwo;
+    User fluriko;
 
     @Mock
     HttpServletRequest request;
@@ -35,37 +39,57 @@ public class LogServletTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         logServlet = new LogServlet();
+        userDao = new UserDaoHib();
+        userOne = new User("111111", "111111", "test1@test.com");
+        userTwo = new User("222222", "222222", "test2@test.com");
+        fluriko = userDao.getUserByLogin("fluriko").get();
+    }
+
+    @After
+    public void clean() {
+        userDao.removeUser(userOne);
+        userDao.removeUser(userTwo);
     }
 
     @Test
     public void doPostNotExist() throws IOException, ServletException {
-        Mockito.when(request.getParameter("name")).thenReturn("alpha");
-        Mockito.when(request.getParameter("password")).thenReturn("111qqq");
-        Mockito.when(request.getRequestDispatcher("login.jsp")).thenReturn(requestDispatcher);
+        Mockito.when(request.getParameter("login")).thenReturn(userOne.getLogin());
+        Mockito.when(request.getParameter("password")).thenReturn(userOne.getPassword());
+        Mockito.when(request.getRequestDispatcher("/login.jsp")).thenReturn(requestDispatcher);
         logServlet.doPost(request, response);
-        Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("login.jsp");
+        Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("/login.jsp");
     }
 
     @Test
-    public void doPostHello() throws IOException, ServletException {
-        User user = new User("betta", "111qqq", "insania@gmail.com");
-        USER_DAO.addUser(user);
-        Mockito.when(request.getParameter("name")).thenReturn("betta");
-        Mockito.when(request.getParameter("password")).thenReturn("111qqq");
-        Mockito.when(request.getRequestDispatcher("/goods")).thenReturn(requestDispatcher);
+    public void doPostWrongPass() throws IOException, ServletException {
+        userDao.addUser(userOne);
+        Mockito.when(request.getParameter("login")).thenReturn(userOne.getLogin());
+        Mockito.when(request.getParameter("password")).thenReturn("1111");
+        Mockito.when(request.getRequestDispatcher("/login.jsp")).thenReturn(requestDispatcher);
+        logServlet.doPost(request, response);
+        Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("/login.jsp");
+    }
+
+    @Test
+    public void doPostUser() throws IOException, ServletException {
+        userDao.addUser(userTwo);
+        Mockito.when(request.getParameter("login")).thenReturn(userTwo.getLogin());
+        Mockito.when(request.getParameter("password")).thenReturn("222222");
+        Mockito.when(request.getRequestDispatcher("/user/goods")).thenReturn(requestDispatcher);
         Mockito.when(request.getSession()).thenReturn(session);
+        Mockito.when(request.getSession().getAttribute("user")).thenReturn(userTwo);
         logServlet.doPost(request, response);
-        Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("/goods");
+        Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("/user/goods");
     }
 
     @Test
-    public void doPostWrong() throws IOException, ServletException {
-        User user = new User("betta", "111qqq", "insania@gmail.com");
-        USER_DAO.addUser(user);
-        Mockito.when(request.getParameter("name")).thenReturn("betta");
-        Mockito.when(request.getParameter("password")).thenReturn("222www");
-        Mockito.when(request.getRequestDispatcher("login.jsp")).thenReturn(requestDispatcher);
+    public void doPostAdmin() throws IOException, ServletException {
+        Mockito.when(request.getParameter("login")).thenReturn("fluriko");
+        Mockito.when(request.getParameter("password")).thenReturn("123123");
+        Mockito.when(request.getRequestDispatcher("/admin")).thenReturn(requestDispatcher);
+        Mockito.when(request.getSession()).thenReturn(session);
+        Mockito.when(request.getSession().getAttribute("user")).thenReturn(fluriko);
         logServlet.doPost(request, response);
-        Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("login.jsp");
+        Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("/admin");
     }
 }
