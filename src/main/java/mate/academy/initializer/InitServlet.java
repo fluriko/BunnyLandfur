@@ -50,7 +50,5 @@ public class InitServlet extends HttpServlet {
         Code testCode = new Code(55L, "1212", candy, frenchLop);
         PURCHASE_CODE_DAO.addCode(testCode);
         PurchaseCodeCleaner.clean(testCode);
-        System.out.println("ADMINS WITH ROLE ADMIN" + ROLE_DAO.getRole(1L).get().getUsers());
-        System.out.println("USERS WITH ROLE USERS" + ROLE_DAO.getRole(2L).get().getUsers());
     }
 }
