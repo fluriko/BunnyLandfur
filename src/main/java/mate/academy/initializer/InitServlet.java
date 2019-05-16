@@ -35,8 +35,10 @@ public class InitServlet extends HttpServlet {
         ROLE_DAO.addRole(user);
         User fluriko = new User("fluriko", "123123", admin, "fluricode@gmail.com");
         User candy = new User("candy", "123123", user, "artfluriko@gmail.com");
+        User sweetie = new User("sweetie", "123123", user, "sweetie@gmail.com");
         USER_DAO.addUser(fluriko);
         USER_DAO.addUser(candy);
+        USER_DAO.addUser(sweetie);
         Good frenchLop = new Good("french lop", "the best pet", "bunnies", 20.5);
         Good englishAngora = new Good("english angora", "the fluffiest pet", "bunnies", 20.8);
         Good cinnamon = new Good("cinnamon", "amily or cinnamon", "bunnies", 20.2);
@@ -48,5 +50,7 @@ public class InitServlet extends HttpServlet {
         Code testCode = new Code(55L, "1212", candy, frenchLop);
         PURCHASE_CODE_DAO.addCode(testCode);
         PurchaseCodeCleaner.clean(testCode);
+        System.out.println("ADMINS WITH ROLE ADMIN" + ROLE_DAO.getRole(1L).get().getUsers());
+        System.out.println("USERS WITH ROLE USERS" + ROLE_DAO.getRole(2L).get().getUsers());
     }
 }
