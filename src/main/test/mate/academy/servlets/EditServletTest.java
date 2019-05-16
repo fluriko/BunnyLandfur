@@ -3,6 +3,7 @@ package mate.academy.servlets;
 import mate.academy.database.user.UserDao;
 import mate.academy.database.user.UserDaoHib;
 import mate.academy.model.User;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -15,8 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class EditServletTest {
-    private static final UserDao USER_DAO = new UserDaoHib();
+    UserDao userDao;
     EditServlet editServlet;
+    User userOne;
 
     @Mock
     HttpServletRequest request;
@@ -31,25 +33,25 @@ public class EditServletTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         editServlet = new EditServlet();
-        User user = new User("alpha", "111qqq", "alphaa@gmail.com");
-        USER_DAO.addUser(user);
+        userDao = new UserDaoHib();
+        userOne = new User("111111", "111111", "test1@test.com");
+        userDao.addUser(userOne);
+    }
+
+    @After
+    public void clean() {
+        userDao.removeUser(userOne);
     }
 
     @Test
-    public void doPostShort() throws IOException, ServletException {
-        Mockito.when(request.getParameter("name")).thenReturn("alpha");
-        Mockito.when(request.getParameter("password")).thenReturn("12");
-        Mockito.when(request.getRequestDispatcher("edit.jsp")).thenReturn(requestDispatcher);
+    public void doPost() throws IOException, ServletException {
+        Long id = userDao.getUserByLogin(userOne.getLogin()).get().getId();
+        Mockito.when(request.getParameter("id")).thenReturn(id.toString());
+        Mockito.when(request.getParameter("login")).thenReturn(userOne.getLogin());
+        Mockito.when(request.getParameter("password")).thenReturn(userOne.getPassword());
+        Mockito.when(request.getParameter("mail")).thenReturn(userOne.getMail());
+        Mockito.when(request.getRequestDispatcher("/admin/list")).thenReturn(requestDispatcher);
         editServlet.doPost(request, response);
-        Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("edit.jsp");
-    }
-
-    @Test
-    public void doPostOk() throws IOException, ServletException {
-        Mockito.when(request.getParameter("name")).thenReturn("alpha");
-        Mockito.when(request.getParameter("password")).thenReturn("111qqq");
-        Mockito.when(request.getRequestDispatcher("/admin")).thenReturn(requestDispatcher);
-        editServlet.doPost(request, response);
-        Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("/admin");
+        Mockito.verify(request, Mockito.times(1)).getRequestDispatcher("/admin/list");
     }
 }
