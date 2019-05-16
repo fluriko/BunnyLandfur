@@ -28,7 +28,7 @@ public class EditGoodServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long goodId = Long.parseLong(req.getParameter("id"));
-        Good goodOld = GOOD_DAO.getGood(goodId).get();
+        Good goodToEdit = GOOD_DAO.getGood(goodId).get();
         String newLabel = req.getParameter("label").trim();
         String newDescription = req.getParameter("description").trim();
         String newCategory = req.getParameter("category").trim();
@@ -37,25 +37,22 @@ public class EditGoodServlet extends HttpServlet {
             newPrice = Double.parseDouble(req.getParameter("price"));
         } catch (Exception e) {
             newPrice = 0.0;
-            logger.debug("Not correct data in field price", e);
         }
-        String message = "successfully edited good " + goodId + ": " + goodOld.getLabel();
-        logger.debug("Admin tried to edit good " + goodId + ": " + goodOld.getLabel());
-        if (newLabel.length() < 3) {
-            newLabel = goodOld.getLabel();
+        if (newLabel.length() >= 3) {
+            goodToEdit.setLabel(newLabel);
         }
-        if (newDescription.length() < 5) {
-            newDescription = goodOld.getDescription();
+        if (newDescription.length() >= 5) {
+            goodToEdit.setDescription(newDescription);
         }
-        if (newCategory.length() < 3) {
-            newCategory = goodOld.getCategory();
+        if (newCategory.length() >= 3) {
+            goodToEdit.setCategory(newCategory);
         }
-        if (newPrice <= goodOld.getPrice() / 2) {
-            newPrice = goodOld.getPrice();
+        if (newPrice > 0) {
+            goodToEdit.setPrice(newPrice);
         }
-        logger.info("Admin changed good " + goodId);
-        Good goodNew = new Good(goodId, newLabel, newDescription, newCategory, newPrice);
-        GOOD_DAO.editGood(goodNew);
+        String message = "Good was edited: " + goodId;
+        logger.info(message);
+        GOOD_DAO.editGood(goodToEdit);
         req.setAttribute("message", message);
         req.getRequestDispatcher("/admin/goods").forward(req, resp);
     }

@@ -52,7 +52,7 @@ public class LogServlet extends HttpServlet {
         }
     }
 
-        private void checkRole(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void checkRole(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = (User) req.getSession().getAttribute("user");
         if (user.getRole().getId() == 1) {
             logger.debug("Admin " + user.getLogin() + " logged in and started session");

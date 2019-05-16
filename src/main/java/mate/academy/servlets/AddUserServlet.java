@@ -21,65 +21,94 @@ public class AddUserServlet extends HttpServlet {
     private static final UserDao USER_DAO = new UserDaoHib();
     private static final RoleDao ROLE_DAO = new RoleDaoHib();
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String login = request.getParameter("login").trim();
-        String password = request.getParameter("password").trim();
-        String mail = request.getParameter("mail").trim();
-        Role role = ROLE_DAO.getRole(2L).get();
-        String checkLogCorrect = checkCorrect(login.length() < 4, "login");
-        String checkPassCorrect = checkCorrect(password.length() < 6, "password");
-        String checkMailCorrect = checkCorrect(!mail.endsWith("@gmail.com") || mail.length() < 16, "mail");
-        if (checkLogCorrect.length() > 0 || checkPassCorrect.length() > 0 || checkMailCorrect.length() > 0) {
-            String message = checkLogCorrect + checkPassCorrect + checkMailCorrect;
-            request.setAttribute("message", message);
-            List<Role> roles = ROLE_DAO.getRoles();
-            request.setAttribute("roles", roles);
-            request.getRequestDispatcher("/admin/addUser.jsp").forward(request, response);
-        } else {
-            String checkLogin = checkUniq(USER_DAO.getUserByLogin(login).isPresent(), "login " + login);
-            String checkMail = checkUniq(USER_DAO.getUserByMail(mail).isPresent(), "mail " + mail);
-            if (checkLogin.length() > 0 || checkMail.length() > 0) {
-                String message = checkLogin + checkMail;
-                request.setAttribute("message", message);
-                List<Role> roles = ROLE_DAO.getRoles();
-                request.setAttribute("roles", roles);
-                request.getRequestDispatcher("/admin/addUser.jsp").forward(request, response);
-            } else {
-                String roleIdString = request.getParameter("role");
-                if (roleIdString != null) {
-                    Long roleId = Long.parseLong(roleIdString);
-                    role = ROLE_DAO.getRole(roleId).get();
-                }
-                User user = new User(login, password, role, mail);
-                USER_DAO.addUser(user);
-                User userGet = USER_DAO.getUserByLogin(login).get();
-                String message = userGet.getRole() + " " + userGet.getId() + " added successfully";
-                logger.debug(message);
-                request.setAttribute("message", message);
-                request.getRequestDispatcher("/admin/list").forward(request, response);
-            }
-        }
-    }
-
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Role> roles = ROLE_DAO.getRoles();
         request.setAttribute("roles", roles);
         request.getRequestDispatcher("/admin/addUser.jsp").forward(request, response);
     }
 
-    private String checkCorrect(boolean condition, String data) {
-        String message = "";
-        if (condition) {
-            message = data + " is not correct!\n";
-        }
-        return message;
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<Role> roles = ROLE_DAO.getRoles();
+        req.setAttribute("roles", roles);
+        checkCorrect(req, resp);
+        checkUnique(req, resp);
     }
 
-    private String checkUniq(boolean condition, String data) {
-        String message = "";
-        if (condition) {
-            message = "User with " + data + " already registered!\n";
+    private void checkCorrect(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        checkCorrectLog(req, resp);
+        checkCorrectPass(req, resp);
+        checkCorrectMail(req, resp);
+    }
+
+    private void checkUnique(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        checkUniqueLog(req, resp);
+        checkUniqueMail(req, resp);
+        addUser(req, resp);
+    }
+
+    private void checkCorrectLog(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String login = req.getParameter("login").trim();
+        if (login.length() < 4) {
+            String message = "Login " + login + " is too short, enter 4 symbols at least\n";
+            req.setAttribute("message", message);
+            req.getRequestDispatcher("/admin/addUser.jsp").forward(req, resp);
         }
-        return message;
+    }
+
+    private void checkCorrectPass(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String password = req.getParameter("password").trim();
+        if (password.length() < 6) {
+            String message = "Password is too short, enter 6 symbols at least\n";
+            req.setAttribute("message", message);
+            req.getRequestDispatcher("/admin/addUser.jsp").forward(req, resp);
+        }
+    }
+
+    private void checkCorrectMail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String mail = req.getParameter("mail").trim();
+        if (!mail.endsWith("@gmail.com") || mail.length() < 16) {
+            String message = "mail should be more than 16 chars long and should end with @gmail.com\n";
+            req.setAttribute("message", message);
+            req.getRequestDispatcher("/admin/addUser.jsp").forward(req, resp);
+        }
+    }
+
+    private void checkUniqueLog(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String login = req.getParameter("login").trim();
+        if (USER_DAO.getUserByLogin(login).isPresent()) {
+            String message = "User with login " + login + " already exists";
+            req.setAttribute("message", message);
+            req.getRequestDispatcher("/admin/addUser.jsp").forward(req, resp);
+        }
+    }
+
+    private void checkUniqueMail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String mail = req.getParameter("mail").trim();
+        if (USER_DAO.getUserByMail(mail).isPresent()) {
+            String message = "User with mail " + mail + " already exists";
+            req.setAttribute("message", message);
+            req.getRequestDispatcher("/admin/addUser.jsp").forward(req, resp);
+        }
+    }
+
+    private void addUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Role role = ROLE_DAO.getRole(2L).get();
+        String login = req.getParameter("login").trim();
+        String password = req.getParameter("password").trim();
+        String mail = req.getParameter("mail").trim();
+        String roleIdString = req.getParameter("role");
+        if (roleIdString != null) {
+            Long roleId = Long.parseLong(roleIdString);
+            role = ROLE_DAO.getRole(roleId).get();
+        }
+        User user = new User(login, password, role, mail);
+        USER_DAO.addUser(user);
+        User userGet = USER_DAO.getUserByLogin(login).get();
+        String message = userGet.getRole() + " " + userGet.getId() + " added successfully";
+        logger.debug(message);
+        req.setAttribute("message", message);
+        req.getRequestDispatcher("/admin/list").forward(req, resp);
     }
 }

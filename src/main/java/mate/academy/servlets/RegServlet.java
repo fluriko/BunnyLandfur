@@ -28,49 +28,77 @@ public class RegServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        checkCorrect(req, resp);
+        checkUnique(req, resp);
+    }
+
+    private void checkCorrect(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        checkCorrectLog(req, resp);
+        checkCorrectPass(req, resp);
+        checkCorrectMail(req, resp);
+    }
+
+    private void checkUnique(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        checkUniqueLog(req, resp);
+        checkUniqueMail(req, resp);
+        addUser(req, resp);
+    }
+
+    private void checkCorrectLog(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String login = req.getParameter("login").trim();
+        if (login.length() < 4) {
+            String message = "Login " + login + " is too short, enter 4 symbols at least\n";
+            req.setAttribute("message", message);
+            req.getRequestDispatcher("/registration.jsp").forward(req, resp);
+        }
+    }
+
+    private void checkCorrectPass(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String password = req.getParameter("password").trim();
+        if (password.length() < 6) {
+            String message = "Password is too short, enter 6 symbols at least\n";
+            req.setAttribute("message", message);
+            req.getRequestDispatcher("/registration.jsp").forward(req, resp);
+        }
+    }
+
+    private void checkCorrectMail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String mail = req.getParameter("mail").trim();
+        if (!mail.endsWith("@gmail.com") || mail.length() < 16) {
+            String message = "Your mail should be real and end with @gmail.com\n";
+            req.setAttribute("message", message);
+            req.getRequestDispatcher("/registration.jsp").forward(req, resp);
+        }
+    }
+
+    private void checkUniqueLog(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String login = req.getParameter("login").trim();
+        if (USER_DAO.getUserByLogin(login).isPresent()) {
+            String message = "User with name " + login + " already exists";
+            req.setAttribute("message", message);
+            req.getRequestDispatcher("/registration.jsp").forward(req, resp);
+        }
+    }
+
+    private void checkUniqueMail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String mail = req.getParameter("mail").trim();
+        if (USER_DAO.getUserByMail(mail).isPresent()) {
+            String message = "User with mail " + mail + " already exists";
+            req.setAttribute("message", message);
+            req.getRequestDispatcher("/registration.jsp").forward(req, resp);
+        }
+    }
+
+    private void addUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter("login").trim();
         String password = req.getParameter("password").trim();
         String mail = req.getParameter("mail").trim();
-        String checkLogCorrect = checkCorrect(login.length() < 4, "login");
-        String checkPassCorrect = checkCorrect(password.length() < 6, "password");
-        String checkMailCorrect = checkCorrect(!mail.endsWith("@gmail.com") || mail.length() < 16, "mail");
-        if (checkLogCorrect.length() > 0 || checkPassCorrect.length() > 0 || checkMailCorrect.length() > 0) {
-            String message = checkLogCorrect + checkPassCorrect + checkMailCorrect;
-            req.setAttribute("message", message);
-            req.setAttribute("instruction", INSTRUCTION);
-            req.getRequestDispatcher("/registration.jsp").forward(req, resp);
-        } else {
-            String checkLogin = checkUniq(USER_DAO.getUserByLogin(login).isPresent(), "login " + login);
-            String checkMail = checkUniq(USER_DAO.getUserByMail(mail).isPresent(), "mail " + mail);
-            if (checkLogin.length() > 0 || checkMail.length() > 0) {
-                String message = checkLogin + checkMail;
-                req.setAttribute("message", message);
-                req.getRequestDispatcher("/registration.jsp").forward(req, resp);
-            } else {
-                User user = new User(login, password, mail);
-                USER_DAO.addUser(user);
-                User userGet = USER_DAO.getUserByLogin(login).get();
-                logger.debug("User " + userGet.getId() + " registered successfully");
-                String message = "Hello and welcome " + login + ", now you can log in";
-                req.setAttribute("message", message);
-                req.getRequestDispatcher("/index.jsp").forward(req, resp);
-            }
-        }
-    }
-
-    private String checkCorrect(boolean condition, String data) {
-        String message = "";
-        if (condition) {
-            message = data + " is not correct!\n";
-        }
-        return message;
-    }
-
-    private String checkUniq(boolean condition, String data) {
-        String message = "";
-        if (condition) {
-            message = "User with " + data + " already registered!\n";
-        }
-        return message;
+        User user = new User(login, password, mail);
+        USER_DAO.addUser(user);
+        User userJustRegistered = USER_DAO.getUserByLogin(login).get();
+        logger.info("User " + userJustRegistered.getId() + " registered successfully");
+        String message = "Hello and welcome " + login + ", now you can log in";
+        req.setAttribute("message", message);
+        req.getRequestDispatcher("/index.jsp").forward(req, resp);
     }
 }
