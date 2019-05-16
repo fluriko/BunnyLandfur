@@ -2,7 +2,6 @@ package mate.academy.servlets;
 
 import mate.academy.database.role.RoleDao;
 import mate.academy.database.role.RoleDaoHib;
-import mate.academy.model.Role;
 import mate.academy.model.User;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;

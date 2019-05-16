@@ -26,36 +26,44 @@ public class LogServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter("login").trim();
-        String password = req.getParameter("password").trim();
-        logger.debug("User entered data " + login + " " + password);
         String message;
         if (USER_DAO.getUserByLogin(login).isPresent()) {
-            User user = USER_DAO.getUserByLogin(login).get();
-            String hashPass = HashUtil.getSha512SecurePassword(password, user.getSalt());
-            if (user.getPassword().equals(hashPass)) {
-                req.getSession().setAttribute("user", user);
-                if (user.getRole().getId() == 1) {
-                    logger.debug("Admin " + user.getLogin() + " logged in and started session");
-                    message = "Welcome back admin " + login;
-                    req.setAttribute("message", message);
-                    req.getRequestDispatcher("/admin").forward(req, resp);
-                } else {
-                    logger.debug("User " + user.getLogin() + " logged in and started session");
-                    message = "Welcome back " + login;
-                    req.setAttribute("message", message);
-                    req.getRequestDispatcher("/user/goods").forward(req, resp);
-                }
-            } else {
-                logger.debug("User entered wrong login or password");
-                message = "Wrong login or password";
-                req.setAttribute("message", message);
-                req.getRequestDispatcher("/login.jsp").forward(req, resp);
-            }
+            checkPassword(req, resp);
         } else {
-            logger.debug("User entered login which doesn't exist in database");
             message = "No user in base with name " + login;
             req.setAttribute("message", message);
             req.getRequestDispatcher("/login.jsp").forward(req, resp);
+        }
+    }
+
+    private void checkPassword(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String login = req.getParameter("login").trim();
+        User user = USER_DAO.getUserByLogin(login).get();
+        String password = req.getParameter("password").trim();
+        String hashPass = HashUtil.getSha512SecurePassword(password, user.getSalt());
+        if (user.getPassword().equals(hashPass)) {
+            req.getSession().setAttribute("user", user);
+            checkRole(req, resp);
+        } else {
+            logger.info("User entered wrong login or password");
+            String message = "Wrong login or password";
+            req.setAttribute("message", message);
+            req.getRequestDispatcher("/login.jsp").forward(req, resp);
+        }
+    }
+
+        private void checkRole(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        User user = (User) req.getSession().getAttribute("user");
+        if (user.getRole().getId() == 1) {
+            logger.debug("Admin " + user.getLogin() + " logged in and started session");
+            String message = "Welcome back admin " + user.getLogin();
+            req.setAttribute("message", message);
+            req.getRequestDispatcher("/admin").forward(req, resp);
+        } else {
+            logger.debug("User " + user.getLogin() + " logged in and started session");
+            String message = "Welcome back " + user.getLogin();
+            req.setAttribute("message", message);
+            req.getRequestDispatcher("/user/goods").forward(req, resp);
         }
     }
 }
