@@ -138,7 +138,7 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
+                ", password='" + password.substring(0, 7) + '\'' +
                 ", role=" + role +
                 ", mail='" + mail + '\'' +
                 ", salt='" + salt + '\'' +

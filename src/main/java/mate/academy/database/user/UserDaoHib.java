@@ -4,7 +4,6 @@ import mate.academy.model.User;
 import mate.academy.util.HibernateSessionFactoryUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
@@ -56,7 +55,6 @@ public class UserDaoHib implements UserDao {
         } catch (Exception e) {
             logger.debug("Error in removing user " + user.getId(), e);
             return 0;
-
         } finally {
             if (session.isOpen()){
                 session.close();
