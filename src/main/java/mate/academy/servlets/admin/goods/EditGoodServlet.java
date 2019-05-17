@@ -1,4 +1,4 @@
-package mate.academy.servlets;
+package mate.academy.servlets.admin.goods;
 
 import mate.academy.database.good.GoodDao;
 import mate.academy.database.good.GoodDaoHib;

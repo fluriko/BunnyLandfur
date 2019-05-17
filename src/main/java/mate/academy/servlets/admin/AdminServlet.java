@@ -1,4 +1,4 @@
-package mate.academy.servlets;
+package mate.academy.servlets.admin;
 
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;

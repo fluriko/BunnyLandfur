@@ -40,8 +40,8 @@ public class LogServletTest {
         MockitoAnnotations.initMocks(this);
         logServlet = new LogServlet();
         userDao = new UserDaoHib();
-        userOne = new User("111111", "111111", "test1@test.com");
-        userTwo = new User("222222", "222222", "test2@test.com");
+        userOne = new User("111111", "111111", "test1Log@test.com");
+        userTwo = new User("222222", "222222", "test2Log@test.com");
         fluriko = userDao.getUserByLogin("fluriko").get();
     }
 

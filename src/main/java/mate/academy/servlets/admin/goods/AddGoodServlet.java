@@ -1,4 +1,4 @@
-package mate.academy.servlets;
+package mate.academy.servlets.admin.goods;
 
 import mate.academy.database.good.GoodDao;
 import mate.academy.database.good.GoodDaoHib;
@@ -14,7 +14,7 @@ import java.io.IOException;
 @WebServlet(value = "/admin/addGood")
 public class AddGoodServlet extends HttpServlet {
     private static final GoodDao GOOD_DAO = new GoodDaoHib();
-    private static final Logger logger = Logger.getLogger(DeleteGoodServlet.class);
+    private static final Logger logger = Logger.getLogger(AddGoodServlet.class);
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String label = request.getParameter("label").trim();

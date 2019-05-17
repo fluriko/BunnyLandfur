@@ -1,4 +1,4 @@
-package mate.academy.servlets;
+package mate.academy.servlets.admin.users;
 
 import mate.academy.database.user.UserDao;
 import mate.academy.database.user.UserDaoHib;
