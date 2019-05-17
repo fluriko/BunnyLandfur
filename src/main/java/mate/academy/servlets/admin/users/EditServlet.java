@@ -6,6 +6,7 @@ import mate.academy.database.user.UserDao;
 import mate.academy.database.user.UserDaoHib;
 import mate.academy.model.Role;
 import mate.academy.model.User;
+import mate.academy.util.HashUtil;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,7 +24,6 @@ public class EditServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        logger.debug("Admin started edit page");
         Long userId = Long.parseLong(req.getParameter("id"));
         User user = USER_DAO.getUserById(userId).get();
         req.setAttribute("user", user);
@@ -39,16 +39,16 @@ public class EditServlet extends HttpServlet {
         String newLog = req.getParameter("login").trim();
         String newPass = req.getParameter("password").trim();
         String newMail = req.getParameter("mail").trim();
-        if (newLog.length() > 3 || !USER_DAO.getUserByLogin(newLog).isPresent()) {
+        if (newLog.length() > 3 && !USER_DAO.getUserByLogin(newLog).isPresent()) {
             userToEdit.setLogin(newLog);
         }
-        if (newPass.length() > 5 || !newPass.equals(userToEdit.getPassword())) {
-            userToEdit.setSalt();
+        if (newPass.length() > 5 && !newPass.equals(userToEdit.getPassword())) {
+            userToEdit.setSalt(HashUtil.getRandomSalt());
             userToEdit.setPassword(newPass);
         }
         if (newMail.endsWith("@gmail.com")
-                || newMail.length() > 15
-                || !USER_DAO.getUserByMail(newMail).isPresent()) {
+                && newMail.length() > 15
+                && !USER_DAO.getUserByMail(newMail).isPresent()) {
             userToEdit.setMail(newMail);
         }
         String roleIdString = req.getParameter("role");

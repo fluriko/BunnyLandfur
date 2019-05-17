@@ -111,10 +111,6 @@ public class User {
         this.salt = salt;
     }
 
-    public void setSalt() {
-        this.salt = HashUtil.getRandomSalt();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
