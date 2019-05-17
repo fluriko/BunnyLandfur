@@ -27,8 +27,8 @@ public class InitServlet extends HttpServlet {
     private static final PurchaseCodeDao PURCHASE_CODE_DAO = new PurchaseCodeDaoHib();
 
     @Override
-    public void init() throws ServletException {
-        logger.info("INITIALIZATION DATABASE");
+    public void init() {
+        logger.debug("INITIALIZATION DATABASE");
         Role admin = new Role(1L, "ADMIN");
         Role user = new Role(2L, "USER");
         ROLE_DAO.addRole(admin);

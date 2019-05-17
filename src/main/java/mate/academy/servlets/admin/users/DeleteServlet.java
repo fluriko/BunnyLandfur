@@ -22,10 +22,11 @@ public class DeleteServlet extends HttpServlet {
         User user = USER_DAO.getUserById(id).get();
         logger.debug("Admin tried to delete " + id);
         String message;
-        if (USER_DAO.removeUser(user) == 0) {
+        if (user.getRole().getId().equals(1L)) {
             logger.debug("Admin can't delete " + id);
             message = "You can't delete user " + id;
         } else {
+            USER_DAO.removeUser(user);
             logger.info("Admin deleted " + id);
             message = "User " + id + " was deleted successfully!";
         }

@@ -4,6 +4,7 @@ import mate.academy.model.Role;
 import mate.academy.util.HibernateSessionFactoryUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
@@ -65,19 +66,6 @@ public class RoleDaoHib implements RoleDao {
             return Optional.of(role);
         } catch (Exception e) {
             logger.debug("Error in getting role " + id, e);
-            return Optional.empty();
-        }
-    }
-
-    @Override
-    public Optional<Role> getRole(String name) {
-        try {
-            Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-            Criteria criteria = session.createCriteria(Role.class);
-            Role user = (Role) criteria.add(Restrictions.eq("name", name)).uniqueResult();
-            return Optional.of(user);
-        } catch (Exception e) {
-            logger.debug("Error in getting role " + name, e);
             return Optional.empty();
         }
     }

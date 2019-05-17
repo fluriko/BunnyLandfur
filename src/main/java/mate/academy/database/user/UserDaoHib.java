@@ -3,10 +3,9 @@ package mate.academy.database.user;
 import mate.academy.model.User;
 import mate.academy.util.HibernateSessionFactoryUtil;
 import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +28,7 @@ public class UserDaoHib implements UserDao {
             session.close();
             return 1;
         } catch (Exception e) {
-            logger.debug("Error in adding user " + user.getLogin(), e);
+            logger.error("Error in adding user " + user.getLogin(), e);
             return 0;
         } finally {
             if (session.isOpen()){
@@ -53,7 +52,7 @@ public class UserDaoHib implements UserDao {
             session.close();
             return 1;
         } catch (Exception e) {
-            logger.debug("Error in removing user " + user.getId(), e);
+            logger.error("Error in removing user " + user.getId(), e);
             return 0;
         } finally {
             if (session.isOpen()){
@@ -71,11 +70,12 @@ public class UserDaoHib implements UserDao {
             session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
         }
         try {
-            Criteria criteria = session.createCriteria(User.class);
-            User user = (User) criteria.add(Restrictions.eq("login", login)).uniqueResult();
+            Query query = session.createQuery("FROM User WHERE login = :login");
+            query.setParameter("login", login);
+            User user = (User) query.uniqueResult();
             return Optional.of(user);
         } catch (Exception e) {
-            logger.debug("Error in getting user " + login, e);
+            logger.error("Error in getting user " + login, e);
             return Optional.empty();
         }
     }
@@ -89,11 +89,12 @@ public class UserDaoHib implements UserDao {
             session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
         }
         try {
-            Criteria criteria = session.createCriteria(User.class);
-            User user = (User) criteria.add(Restrictions.eq("mail", mail)).uniqueResult();
+            Query query = session.createQuery("FROM User WHERE mail = :mail");
+            query.setParameter("mail", mail);
+            User user = (User) query.uniqueResult();
             return Optional.of(user);
         } catch (Exception e) {
-            logger.debug("Error in getting user " + mail, e);
+            logger.error("Error in getting user " + mail, e);
             return Optional.empty();
         }
     }
@@ -110,12 +111,8 @@ public class UserDaoHib implements UserDao {
             User user = session.get(User.class, id);
             return Optional.of(user);
         } catch (Exception e) {
-            logger.debug("Error in getting user " + id, e);
+            logger.error("Error in getting user " + id, e);
             return Optional.empty();
-        } finally {
-            if (session.isOpen()){
-                session.close();
-            }
         }
     }
 
@@ -134,7 +131,7 @@ public class UserDaoHib implements UserDao {
             session.close();
             return 1;
         } catch (Exception e) {
-            logger.debug("Error in getting user " + user.getId(), e);
+            logger.error("Error in getting user " + user.getId(), e);
             return 0;
         } finally {
             if (session.isOpen()){
@@ -155,7 +152,7 @@ public class UserDaoHib implements UserDao {
         try {
             users = session.createQuery("From User").list();
         } catch (Exception e) {
-            logger.debug("Error in getting all users", e);
+            logger.error("Error in getting all users", e);
         }
         return users;
     }
