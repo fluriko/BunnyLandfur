@@ -28,65 +28,75 @@ public class RegServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        checkCorrect(req, resp);
-        checkUnique(req, resp);
+        if (checkCorrect(req, resp) && checkUnique(req, resp)) {
+            addUser(req, resp);
+        }
     }
 
-    private void checkCorrect(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        checkCorrectLog(req, resp);
-        checkCorrectPass(req, resp);
-        checkCorrectMail(req, resp);
+    private boolean checkCorrect(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        return checkCorrectLog(req, resp)
+                && checkCorrectPass(req, resp)
+                &&checkCorrectMail(req, resp);
     }
 
-    private void checkUnique(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        checkUniqueLog(req, resp);
-        checkUniqueMail(req, resp);
-        addUser(req, resp);
+    private boolean checkUnique(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        return checkUniqueLog(req, resp)
+                && checkUniqueMail(req, resp);
     }
 
-    private void checkCorrectLog(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private boolean checkCorrectLog(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter("login").trim();
         if (login.length() < 4) {
             String message = "Login " + login + " is too short, enter 4 symbols at least\n";
             req.setAttribute("message", message);
             req.getRequestDispatcher("/registration.jsp").forward(req, resp);
+            return false;
         }
+        return true;
     }
 
-    private void checkCorrectPass(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private boolean checkCorrectPass(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String password = req.getParameter("password").trim();
         if (password.length() < 6) {
             String message = "Password is too short, enter 6 symbols at least\n";
             req.setAttribute("message", message);
             req.getRequestDispatcher("/registration.jsp").forward(req, resp);
+            return false;
         }
+        return true;
     }
 
-    private void checkCorrectMail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private boolean checkCorrectMail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String mail = req.getParameter("mail").trim();
         if (!mail.endsWith("@gmail.com") || mail.length() < 16) {
             String message = "Your mail should be real and end with @gmail.com\n";
             req.setAttribute("message", message);
             req.getRequestDispatcher("/registration.jsp").forward(req, resp);
+            return false;
         }
+        return true;
     }
 
-    private void checkUniqueLog(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private boolean checkUniqueLog(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter("login").trim();
         if (USER_DAO.getUserByLogin(login).isPresent()) {
             String message = "User with name " + login + " already exists";
             req.setAttribute("message", message);
             req.getRequestDispatcher("/registration.jsp").forward(req, resp);
+            return false;
         }
+        return true;
     }
 
-    private void checkUniqueMail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private boolean checkUniqueMail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String mail = req.getParameter("mail").trim();
         if (USER_DAO.getUserByMail(mail).isPresent()) {
             String message = "User with mail " + mail + " already exists";
             req.setAttribute("message", message);
             req.getRequestDispatcher("/registration.jsp").forward(req, resp);
+            return false;
         }
+        return true;
     }
 
     private void addUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
