@@ -38,10 +38,6 @@ public class User {
     @Column(name = "SALT", nullable = false)
     private String salt;
 
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "CART_ID")
-//    private Cart cart;
-
     public User(Long id, String login, String password, Role role, String mail, String salt) {
         this.id = id;
         this.login = login;

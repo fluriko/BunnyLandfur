@@ -92,7 +92,7 @@ public class Code {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, value, user, good);
+        return Objects.hash(id, value, user.getId(), good.getId());
     }
 
     @Override
