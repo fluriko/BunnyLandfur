@@ -73,9 +73,9 @@ public class UserDaoHib implements UserDao {
             Query query = session.createQuery("FROM User WHERE login = :login");
             query.setParameter("login", login);
             User user = (User) query.uniqueResult();
-            return Optional.of(user);
+            return Optional.ofNullable(user);
         } catch (Exception e) {
-            logger.error("Error in getting user " + login, e);
+            logger.error("Error in getting user by login " + login, e);
             return Optional.empty();
         }
     }
@@ -92,9 +92,9 @@ public class UserDaoHib implements UserDao {
             Query query = session.createQuery("FROM User WHERE mail = :mail");
             query.setParameter("mail", mail);
             User user = (User) query.uniqueResult();
-            return Optional.of(user);
+            return Optional.ofNullable(user);
         } catch (Exception e) {
-            logger.error("Error in getting user " + mail, e);
+            logger.error("Error in getting user by mail " + mail, e);
             return Optional.empty();
         }
     }
@@ -109,9 +109,9 @@ public class UserDaoHib implements UserDao {
         }
         try {
             User user = session.get(User.class, id);
-            return Optional.of(user);
+            return Optional.ofNullable(user);
         } catch (Exception e) {
-            logger.error("Error in getting user " + id, e);
+            logger.error("Error in getting user by id " + id, e);
             return Optional.empty();
         }
     }
@@ -131,7 +131,7 @@ public class UserDaoHib implements UserDao {
             session.close();
             return 1;
         } catch (Exception e) {
-            logger.error("Error in getting user " + user.getId(), e);
+            logger.error("Error in editing user " + user.getId(), e);
             return 0;
         } finally {
             if (session.isOpen()){

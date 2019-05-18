@@ -57,7 +57,7 @@ public class EditServlet extends HttpServlet {
             userToEdit.setRole(ROLE_DAO.getRole(roleId).get());
         }
         USER_DAO.editUser(userToEdit);
-        String message = "Admin changed user data for " + userId;
+        String message = "Admin changed user data for " + userToEdit.getId();
         logger.warn(message);
         req.setAttribute("message", message);
         req.getRequestDispatcher("/admin/list").forward(req, resp);
