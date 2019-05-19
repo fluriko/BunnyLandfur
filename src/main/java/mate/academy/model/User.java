@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -57,6 +58,22 @@ public class User {
     }
 
     public User() {
+    }
+
+    public void addGoodToCart(Good good) {
+        getGoodsInCart().add(good);
+    }
+
+    public List<Good> getGoodsInCart() {
+        return getCart().getGoodsInCart();
+    }
+
+    public void removeFromCart(Good good) {
+        getGoodsInCart().remove(good);
+    }
+
+    public void cleanCart() {
+        getGoodsInCart().clear();
     }
 
     public Cart getCart() {

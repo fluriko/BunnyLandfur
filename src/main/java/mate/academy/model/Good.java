@@ -32,9 +32,6 @@ public class Good {
     @Column(name = "PRICE", nullable = false)
     private double price;
 
-    @Column(name = "QUANTITY")
-    private long quantity;
-
     @ManyToMany(mappedBy = "goodsInCart", cascade = CascadeType.ALL)
     private List<Cart> carts;
 
@@ -43,7 +40,6 @@ public class Good {
         this.description = description;
         this.category = category;
         this.price = price;
-        this.quantity = 1;
     }
 
     public Good() {
@@ -95,14 +91,6 @@ public class Good {
 
     public void setPrice(double price) {
         this.price = price;
-    }
-
-    public long getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(long quantity) {
-        this.quantity = quantity;
     }
 
     @Override

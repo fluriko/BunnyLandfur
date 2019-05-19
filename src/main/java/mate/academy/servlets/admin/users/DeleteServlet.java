@@ -31,6 +31,6 @@ public class DeleteServlet extends HttpServlet {
             message = "User " + id + " was deleted successfully!";
         }
         req.setAttribute("message", message);
-        req.getRequestDispatcher("/admin/delete.jsp").forward(req, resp);
+        req.getRequestDispatcher("/admin/list").forward(req, resp);
     }
 }

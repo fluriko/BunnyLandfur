@@ -30,6 +30,6 @@ public class DeleteGoodServlet extends HttpServlet {
             message = "Good " + id + " was deleted successfully!";
         }
         req.setAttribute("message", message);
-        req.getRequestDispatcher("/admin/deleteGood.jsp").forward(req, resp);
+        req.getRequestDispatcher("/admin/goods").forward(req, resp);
     }
 }

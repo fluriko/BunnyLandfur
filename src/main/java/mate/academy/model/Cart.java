@@ -33,8 +33,12 @@ public class Cart {
             inverseJoinColumns = @JoinColumn(name = "GOOD_ID"))
     private List<Good> goodsInCart;
 
+    @Column(name = "TOTAL")
+    private double total;
+
     public Cart(User userOwner) {
         this.userOwner = userOwner;
+        total = 0;
     }
 
     public Cart() {
@@ -64,18 +68,31 @@ public class Cart {
         this.goodsInCart = goodsInCart;
     }
 
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
+    public void countTotal() {
+        total = 0;
+        goodsInCart.stream().forEach((o) -> total += o.getPrice());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Cart)) return false;
         Cart cart = (Cart) o;
         return Objects.equals(id, cart.id) &&
-                Objects.equals(userOwner, cart.userOwner);
+                Objects.equals(userOwner.getId(), cart.userOwner.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userOwner);
+        return Objects.hash(id, userOwner.getId());
     }
 
     @Override
