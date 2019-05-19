@@ -23,14 +23,8 @@ public class Role {
     @Column(name = "NAME", unique = true, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
     private List<User> users;
-
-    public Role(Long id, String name, List<User> users) {
-        this.id = id;
-        this.name = name;
-        this.users = users;
-    }
 
     public Role(Long id, String name) {
         this.id = id;

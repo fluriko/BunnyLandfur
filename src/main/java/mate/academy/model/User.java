@@ -1,6 +1,7 @@
 package mate.academy.model;
 
 import mate.academy.util.HashUtil;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.Objects;
 
@@ -27,7 +29,7 @@ public class User {
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(optional=false, fetch = FetchType.EAGER)
     @JoinColumn(name = "ROLE_ID")
     private Role role;
 
@@ -37,14 +39,9 @@ public class User {
     @Column(name = "SALT", nullable = false)
     private String salt;
 
-    public User(Long id, String login, String password, Role role, String mail, String salt) {
-        this.id = id;
-        this.login = login;
-        this.password = password;
-        this.role = role;
-        this.mail = mail;
-        this.salt = salt;
-    }
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "CART_ID")
+    private Cart cart;
 
     public User(String login, String password, Role role, String mail) {
         this.salt = HashUtil.getRandomSalt();
@@ -52,6 +49,7 @@ public class User {
         this.password = HashUtil.getSha512SecurePassword(password, salt);
         this.role = role;
         this.mail = mail;
+        cart = new Cart(this);
     }
 
     public User(String login, String password, String mail) {
@@ -59,6 +57,14 @@ public class User {
     }
 
     public User() {
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 
     public Long getId() {

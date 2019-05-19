@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GoodDao {
-    Long addGood(Good good);
-    Long removeGood(Good good);
+    int addGood(Good good);
+    int removeGood(Good good);
     Optional<Good> getGood(Long id);
-    Long editGood(Good good);
+    int editGood(Good good);
     List<Good> getGoods();
 }

@@ -104,16 +104,15 @@ public class AddUserServlet extends HttpServlet {
     }
 
     private void addUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Role role = ROLE_DAO.getRole(2L).get();
         String login = req.getParameter("login").trim();
         String password = req.getParameter("password").trim();
         String mail = req.getParameter("mail").trim();
+        User user = new User(login, password, mail);
         String roleIdString = req.getParameter("role");
         if (roleIdString != null) {
             Long roleId = Long.parseLong(roleIdString);
-            role = ROLE_DAO.getRole(roleId).get();
+            user.setRole(ROLE_DAO.getRole(roleId).get());
         }
-        User user = new User(login, password, role, mail);
         USER_DAO.addUser(user);
         User userGet = USER_DAO.getUserByLogin(login).get();
         String message = userGet.getRole() + " " + userGet.getId() + " added successfully";

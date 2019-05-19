@@ -20,7 +20,7 @@ public class GoodsServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
-        logger.info("User " + user.getLogin() + " is on goods page");
+        logger.debug(user.getRole() + " " + user.getLogin() + " is on goods page");
         List<Good> goods = GOOD_DAO.getGoods();
         request.setAttribute("goods", goods);
         request.getRequestDispatcher("/user/goods.jsp").forward(request, response);

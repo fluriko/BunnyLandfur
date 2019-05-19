@@ -12,68 +12,47 @@ public class GoodDaoHib implements GoodDao {
     private static final Logger logger = Logger.getLogger(GoodDaoHib.class);
 
     @Override
-    public Long addGood(Good good) {
-        try {
-            Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-            Transaction transaction = session.beginTransaction();
-            session.save(good);
-            transaction.commit();
-            session.close();
-            return 1L;
-        } catch (Exception e) {
-            logger.debug("Error in adding good " + good.getLabel(), e);
-            return 0L;
-        }
+    public int addGood(Good good) {
+        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+        session.save(good);
+        transaction.commit();
+        session.close();
+        return 1;
     }
 
     @Override
-    public Long removeGood(Good good) {
-        try {
-            Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-            Transaction transaction = session.beginTransaction();
-            session.delete(good);
-            transaction.commit();
-            session.close();
-            return 1L;
-        } catch (Exception e) {
-            logger.debug("Error in removing good " + good.getId(), e);
-            return 0L;
-        }
+    public int removeGood(Good good) {
+        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+        session.delete(good);
+        transaction.commit();
+        session.close();
+        return 1;
     }
 
     @Override
     public Optional<Good> getGood(Long id) {
-        try {
-            Good good = HibernateSessionFactoryUtil.getSessionFactory().openSession().get(Good.class, id);
-            return Optional.of(good);
-        } catch (Exception e) {
-            logger.debug("Error in getting good " + id, e);
-            return Optional.empty();
-        }
+        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Good good = session.get(Good.class, id);
+        session.close();
+        return Optional.ofNullable(good);
     }
 
     @Override
-    public Long editGood(Good good) {
-        try {
-            Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-            Transaction transaction = session.beginTransaction();
-            session.update(good);
-            transaction.commit();
-            session.close();
-            return 1L;
-        } catch (Exception e) {
-            logger.debug("Error in getting good " + good.getId(), e);
-            return 0L;
-        }
+    public int editGood(Good good) {
+        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+        session.update(good);
+        transaction.commit();
+        session.close();
+        return 1;
     }
 
     @Override
     public List<Good> getGoods() {
-        List<Good> goods = (List<Good>)  HibernateSessionFactoryUtil
-                .getSessionFactory()
-                .openSession()
-                .createQuery("From Good")
-                .list();
+        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        List<Good> goods = session.createQuery("From Good").list();
         return goods;
     }
 }
