@@ -72,6 +72,10 @@ public class User {
         cart.removeGood(good);
     }
 
+    public void editGoodInCart(Good good) {
+        cart.editGood(good);
+    }
+
     public void cleanCart() {
         cart.clear();
     }

@@ -29,14 +29,26 @@ public class Good {
     @Column(name = "PRICE", nullable = false)
     private double price;
 
+    @Column(name = "QUANTITY", nullable = false)
+    private long quantity;
+
     public Good(String label, String description, String category, double price) {
         this.label = label;
         this.description = description;
         this.category = category;
         this.price = price;
+        quantity = 1;
     }
 
     public Good() {
+    }
+
+    public long getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(long quantity) {
+        this.quantity = quantity;
     }
 
     public Long getId() {
@@ -77,6 +89,10 @@ public class Good {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public double getTotalPrice() {
+        return price * quantity;
     }
 
     @Override

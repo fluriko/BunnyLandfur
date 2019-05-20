@@ -31,7 +31,7 @@
             <tr>
                 <td><c:out value="${good.label}"/></td>
                 <td><c:out value="${good.price}"/></td>
-                <td><c:out value="${quantity}"/></td>
+                <td><c:out value="${good.quantity}"/></td>
                 <td><a href='/user/changeQuantity?goodId=${good.id}'>Change Quantity</a></td>
                 <td><a href='/user/removeGood?goodId=${good.id}'>Remove</a></td>
             </tr>

@@ -15,14 +15,10 @@
 </head>
 <body class="w3-light-blue">
 <div class="w3-container w3-blue w3-opacity w3-right-align">
-
-    <h2>You can change you info: <c:out value="${id}"/> </h2>
     <h2><c:out value="${message}"/> </h2>
+    <h2><c:out value="${user.login}"/>, you can change your info: <c:out value="${id}"/> </h2>
 </div>
 <form method="post" class="w3-selection w3-light-blue w3-padding">
-    <label> login:
-        <input type="text" name="login" value = "<c:out value="${user.login}"/>" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
-    </label>
     <label> password:
         <input type="password" name="password" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>

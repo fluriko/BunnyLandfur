@@ -14,20 +14,28 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(value = "/user/removeGood")
-public class DeleteGoodServlet extends HttpServlet {
+@WebServlet(value = "/user/changeQuantity")
+public class EditQuantityServlet extends HttpServlet {
     private static final GoodDao GOOD_DAO = new GoodDaoHib();
     private static final CartDao CART_DAO = new CartDaoHib();
-    private static final Logger logger = Logger.getLogger(DeleteGoodServlet.class);
+    private static final Logger logger = Logger.getLogger(EditQuantityServlet.class);
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
         Long goodId = Long.parseLong(request.getParameter("goodId"));
+        Long quantity = Long.parseLong(request.getParameter("quantity"));
         Good good = GOOD_DAO.getGood(goodId).get();
-        user.removeFromCart(good);
+        good.setQuantity(quantity);
+        user.editGoodInCart(good);
         CART_DAO.editCart(user.getCart());
-        logger.debug("User deleted " + good.getId() + " from cart");
-        request.setAttribute("message", good.getLabel() + " was removed from cart");
+        logger.debug("User edited quantity for " + good.getId());
         request.getRequestDispatcher("/user/cart").forward(request, response);
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Long goodId = Long.parseLong(request.getParameter("goodId"));
+        request.setAttribute("goodId", goodId);
+        request.getRequestDispatcher("/user/changeQuantity.jsp").forward(request, response);
     }
 }

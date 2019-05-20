@@ -18,13 +18,9 @@ public class UserProfileServlet extends HttpServlet {
     private static final UserDao USER_DAO = new UserDaoHib();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String newLog = request.getParameter("login").trim();
         String newPass = request.getParameter("password").trim();
         String newMail = request.getParameter("mail").trim();
         User userFromSession = (User) request.getSession().getAttribute("user");
-        if (newLog.length() > 3 && !USER_DAO.getUserByLogin(newLog).isPresent()) {
-            userFromSession.setLogin(newLog);
-        }
         if (newPass.length() > 5 && !newPass.equals(userFromSession.getPassword())) {
             userFromSession.setSalt(HashUtil.getRandomSalt());
             userFromSession.setPassword(newPass);
@@ -35,7 +31,7 @@ public class UserProfileServlet extends HttpServlet {
             userFromSession.setMail(newMail);
         }
         USER_DAO.editUser(userFromSession);
-        String message = userFromSession.getLogin() + ", you changed your data successfully!";
+        String message = "You changed your data successfully!";
         logger.warn("User " + userFromSession.getId() + " changed his data");
         request.setAttribute("message", message);
         request.getRequestDispatcher("/user/profile.jsp").forward(request, response);

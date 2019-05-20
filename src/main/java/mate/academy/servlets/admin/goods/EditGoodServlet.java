@@ -32,12 +32,7 @@ public class EditGoodServlet extends HttpServlet {
         String newLabel = req.getParameter("label").trim();
         String newDescription = req.getParameter("description").trim();
         String newCategory = req.getParameter("category").trim();
-        Double newPrice;
-        try {
-            newPrice = Double.parseDouble(req.getParameter("price"));
-        } catch (Exception e) {
-            newPrice = 0.0;
-        }
+        Double newPrice = Double.parseDouble(req.getParameter("price"));
         if (newLabel.length() >= 3) {
             goodToEdit.setLabel(newLabel);
         }

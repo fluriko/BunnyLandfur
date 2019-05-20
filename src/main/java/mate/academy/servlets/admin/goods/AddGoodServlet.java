@@ -20,14 +20,7 @@ public class AddGoodServlet extends HttpServlet {
         String label = request.getParameter("label").trim();
         String description = request.getParameter("description").trim();
         String category = request.getParameter("category").trim();
-        String priceString = request.getParameter("price");
-        Double price;
-        try {
-            price = Double.parseDouble(priceString);
-        } catch (Exception e) {
-            price = 0.0;
-            logger.debug("Admin entered not acceptable price");
-        }
+        Double price = Double.parseDouble(request.getParameter("price"));
         String message;
         if (price <= 0) {
             message = "You entered wrong price";

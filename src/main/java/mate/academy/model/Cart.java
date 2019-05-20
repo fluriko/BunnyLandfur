@@ -33,12 +33,8 @@ public class Cart {
             inverseJoinColumns = @JoinColumn(name = "GOOD_ID"))
     private List<Good> goodsInCart;
 
-    @Column(name = "TOTAL")
-    private double total;
-
     public Cart(User userOwner) {
         this.userOwner = userOwner;
-        total = 0;
     }
 
     public Cart() {
@@ -46,17 +42,19 @@ public class Cart {
 
     public void addGood(Good good) {
         goodsInCart.add(good);
-        total += good.getPrice();
     }
 
     public void removeGood(Good good) {
         goodsInCart.remove(good);
-        total -= good.getPrice();
+    }
+
+    public void editGood(Good good) {
+        int index = goodsInCart.indexOf(good);
+        goodsInCart.set(index, good);
     }
 
     public void clear() {
         goodsInCart.clear();
-        total = 0;
     }
 
     public Long getId() {
@@ -83,28 +81,20 @@ public class Cart {
         this.goodsInCart = goodsInCart;
     }
 
-    public double getTotal() {
-        return total;
-    }
-
-    public void setTotal(double total) {
-        this.total = total;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Cart)) return false;
         Cart cart = (Cart) o;
-        return Double.compare(cart.total, total) == 0 &&
-                Objects.equals(id, cart.id) &&
+        return Objects.equals(id, cart.id) &&
                 Objects.equals(userOwner.getId(), cart.userOwner.getId()) &&
                 Objects.equals(goodsInCart, cart.goodsInCart);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userOwner.getId(), goodsInCart, total);
+        return Objects.hash(id, userOwner.getId(), goodsInCart);
     }
 
     @Override
@@ -113,7 +103,6 @@ public class Cart {
                 "id=" + id +
                 ", userOwner=" + userOwner.getId() +
                 ", goodsInCart=" + goodsInCart +
-                ", total=" + total +
                 '}';
     }
 }
