@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.Objects;
 
@@ -24,25 +25,19 @@ public class Code {
     @Column(name = "VALUE", unique = true, nullable = false)
     private String value;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "USER_ID", nullable = false)
-    private User user;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "CART_ID", nullable = false)
+    private Cart cart;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "GOOD_ID", nullable = false)
-    private Good good;
-
-    public Code(Long id, String value, User user, Good good) {
+    public Code(Long id, String value, Cart cart) {
         this.id = id;
         this.value = value;
-        this.user = user;
-        this.good = good;
+        this.cart = cart;
     }
 
-    public Code(String value, User user, Good good) {
+    public Code(String value, Cart cart) {
         this.value = value;
-        this.user = user;
-        this.good = good;
+        this.cart = cart;
     }
 
     public Code() {
@@ -64,20 +59,12 @@ public class Code {
         this.value = value;
     }
 
-    public User getUser() {
-        return user;
+    public Cart getCart() {
+        return cart;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Good getGood() {
-        return good;
-    }
-
-    public void setGood(Good good) {
-        this.good = good;
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 
     @Override
@@ -87,13 +74,12 @@ public class Code {
         Code code = (Code) o;
         return Objects.equals(id, code.id) &&
                 Objects.equals(value, code.value) &&
-                Objects.equals(user.getId(), code.user.getId()) &&
-                Objects.equals(good.getId(), code.good.getId());
+                Objects.equals(cart.getId(), code.cart.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, value, user.getId(), good.getId());
+        return Objects.hash(id, value, cart.getId());
     }
 
     @Override
@@ -101,8 +87,7 @@ public class Code {
         return "Code{" +
                 "id=" + id +
                 ", value='" + value + '\'' +
-                ", user=" + user +
-                ", good=" + good +
+                ", cart=" + cart +
                 '}';
     }
 }

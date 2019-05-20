@@ -44,6 +44,21 @@ public class Cart {
     public Cart() {
     }
 
+    public void addGood(Good good) {
+        goodsInCart.add(good);
+        total += good.getPrice();
+    }
+
+    public void removeGood(Good good) {
+        goodsInCart.remove(good);
+        total -= good.getPrice();
+    }
+
+    public void clear() {
+        goodsInCart.clear();
+        total = 0;
+    }
+
     public Long getId() {
         return id;
     }
@@ -76,31 +91,29 @@ public class Cart {
         this.total = total;
     }
 
-    public void countTotal() {
-        total = 0;
-        goodsInCart.stream().forEach((o) -> total += o.getPrice());
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Cart)) return false;
         Cart cart = (Cart) o;
-        return Objects.equals(id, cart.id) &&
-                Objects.equals(userOwner.getId(), cart.userOwner.getId());
+        return Double.compare(cart.total, total) == 0 &&
+                Objects.equals(id, cart.id) &&
+                Objects.equals(userOwner.getId(), cart.userOwner.getId()) &&
+                Objects.equals(goodsInCart, cart.goodsInCart);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userOwner.getId());
+        return Objects.hash(id, userOwner.getId(), goodsInCart, total);
     }
 
     @Override
     public String toString() {
         return "Cart{" +
                 "id=" + id +
-                ", userOwner=" + userOwner +
+                ", userOwner=" + userOwner.getId() +
                 ", goodsInCart=" + goodsInCart +
+                ", total=" + total +
                 '}';
     }
 }

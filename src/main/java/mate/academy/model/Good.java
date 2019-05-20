@@ -1,14 +1,11 @@
 package mate.academy.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -32,9 +29,6 @@ public class Good {
     @Column(name = "PRICE", nullable = false)
     private double price;
 
-    @ManyToMany(mappedBy = "goodsInCart", cascade = CascadeType.ALL)
-    private List<Cart> carts;
-
     public Good(String label, String description, String category, double price) {
         this.label = label;
         this.description = description;
@@ -43,14 +37,6 @@ public class Good {
     }
 
     public Good() {
-    }
-
-    public List<Cart> getCarts() {
-        return carts;
-    }
-
-    public void setCarts(List<Cart> carts) {
-        this.carts = carts;
     }
 
     public Long getId() {

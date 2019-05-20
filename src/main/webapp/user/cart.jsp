@@ -23,12 +23,16 @@
         <tr>
             <th>Good</th>
             <th>Price</th>
+            <th>Quantity</th>
+            <th>Change Quantity</th>
             <th>Remove</th>
         </tr>
         <c:forEach items="${goodsInCart}" var="good">
             <tr>
                 <td><c:out value="${good.label}"/></td>
                 <td><c:out value="${good.price}"/></td>
+                <td><c:out value="${quantity}"/></td>
+                <td><a href='/user/changeQuantity?goodId=${good.id}'>Change Quantity</a></td>
                 <td><a href='/user/removeGood?goodId=${good.id}'>Remove</a></td>
             </tr>
         </c:forEach>
@@ -40,7 +44,7 @@
         </tr>
     </table>
 </div><br />
-<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/user/buyAll'">Buy all</button><br /><br />
+<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/user/buy'">Buy all in cart</button><br /><br />
 <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/user/cleanCart'">Clean cart</button><br /><br />
 <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/user/goods'">Back to goods</button><br /><br />
 <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='..'">Back to main</button><br /><br />

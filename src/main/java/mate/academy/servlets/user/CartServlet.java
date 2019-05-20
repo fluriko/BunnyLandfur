@@ -20,9 +20,9 @@ public class CartServlet extends HttpServlet {
         logger.debug(user.getId() + " on cart page");
         List<Good> goodsInCart = user.getGoodsInCart();
         request.setAttribute("goodsInCart", goodsInCart);
-        user.getCart().countTotal();
         double total = user.getCart().getTotal();
         request.setAttribute("total", total);
+        request.setAttribute("quantity", 1);
         request.getRequestDispatcher("/user/cart.jsp").forward(request, response);
     }
 

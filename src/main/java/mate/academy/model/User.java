@@ -61,19 +61,19 @@ public class User {
     }
 
     public void addGoodToCart(Good good) {
-        getGoodsInCart().add(good);
+        cart.addGood(good);
     }
 
     public List<Good> getGoodsInCart() {
-        return getCart().getGoodsInCart();
+        return cart.getGoodsInCart();
     }
 
     public void removeFromCart(Good good) {
-        getGoodsInCart().remove(good);
+        cart.removeGood(good);
     }
 
     public void cleanCart() {
-        getGoodsInCart().clear();
+        cart.clear();
     }
 
     public Cart getCart() {
@@ -140,14 +140,15 @@ public class User {
         return Objects.equals(id, user.id) &&
                 Objects.equals(login, user.login) &&
                 Objects.equals(password, user.password) &&
-                Objects.equals(role, user.role) &&
+                Objects.equals(role.getId(), user.role.getId()) &&
                 Objects.equals(mail, user.mail) &&
-                Objects.equals(salt, user.salt);
+                Objects.equals(salt, user.salt) &&
+                Objects.equals(cart.getId(), user.cart.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, login, password, role, mail, salt);
+        return Objects.hash(id, login, password, role.getId(), mail, salt, cart.getId());
     }
 
     @Override
@@ -155,10 +156,11 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
-                ", role=" + role +
+                ", password='" + password.substring(0, 7) + '\'' +
+                ", role=" + role.getId() +
                 ", mail='" + mail + '\'' +
                 ", salt='" + salt + '\'' +
+                ", cart=" + cart.getId() +
                 '}';
     }
 }

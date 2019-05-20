@@ -1,5 +1,7 @@
 package mate.academy.servlets.user;
 
+import mate.academy.database.cart.CartDao;
+import mate.academy.database.cart.CartDaoHib;
 import mate.academy.database.good.GoodDao;
 import mate.academy.database.good.GoodDaoHib;
 import mate.academy.database.good.PurchaseCodeDao;
@@ -22,20 +24,20 @@ import java.io.IOException;
 public class BuyServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(BuyServlet.class);
     private static final PurchaseCodeDao PURCHASE_CODE_DAO = new PurchaseCodeDaoHib();
-    private static final GoodDao GOOD_DAO = new GoodDaoHib();
+    private static final CartDao CART_DAO = new CartDaoHib();
     private static final MailService MAIL_SERVICE = new MailService();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String codeValue = request.getParameter("codeValue");
         User user = (User) request.getSession().getAttribute("user");
-        Long goodId = Long.parseLong(request.getParameter("goodId"));
-        Good good = GOOD_DAO.getGood(goodId).get();
         Long codeId = Long.parseLong(request.getParameter("codeId"));
-        logger.error(codeId);
-        Code code = new Code(codeId, codeValue, user, good);
+        Code code = new Code(codeId, codeValue, user.getCart());
         Code codeFromDb = PURCHASE_CODE_DAO.getCode(codeId).get();
         if (codeFromDb.equals(code)) {
+            logger.info("successful purchase " + user.getCart());
             request.setAttribute("message", "successful purchase");
+            user.cleanCart();
+            CART_DAO.editCart(user.getCart());
         } else {
             request.setAttribute("message", "you entered wrong code");
         }
@@ -45,15 +47,12 @@ public class BuyServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
-        Long goodId = Long.parseLong(request.getParameter("goodId"));
-        Good good = GOOD_DAO.getGood(goodId).get();
-        logger.info("User " + user.getLogin() + " is on buy good " + goodId +" page");
         String codeValue = RandomGenerator.generateCode();
         while (PURCHASE_CODE_DAO.getCode(codeValue).isPresent()) {
-            codeValue = RandomGenerator.generateCode();;
+            codeValue = RandomGenerator.generateCode();
         }
         MAIL_SERVICE.sendMail(user.getMail(), codeValue);
-        Code code = new Code(codeValue, user, good);
+        Code code = new Code(codeValue, user.getCart());
         PURCHASE_CODE_DAO.addCode(code);
         Long codeId = PURCHASE_CODE_DAO.getCode(codeValue).get().getId();
         PurchaseCodeCleaner.clean(code);

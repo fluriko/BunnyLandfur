@@ -26,7 +26,6 @@
             <th>description</th>
             <th>category</th>
             <th>price</th>
-            <th>buy</th>
             <th>add to cart</th>
         </tr>
         <c:forEach items="${goods}" var="good">
@@ -36,7 +35,6 @@
                 <td><c:out value="${good.description}"/></td>
                 <td><c:out value="${good.category}"/></td>
                 <td><c:out value="${good.price}"/></td>
-                <td><a href='/user/buy?goodId=${good.id}'>BUY IT</a></td>
                 <td><a href='/user/addToCart?goodId=${good.id}'>ADD TO CART</a></td>
             </tr>
         </c:forEach>

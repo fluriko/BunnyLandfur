@@ -1,5 +1,7 @@
 package mate.academy.initializer;
 
+import mate.academy.database.cart.CartDao;
+import mate.academy.database.cart.CartDaoHib;
 import mate.academy.database.good.GoodDao;
 import mate.academy.database.good.GoodDaoHib;
 import mate.academy.database.good.PurchaseCodeDao;
@@ -14,7 +16,6 @@ import mate.academy.model.Role;
 import mate.academy.model.User;
 import mate.academy.util.PurchaseCodeCleaner;
 import org.apache.log4j.Logger;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 
@@ -24,6 +25,7 @@ public class InitServlet extends HttpServlet {
     private static final UserDao USER_DAO = new UserDaoHib();
     private static final GoodDao GOOD_DAO = new GoodDaoHib();
     private static final RoleDao ROLE_DAO = new RoleDaoHib();
+    private static final CartDao CART_DAO = new CartDaoHib();
     private static final PurchaseCodeDao PURCHASE_CODE_DAO = new PurchaseCodeDaoHib();
 
     @Override
@@ -47,7 +49,9 @@ public class InitServlet extends HttpServlet {
         GOOD_DAO.addGood(englishAngora);
         GOOD_DAO.addGood(cinnamon);
         GOOD_DAO.addGood(hay);
-        Code testCode = new Code(55L, "1212", candy, frenchLop);
+        sweetie.addGoodToCart(hay);
+        CART_DAO.editCart(sweetie.getCart());
+        Code testCode = new Code("1212", sweetie.getCart());
         PURCHASE_CODE_DAO.addCode(testCode);
         PurchaseCodeCleaner.clean(testCode);
     }
