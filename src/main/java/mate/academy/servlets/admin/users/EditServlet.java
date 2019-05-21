@@ -1,9 +1,9 @@
 package mate.academy.servlets.admin.users;
 
-import mate.academy.database.role.RoleDao;
-import mate.academy.database.role.RoleDaoHib;
-import mate.academy.database.user.UserDao;
-import mate.academy.database.user.UserDaoHib;
+import mate.academy.database.RoleDao;
+import mate.academy.database.UserDao;
+import mate.academy.database.impl.RoleDaoHibImpl;
+import mate.academy.database.impl.UserDaoHibImpl;
 import mate.academy.model.Role;
 import mate.academy.model.User;
 import mate.academy.util.HashUtil;
@@ -18,16 +18,16 @@ import java.util.List;
 
 @WebServlet(value = "/admin/edit")
 public class EditServlet extends HttpServlet {
-    private static final UserDao USER_DAO = new UserDaoHib();
-    private static final RoleDao ROLE_DAO = new RoleDaoHib();
+    private static final UserDao userDao = new UserDaoHibImpl();
+    private static final RoleDao roleDaoHib = new RoleDaoHibImpl();
     private static final Logger logger = Logger.getLogger(EditServlet.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long userId = Long.parseLong(req.getParameter("id"));
-        User user = USER_DAO.getUserById(userId).get();
+        User user = userDao.get(userId).get();
         req.setAttribute("user", user);
-        List<Role> roles = ROLE_DAO.getRoles();
+        List<Role> roles = roleDaoHib.getAll();
         req.setAttribute("roles", roles);
         req.getRequestDispatcher("/admin/edit.jsp").forward(req, resp);
     }
@@ -35,11 +35,11 @@ public class EditServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long userId = Long.parseLong(req.getParameter("id"));
-        User userToEdit = USER_DAO.getUserById(userId).get();
+        User userToEdit = userDao.get(userId).get();
         String newLog = req.getParameter("login").trim();
         String newPass = req.getParameter("password").trim();
         String newMail = req.getParameter("mail").trim();
-        if (newLog.length() > 3 && !USER_DAO.getUserByLogin(newLog).isPresent()) {
+        if (newLog.length() > 3 && !userDao.getUserByLogin(newLog).isPresent()) {
             userToEdit.setLogin(newLog);
         }
         if (newPass.length() > 5 && !newPass.equals(userToEdit.getPassword())) {
@@ -48,17 +48,18 @@ public class EditServlet extends HttpServlet {
         }
         if (newMail.endsWith("@gmail.com")
                 && newMail.length() > 15
-                && !USER_DAO.getUserByMail(newMail).isPresent()) {
+                && !userDao.getUserByMail(newMail).isPresent()) {
             userToEdit.setMail(newMail);
         }
+        String message = "You have changed data for " + userToEdit.getRole() + " " + userToEdit.getId();
         String roleIdString = req.getParameter("role");
         if (roleIdString != null) {
             Long roleId = Long.parseLong(roleIdString);
-            userToEdit.setRole(ROLE_DAO.getRole(roleId).get());
+            userToEdit.setRole(roleDaoHib.get(roleId).get());
         }
-        USER_DAO.editUser(userToEdit);
-        String message = "Admin changed user data for " + userToEdit.getId();
-        logger.warn(message);
+        userDao.edit(userToEdit);
+        User admin = (User) req.getSession().getAttribute("user");
+        logger.warn(admin.getInfo() + "changed data for" + userToEdit.getInfo());
         req.setAttribute("message", message);
         req.getRequestDispatcher("/admin/list").forward(req, resp);
     }

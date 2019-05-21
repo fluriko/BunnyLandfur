@@ -136,6 +136,10 @@ public class User {
         this.salt = salt;
     }
 
+    public String getInfo() {
+        return role.getName() + " " + id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -17,10 +17,10 @@ public class CartServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
-        logger.debug(user.getId() + " on cart page");
+        logger.debug(user.getInfo() + " on cart page");
         List<Good> goodsInCart = user.getGoodsInCart();
         request.setAttribute("goodsInCart", goodsInCart);
-        double totalPrice = user.getCart().getGoodsInCart().stream().mapToDouble((o) -> o.getTotalPrice()).sum();
+        double totalPrice = user.getCart().getGoodsInCart().stream().mapToDouble(Good::getTotalPrice).sum();
         request.setAttribute("total", totalPrice);
         request.getRequestDispatcher("/user/cart.jsp").forward(request, response);
     }

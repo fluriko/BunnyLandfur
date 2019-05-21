@@ -1,8 +1,9 @@
 package mate.academy.servlets.admin.goods;
 
-import mate.academy.database.good.GoodDao;
-import mate.academy.database.good.GoodDaoHib;
+import mate.academy.database.GoodDao;
+import mate.academy.database.impl.GoodDaoHibImpl;
 import mate.academy.model.Good;
+import mate.academy.model.User;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,13 +15,12 @@ import java.io.IOException;
 @WebServlet(value = "/admin/editGood")
 public class EditGoodServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(EditGoodServlet.class);
-    private static final GoodDao GOOD_DAO = new GoodDaoHib();
+    private static final GoodDao goodDao = new GoodDaoHibImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        logger.info("Admin started edit good page");
         Long goodId = Long.parseLong(req.getParameter("id"));
-        Good good = GOOD_DAO.getGood(goodId).get();
+        Good good = goodDao.get(goodId).get();
         req.setAttribute("good", good);
         req.getRequestDispatcher("/admin/editGood.jsp").forward(req, resp);
     }
@@ -28,7 +28,8 @@ public class EditGoodServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long goodId = Long.parseLong(req.getParameter("id"));
-        Good goodToEdit = GOOD_DAO.getGood(goodId).get();
+        Good goodToEdit = goodDao.get(goodId).get();
+        String oldGoodInfo = goodToEdit.toString();
         String newLabel = req.getParameter("label").trim();
         String newDescription = req.getParameter("description").trim();
         String newCategory = req.getParameter("category").trim();
@@ -45,9 +46,11 @@ public class EditGoodServlet extends HttpServlet {
         if (newPrice > 0) {
             goodToEdit.setPrice(newPrice);
         }
+        goodDao.edit(goodToEdit);
         String message = "Good was edited: " + goodId;
-        logger.info(message);
-        GOOD_DAO.editGood(goodToEdit);
+        User admin = (User) req.getSession().getAttribute("user");
+        logger.info(admin.getInfo() + " edited good " + goodId);
+        logger.info("Old fields: " + oldGoodInfo);
         req.setAttribute("message", message);
         req.getRequestDispatcher("/admin/goods").forward(req, resp);
     }

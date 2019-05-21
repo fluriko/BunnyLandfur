@@ -1,5 +1,6 @@
 package mate.academy.servlets.admin;
 
+import mate.academy.model.User;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,7 +14,8 @@ public class AdminServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(AdminServlet.class);
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.info("Admin is on main admin page");
+        User admin = (User) request.getSession().getAttribute("user");
+        logger.info(admin.getInfo() + " is on main admin page");
         request.getRequestDispatcher("/admin/admin.jsp").forward(request, response);
     }
 

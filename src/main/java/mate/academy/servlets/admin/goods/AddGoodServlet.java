@@ -1,8 +1,9 @@
 package mate.academy.servlets.admin.goods;
 
-import mate.academy.database.good.GoodDao;
-import mate.academy.database.good.GoodDaoHib;
+import mate.academy.database.GoodDao;
+import mate.academy.database.impl.GoodDaoHibImpl;
 import mate.academy.model.Good;
+import mate.academy.model.User;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,7 +14,7 @@ import java.io.IOException;
 
 @WebServlet(value = "/admin/addGood")
 public class AddGoodServlet extends HttpServlet {
-    private static final GoodDao GOOD_DAO = new GoodDaoHib();
+    private static final GoodDao goodDao = new GoodDaoHibImpl();
     private static final Logger logger = Logger.getLogger(AddGoodServlet.class);
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -23,33 +24,30 @@ public class AddGoodServlet extends HttpServlet {
         Double price = Double.parseDouble(request.getParameter("price"));
         String message;
         if (price <= 0) {
-            message = "You entered wrong price";
-            logger.debug(message);
+            message = "Price can't be 0 or negative. ";
             request.setAttribute("message", message);
             request.getRequestDispatcher("/admin/addGood.jsp").forward(request, response);
         }
         if (category.length() < 3) {
-            message = "Category is too short";
-            logger.debug(message);
+            message = "Category is too short. ";
             request.setAttribute("message", message);
             request.getRequestDispatcher("/admin/addGood.jsp").forward(request, response);
         }
         if (label.length() < 3) {
-            message = "Label is too short";
-            logger.debug(message);
+            message = "Label is too short. ";
             request.setAttribute("message", message);
             request.getRequestDispatcher("/admin/addGood.jsp").forward(request, response);
         }
         Good good = new Good(label, description, category, price);
-        GOOD_DAO.addGood(good);
-        message = "successfully added good: " + label;
-        logger.debug(message);
+        goodDao.add(good);
+        message = "Good " + label + " added successfully!";
+        User admin = (User) request.getSession().getAttribute("user");
+        logger.debug(admin.getInfo() + "added good " + label);
         request.setAttribute("message", message);
         request.getRequestDispatcher("/admin/goods").forward(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.debug("Admin tried to add good");
         request.getRequestDispatcher("/admin/addGood.jsp").forward(request, response);
     }
 }

@@ -1,7 +1,7 @@
 package mate.academy.servlets.admin.users;
 
-import mate.academy.database.user.UserDao;
-import mate.academy.database.user.UserDaoHib;
+import mate.academy.database.UserDao;
+import mate.academy.database.impl.UserDaoHibImpl;
 import mate.academy.model.User;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
@@ -14,7 +14,7 @@ import java.util.List;
 
 @WebServlet(value = "/admin/list")
 public class ListServlet extends HttpServlet {
-    private static final UserDao USER_DAO = new UserDaoHib();
+    private static final UserDao userDao = new UserDaoHibImpl();
     private static final Logger logger = Logger.getLogger(ListServlet.class);
 
     @Override
@@ -24,8 +24,9 @@ public class ListServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        logger.info("Admin is on list page");
-        List<User> users = USER_DAO.getUsers();
+        User admin = (User) req.getSession().getAttribute("user");
+        logger.info(admin.getInfo() + " is on users list page");
+        List<User> users = userDao.getAll();
         req.setAttribute("users", users);
         req.getRequestDispatcher("/admin/list.jsp").forward(req, resp);
     }

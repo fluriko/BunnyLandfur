@@ -1,15 +1,15 @@
 package mate.academy.initializer;
 
-import mate.academy.database.cart.CartDao;
-import mate.academy.database.cart.CartDaoHib;
-import mate.academy.database.good.GoodDao;
-import mate.academy.database.good.GoodDaoHib;
-import mate.academy.database.good.PurchaseCodeDao;
-import mate.academy.database.good.PurchaseCodeDaoHib;
-import mate.academy.database.role.RoleDao;
-import mate.academy.database.role.RoleDaoHib;
-import mate.academy.database.user.UserDao;
-import mate.academy.database.user.UserDaoHib;
+import mate.academy.database.CartDao;
+import mate.academy.database.GoodDao;
+import mate.academy.database.PurchaseCodeDao;
+import mate.academy.database.RoleDao;
+import mate.academy.database.UserDao;
+import mate.academy.database.impl.CartDaoHibImpl;
+import mate.academy.database.impl.GoodDaoHibImpl;
+import mate.academy.database.impl.PurchaseCodeDaoHibImpl;
+import mate.academy.database.impl.RoleDaoHibImpl;
+import mate.academy.database.impl.UserDaoHibImpl;
 import mate.academy.model.Code;
 import mate.academy.model.Good;
 import mate.academy.model.Role;
@@ -22,37 +22,37 @@ import javax.servlet.http.HttpServlet;
 @WebServlet(value = "/init", loadOnStartup = 1)
 public class InitServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(InitServlet.class);
-    private static final UserDao USER_DAO = new UserDaoHib();
-    private static final GoodDao GOOD_DAO = new GoodDaoHib();
-    private static final RoleDao ROLE_DAO = new RoleDaoHib();
-    private static final CartDao CART_DAO = new CartDaoHib();
-    private static final PurchaseCodeDao PURCHASE_CODE_DAO = new PurchaseCodeDaoHib();
+    private static final UserDao userDao = new UserDaoHibImpl();
+    private static final GoodDao goodDao = new GoodDaoHibImpl();
+    private static final RoleDao roleDao = new RoleDaoHibImpl();
+    private static final CartDao cartDao = new CartDaoHibImpl();
+    private static final PurchaseCodeDao purchaseCodeDao = new PurchaseCodeDaoHibImpl();
 
     @Override
     public void init() {
         logger.debug("INITIALIZATION DATABASE");
         Role admin = new Role(1L, "ADMIN");
         Role user = new Role(2L, "USER");
-        ROLE_DAO.addRole(admin);
-        ROLE_DAO.addRole(user);
+        roleDao.add(admin);
+        roleDao.add(user);
         User fluriko = new User("fluriko", "123123", admin, "fluricode@gmail.com");
         User candy = new User("candy", "123123", user, "artfluriko@gmail.com");
         User sweetie = new User("sweetie", "123123", user, "sweetie@gmail.com");
-        USER_DAO.addUser(fluriko);
-        USER_DAO.addUser(candy);
-        USER_DAO.addUser(sweetie);
+        userDao.add(fluriko);
+        userDao.add(candy);
+        userDao.add(sweetie);
         Good frenchLop = new Good("french lop", "the best pet", "bunnies", 20.5);
         Good englishAngora = new Good("english angora", "the fluffiest pet", "bunnies", 20.8);
         Good cinnamon = new Good("cinnamon", "amily or cinnamon", "bunnies", 20.2);
         Good hay = new Good("fresh hay", "good quality hay ", "food", 2.2);
-        GOOD_DAO.addGood(frenchLop);
-        GOOD_DAO.addGood(englishAngora);
-        GOOD_DAO.addGood(cinnamon);
-        GOOD_DAO.addGood(hay);
+        goodDao.add(frenchLop);
+        goodDao.add(englishAngora);
+        goodDao.add(cinnamon);
+        goodDao.add(hay);
         sweetie.addGoodToCart(hay);
-        CART_DAO.editCart(sweetie.getCart());
+        cartDao.edit(sweetie.getCart());
         Code testCode = new Code("1212", sweetie.getCart());
-        PURCHASE_CODE_DAO.addCode(testCode);
+        purchaseCodeDao.add(testCode);
         PurchaseCodeCleaner.clean(testCode);
     }
 }

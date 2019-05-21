@@ -15,7 +15,8 @@
 </head>
 <body >
 <div class="w3-container w3-left-align">
-    <h2><c:out value="${message}"/></h2>
+    <h3><c:out value="${message}"/></h3>
+    <h3><c:out value="${cartInfo}"/> goods in your cart</h3>
     <h1>Choose what you want to buy!</h1>
 </div>
 <div class="w3-container w3-left-align">

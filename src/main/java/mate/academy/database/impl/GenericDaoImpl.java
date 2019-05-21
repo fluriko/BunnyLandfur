@@ -1,55 +1,58 @@
-package mate.academy.database.cart;
+package mate.academy.database.impl;
 
-import mate.academy.model.Cart;
+import mate.academy.database.GenericDao;
 import mate.academy.util.HibernateSessionFactoryUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import java.util.List;
 import java.util.Optional;
 
-public class CartDaoHib implements CartDao {
+public abstract class GenericDaoImpl<T> implements GenericDao<T> {
+    Class<T> clazz;
+
+    public GenericDaoImpl(Class<T> clazz) {
+        this.clazz = clazz;
+    }
+
     @Override
-    public int addCart(Cart cart) {
+    public void add(T object) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
-        session.save(cart);
+        session.save(object);
         transaction.commit();
         session.close();
-        return 1;
     }
 
     @Override
-    public int editCart(Cart cart) {
+    public void remove(T object) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
-        session.update(cart);
+        session.delete(object);
         transaction.commit();
         session.close();
-        return 1;
     }
 
     @Override
-    public int removeCart(Cart cart) {
+    public void edit(T object) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
-        session.delete(cart);
+        session.update(object);
         transaction.commit();
         session.close();
-        return 1;
     }
 
     @Override
-    public Optional<Cart> getCart(Long id) {
+    public Optional<T> get(long id) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        Cart cart = session.get(Cart.class, id);
+        T object = session.get(clazz, id);
         session.close();
-        return Optional.ofNullable(cart);
+        return Optional.ofNullable(object);
     }
 
     @Override
-    public List<Cart> getCarts() {
+    public List<T> getAll() {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        List<Cart> carts = session.createQuery("From Cart").list();
-        return carts;
+        List<T> objects = session.createQuery("From " + clazz.getName()).list();
+        return objects;
     }
 }

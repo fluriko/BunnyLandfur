@@ -1,9 +1,9 @@
 package mate.academy.servlets.user;
 
-import mate.academy.database.cart.CartDao;
-import mate.academy.database.cart.CartDaoHib;
-import mate.academy.database.good.GoodDao;
-import mate.academy.database.good.GoodDaoHib;
+import mate.academy.database.CartDao;
+import mate.academy.database.GoodDao;
+import mate.academy.database.impl.CartDaoHibImpl;
+import mate.academy.database.impl.GoodDaoHibImpl;
 import mate.academy.model.Good;
 import mate.academy.model.User;
 import org.apache.log4j.Logger;
@@ -16,17 +16,17 @@ import java.io.IOException;
 
 @WebServlet(value = "/user/removeGood")
 public class DeleteGoodServlet extends HttpServlet {
-    private static final GoodDao GOOD_DAO = new GoodDaoHib();
-    private static final CartDao CART_DAO = new CartDaoHib();
+    private static final GoodDao goodDao = new GoodDaoHibImpl();
+    private static final CartDao cartDao = new CartDaoHibImpl();
     private static final Logger logger = Logger.getLogger(DeleteGoodServlet.class);
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
         Long goodId = Long.parseLong(request.getParameter("goodId"));
-        Good good = GOOD_DAO.getGood(goodId).get();
+        Good good = goodDao.get(goodId).get();
         user.removeFromCart(good);
-        CART_DAO.editCart(user.getCart());
-        logger.debug("User deleted " + good.getId() + " from cart");
+        cartDao.edit(user.getCart());
+        logger.debug(user.getInfo() + " deleted " + good.getId() + " from his cart");
         request.setAttribute("message", good.getLabel() + " was removed from cart");
         request.getRequestDispatcher("/user/cart").forward(request, response);
     }

@@ -1,7 +1,7 @@
 package mate.academy.servlets.admin.users;
 
-import mate.academy.database.user.UserDao;
-import mate.academy.database.user.UserDaoHib;
+import mate.academy.database.UserDao;
+import mate.academy.database.impl.UserDaoHibImpl;
 import mate.academy.model.User;
 import org.junit.After;
 import org.junit.Before;
@@ -33,14 +33,14 @@ public class EditServletTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         editServlet = new EditServlet();
-        userDao = new UserDaoHib();
+        userDao = new UserDaoHibImpl();
         userOne = new User("111111", "111111", "test1@test.com");
-        userDao.addUser(userOne);
+        userDao.add(userOne);
     }
 
     @After
     public void clean() {
-        userDao.removeUser(userOne);
+        userDao.remove(userOne);
     }
 
     @Test

@@ -1,7 +1,7 @@
 package mate.academy.servlets;
 
-import mate.academy.database.user.UserDao;
-import mate.academy.database.user.UserDaoHib;
+import mate.academy.database.UserDao;
+import mate.academy.database.impl.UserDaoHibImpl;
 import mate.academy.model.User;
 import mate.academy.util.HashUtil;
 import org.apache.log4j.Logger;
@@ -14,12 +14,12 @@ import java.io.IOException;
 
 @WebServlet(value = "/login")
 public class LogServlet extends HttpServlet {
-    private static final UserDao USER_DAO = new UserDaoHib();
+    private static final UserDao userDao = new UserDaoHibImpl();
     private static final Logger logger = Logger.getLogger(LogServlet.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        logger.debug("User started log in page");
+        logger.debug("Guest started log in page");
         req.getRequestDispatcher("/login.jsp").forward(req, resp);
     }
 
@@ -27,7 +27,7 @@ public class LogServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter("login").trim();
         String message;
-        if (USER_DAO.getUserByLogin(login).isPresent()) {
+        if (userDao.getUserByLogin(login).isPresent()) {
             checkPassword(req, resp);
         } else {
             message = "No user in base with name " + login;
@@ -38,14 +38,15 @@ public class LogServlet extends HttpServlet {
 
     private void checkPassword(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter("login").trim();
-        User user = USER_DAO.getUserByLogin(login).get();
+        User user = userDao.getUserByLogin(login).get();
         String password = req.getParameter("password").trim();
         String hashPass = HashUtil.getSha512SecurePassword(password, user.getSalt());
         if (user.getPassword().equals(hashPass)) {
             req.getSession().setAttribute("user", user);
+            logger.debug(user.getInfo() + " logged in and started session");
             checkRole(req, resp);
         } else {
-            logger.info("User entered wrong login or password");
+            logger.info("Guest entered wrong login or password");
             String message = "Wrong login or password";
             req.setAttribute("message", message);
             req.getRequestDispatcher("/login.jsp").forward(req, resp);
@@ -54,14 +55,11 @@ public class LogServlet extends HttpServlet {
 
     private void checkRole(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = (User) req.getSession().getAttribute("user");
+        String message = "Welcome back, " + user.getLogin();
         if (user.getRole().getId() == 1) {
-            logger.debug("Admin " + user.getLogin() + " logged in and started session");
-            String message = "Welcome back admin " + user.getLogin();
             req.setAttribute("message", message);
             req.getRequestDispatcher("/admin").forward(req, resp);
         } else {
-            logger.debug("User " + user.getLogin() + " logged in and started session");
-            String message = "Welcome back " + user.getLogin();
             req.setAttribute("message", message);
             req.getRequestDispatcher("/user/goods").forward(req, resp);
         }

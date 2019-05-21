@@ -1,7 +1,7 @@
 package mate.academy.servlets;
 
-import mate.academy.database.user.UserDao;
-import mate.academy.database.user.UserDaoHib;
+import mate.academy.database.UserDao;
+import mate.academy.database.impl.UserDaoHibImpl;
 import mate.academy.model.User;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 @WebServlet(value = "/registration")
 public class RegServlet extends HttpServlet {
-    private static final UserDao USER_DAO = new UserDaoHib();
+    private static final UserDao userDao = new UserDaoHibImpl();
     private static final Logger logger = Logger.getLogger(RegServlet.class);
     private static final String INSTRUCTION = "login should be 4 chars at least,\n" +
             "password should be 6 chars at least,\n" +
@@ -21,7 +21,7 @@ public class RegServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        logger.debug("User started registration");
+        logger.debug("Guest started registration");
         req.setAttribute("instruction", INSTRUCTION);
         req.getRequestDispatcher("/registration.jsp").forward(req, resp);
     }
@@ -30,6 +30,8 @@ public class RegServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (checkCorrect(req, resp) && checkUnique(req, resp)) {
             addUser(req, resp);
+        } else {
+            logger.debug("Registration failed");
         }
     }
 
@@ -79,7 +81,7 @@ public class RegServlet extends HttpServlet {
 
     private boolean checkUniqueLog(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter("login").trim();
-        if (USER_DAO.getUserByLogin(login).isPresent()) {
+        if (userDao.getUserByLogin(login).isPresent()) {
             String message = "User with name " + login + " already exists";
             req.setAttribute("message", message);
             req.getRequestDispatcher("/registration.jsp").forward(req, resp);
@@ -90,7 +92,7 @@ public class RegServlet extends HttpServlet {
 
     private boolean checkUniqueMail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String mail = req.getParameter("mail").trim();
-        if (USER_DAO.getUserByMail(mail).isPresent()) {
+        if (userDao.getUserByMail(mail).isPresent()) {
             String message = "User with mail " + mail + " already exists";
             req.setAttribute("message", message);
             req.getRequestDispatcher("/registration.jsp").forward(req, resp);
@@ -104,9 +106,9 @@ public class RegServlet extends HttpServlet {
         String password = req.getParameter("password").trim();
         String mail = req.getParameter("mail").trim();
         User user = new User(login, password, mail);
-        USER_DAO.addUser(user);
-        User userJustRegistered = USER_DAO.getUserByLogin(login).get();
-        logger.info("User " + userJustRegistered.getId() + " registered successfully");
+        userDao.add(user);
+        User userJustRegistered = userDao.getUserByLogin(login).get();
+        logger.info(userJustRegistered.getInfo() + " registered successfully");
         String message = "Hello and welcome " + login + ", now you can log in";
         req.setAttribute("message", message);
         req.getRequestDispatcher("/index.jsp").forward(req, resp);

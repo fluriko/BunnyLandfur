@@ -1,9 +1,9 @@
 package mate.academy.servlets.admin.users;
 
-import mate.academy.database.role.RoleDao;
-import mate.academy.database.role.RoleDaoHib;
-import mate.academy.database.user.UserDao;
-import mate.academy.database.user.UserDaoHib;
+import mate.academy.database.RoleDao;
+import mate.academy.database.UserDao;
+import mate.academy.database.impl.RoleDaoHibImpl;
+import mate.academy.database.impl.UserDaoHibImpl;
 import mate.academy.model.Role;
 import mate.academy.model.User;
 import org.apache.log4j.Logger;
@@ -18,19 +18,19 @@ import java.util.List;
 @WebServlet(value = "/admin/addUser")
 public class AddUserServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(AddUserServlet.class);
-    private static final UserDao USER_DAO = new UserDaoHib();
-    private static final RoleDao ROLE_DAO = new RoleDaoHib();
+    private static final UserDao userDao = new UserDaoHibImpl();
+    private static final RoleDao roleDao = new RoleDaoHibImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Role> roles = ROLE_DAO.getRoles();
+        List<Role> roles = roleDao.getAll();
         request.setAttribute("roles", roles);
         request.getRequestDispatcher("/admin/addUser.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Role> roles = ROLE_DAO.getRoles();
+        List<Role> roles = roleDao.getAll();
         req.setAttribute("roles", roles);
         if (checkCorrect(req, resp) && checkUnique(req, resp)) {
             addUser(req, resp);
@@ -83,7 +83,7 @@ public class AddUserServlet extends HttpServlet {
 
     private boolean checkUniqueLog(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter("login").trim();
-        if (USER_DAO.getUserByLogin(login).isPresent()) {
+        if (userDao.getUserByLogin(login).isPresent()) {
             String message = "User with login " + login + " already exists";
             req.setAttribute("message", message);
             req.getRequestDispatcher("/admin/addUser.jsp").forward(req, resp);
@@ -94,7 +94,7 @@ public class AddUserServlet extends HttpServlet {
 
     private boolean checkUniqueMail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String mail = req.getParameter("mail").trim();
-        if (USER_DAO.getUserByMail(mail).isPresent()) {
+        if (userDao.getUserByMail(mail).isPresent()) {
             String message = "User with mail " + mail + " already exists";
             req.setAttribute("message", message);
             req.getRequestDispatcher("/admin/addUser.jsp").forward(req, resp);
@@ -107,16 +107,17 @@ public class AddUserServlet extends HttpServlet {
         String login = req.getParameter("login").trim();
         String password = req.getParameter("password").trim();
         String mail = req.getParameter("mail").trim();
+        User admin = (User) req.getSession().getAttribute("user");
         User user = new User(login, password, mail);
         String roleIdString = req.getParameter("role");
         if (roleIdString != null) {
             Long roleId = Long.parseLong(roleIdString);
-            user.setRole(ROLE_DAO.getRole(roleId).get());
+            user.setRole(roleDao.get(roleId).get());
         }
-        USER_DAO.addUser(user);
-        User userGet = USER_DAO.getUserByLogin(login).get();
+        userDao.add(user);
+        User userGet = userDao.getUserByLogin(login).get();
+        logger.info(userGet.getInfo() + " registered by " + admin.getInfo());
         String message = userGet.getRole() + " " + userGet.getId() + " added successfully";
-        logger.info(message);
         req.setAttribute("message", message);
         req.getRequestDispatcher("/admin/list").forward(req, resp);
     }

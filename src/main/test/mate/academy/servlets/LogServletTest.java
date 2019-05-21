@@ -1,7 +1,7 @@
 package mate.academy.servlets;
 
-import mate.academy.database.user.UserDao;
-import mate.academy.database.user.UserDaoHib;
+import mate.academy.database.UserDao;
+import mate.academy.database.impl.UserDaoHibImpl;
 import mate.academy.model.User;
 import org.junit.After;
 import org.junit.Before;
@@ -39,7 +39,7 @@ public class LogServletTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         logServlet = new LogServlet();
-        userDao = new UserDaoHib();
+        userDao = new UserDaoHibImpl();
         userOne = new User("111111", "111111", "test1Log@test.com");
         userTwo = new User("222222", "222222", "test2Log@test.com");
         fluriko = userDao.getUserByLogin("fluriko").get();
@@ -47,8 +47,8 @@ public class LogServletTest {
 
     @After
     public void clean() {
-        userDao.removeUser(userOne);
-        userDao.removeUser(userTwo);
+        userDao.remove(userOne);
+        userDao.remove(userTwo);
     }
 
     @Test
@@ -62,7 +62,7 @@ public class LogServletTest {
 
     @Test
     public void doPostWrongPass() throws IOException, ServletException {
-        userDao.addUser(userOne);
+        userDao.add(userOne);
         Mockito.when(request.getParameter("login")).thenReturn(userOne.getLogin());
         Mockito.when(request.getParameter("password")).thenReturn("1111");
         Mockito.when(request.getRequestDispatcher("/login.jsp")).thenReturn(requestDispatcher);
@@ -72,7 +72,7 @@ public class LogServletTest {
 
     @Test
     public void doPostUser() throws IOException, ServletException {
-        userDao.addUser(userTwo);
+        userDao.add(userTwo);
         Mockito.when(request.getParameter("login")).thenReturn(userTwo.getLogin());
         Mockito.when(request.getParameter("password")).thenReturn("222222");
         Mockito.when(request.getRequestDispatcher("/user/goods")).thenReturn(requestDispatcher);

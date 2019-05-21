@@ -1,9 +1,9 @@
 package mate.academy.servlets.user;
 
-import mate.academy.database.cart.CartDao;
-import mate.academy.database.cart.CartDaoHib;
-import mate.academy.database.good.GoodDao;
-import mate.academy.database.good.GoodDaoHib;
+import mate.academy.database.CartDao;
+import mate.academy.database.GoodDao;
+import mate.academy.database.impl.CartDaoHibImpl;
+import mate.academy.database.impl.GoodDaoHibImpl;
 import mate.academy.model.Good;
 import mate.academy.model.User;
 import org.apache.log4j.Logger;
@@ -16,8 +16,8 @@ import java.io.IOException;
 
 @WebServlet(value = "/user/changeQuantity")
 public class EditQuantityServlet extends HttpServlet {
-    private static final GoodDao GOOD_DAO = new GoodDaoHib();
-    private static final CartDao CART_DAO = new CartDaoHib();
+    private static final GoodDao goodDao = new GoodDaoHibImpl();
+    private static final CartDao cartDao = new CartDaoHibImpl();
     private static final Logger logger = Logger.getLogger(EditQuantityServlet.class);
 
     @Override
@@ -25,11 +25,11 @@ public class EditQuantityServlet extends HttpServlet {
         User user = (User) request.getSession().getAttribute("user");
         Long goodId = Long.parseLong(request.getParameter("goodId"));
         Long quantity = Long.parseLong(request.getParameter("quantity"));
-        Good good = GOOD_DAO.getGood(goodId).get();
+        Good good = goodDao.get(goodId).get();
         good.setQuantity(quantity);
         user.editGoodInCart(good);
-        CART_DAO.editCart(user.getCart());
-        logger.debug("User edited quantity for " + good.getId());
+        cartDao.edit(user.getCart());
+        logger.debug(user.getInfo() + " edited quantity for " + good.getId());
         request.getRequestDispatcher("/user/cart").forward(request, response);
     }
 

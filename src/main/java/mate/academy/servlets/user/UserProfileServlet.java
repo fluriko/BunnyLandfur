@@ -1,7 +1,7 @@
 package mate.academy.servlets.user;
 
-import mate.academy.database.user.UserDao;
-import mate.academy.database.user.UserDaoHib;
+import mate.academy.database.UserDao;
+import mate.academy.database.impl.UserDaoHibImpl;
 import mate.academy.model.User;
 import mate.academy.util.HashUtil;
 import org.apache.log4j.Logger;
@@ -15,24 +15,24 @@ import java.io.IOException;
 @WebServlet(value = "/user/profile")
 public class UserProfileServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(UserProfileServlet.class);
-    private static final UserDao USER_DAO = new UserDaoHib();
+    private static final UserDao userDao = new UserDaoHibImpl();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String newPass = request.getParameter("password").trim();
         String newMail = request.getParameter("mail").trim();
-        User userFromSession = (User) request.getSession().getAttribute("user");
-        if (newPass.length() > 5 && !newPass.equals(userFromSession.getPassword())) {
-            userFromSession.setSalt(HashUtil.getRandomSalt());
-            userFromSession.setPassword(newPass);
+        User user = (User) request.getSession().getAttribute("user");
+        if (newPass.length() > 5 && !newPass.equals(user.getPassword())) {
+            user.setSalt(HashUtil.getRandomSalt());
+            user.setPassword(newPass);
         }
         if (newMail.endsWith("@gmail.com")
                 && newMail.length() > 15
-                && !USER_DAO.getUserByMail(newMail).isPresent()) {
-            userFromSession.setMail(newMail);
+                && !userDao.getUserByMail(newMail).isPresent()) {
+            user.setMail(newMail);
         }
-        USER_DAO.editUser(userFromSession);
+        userDao.edit(user);
         String message = "You changed your data successfully!";
-        logger.warn("User " + userFromSession.getId() + " changed his data");
+        logger.warn(user.getInfo() + " changed his data");
         request.setAttribute("message", message);
         request.getRequestDispatcher("/user/profile.jsp").forward(request, response);
     }
