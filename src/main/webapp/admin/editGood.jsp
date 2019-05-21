@@ -15,7 +15,10 @@
 </head>
 <body class="w3-light-blue">
 <div class="w3-container w3-blue w3-opacity w3-right-align">
-
+    <h4>Admin <c:out value="${user.login}"/>
+        <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/user/profile'">My profile</button>
+        <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/logout'">Log out</button>
+    </h4>
     <h2>Enter new data for good: <c:out value="${id}"/> </h2>
 
 </div>

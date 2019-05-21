@@ -44,24 +44,12 @@ public class LogServlet extends HttpServlet {
         if (user.getPassword().equals(hashPass)) {
             req.getSession().setAttribute("user", user);
             logger.debug(user.getInfo() + " logged in and started session");
-            checkRole(req, resp);
+            resp.sendRedirect("/main");
         } else {
             logger.info("Guest entered wrong login or password");
             String message = "Wrong login or password";
             req.setAttribute("message", message);
             req.getRequestDispatcher("/login.jsp").forward(req, resp);
-        }
-    }
-
-    private void checkRole(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User user = (User) req.getSession().getAttribute("user");
-        String message = "Welcome back, " + user.getLogin();
-        if (user.getRole().getId() == 1) {
-            req.setAttribute("message", message);
-            req.getRequestDispatcher("/admin").forward(req, resp);
-        } else {
-            req.setAttribute("message", message);
-            req.getRequestDispatcher("/user/goods").forward(req, resp);
         }
     }
 }

@@ -14,6 +14,10 @@
 </head>
 <body class="w3-light-blue">
 <div class="w3-container w3-blue w3-opacity w3-right-align">
+    <h4>Admin <c:out value="${user.login}"/>
+        <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/user/profile'">My profile</button>
+        <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/logout'">Log out</button>
+    </h4>
     <h1>Fill the form below to add user!</h1>
     <h2><c:out value="${message}"/></h2>
 </div>
@@ -34,8 +38,8 @@
     <button type="submit" class="w3-btn w3-blue w3-round-large w3-margin-bottom">Submit</button>
 </form>
 <div class="w3-container w3-blue w3-opacity w3-right-align w3-padding">
-    <button class="w3-btn w3-round-large" onclick="location.href='/'">Back to main</button>
-    <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/admin'">Back to admin page</button><br /><br />
+    <button class="w3-btn w3-round-large" onclick="location.href='/main'">Back to main</button>
+    <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/admin/list'">Back to users list</button><br /><br />
 </div>
 </body>
 </html>

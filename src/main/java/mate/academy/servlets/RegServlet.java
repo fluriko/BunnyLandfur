@@ -109,8 +109,6 @@ public class RegServlet extends HttpServlet {
         userDao.add(user);
         User userJustRegistered = userDao.getUserByLogin(login).get();
         logger.info(userJustRegistered.getInfo() + " registered successfully");
-        String message = "Hello and welcome " + login + ", now you can log in";
-        req.setAttribute("message", message);
-        req.getRequestDispatcher("/index.jsp").forward(req, resp);
+        req.getRequestDispatcher("/login").forward(req, resp);
     }
 }

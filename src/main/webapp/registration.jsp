@@ -31,7 +31,7 @@
     <button type="submit" class="w3-btn w3-blue w3-round-large w3-margin-bottom">Submit</button>
 </form>
 <div class="w3-container w3-blue w3-opacity w3-right-align w3-padding">
-    <button class="w3-btn w3-round-large" onclick="location.href='/'">Back to main</button>
+    <button class="w3-btn w3-round-large" onclick="location.href='/main'">Back to main</button>
     <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/login'">Log in</button><br /><br />
 </div>
 </body>

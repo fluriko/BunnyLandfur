@@ -15,7 +15,10 @@
 </head>
 <body class="w3-light-blue">
 <div class="w3-container w3-blue w3-opacity w3-right-align">
-
+    <h4>Admin <c:out value="${user.login}"/>
+        <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/user/profile'">My profile</button>
+        <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/logout'">Log out</button>
+    </h4>
 <h2>Enter new data for user: <c:out value="${id}"/> </h2>
 
 </div>
@@ -35,6 +38,6 @@
 </c:forEach>
     <button type="submit" class="w3-btn w3-blue w3-round-large w3-margin-bottom">Submit</button>
 </form>
-<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/admin'">Back to admin page</button><br /><br />
+<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/admin/list'">Back to user list</button><br /><br />
 </body>
 </html>

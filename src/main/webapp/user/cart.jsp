@@ -15,6 +15,10 @@
 </head>
 <body >
 <div class="w3-container w3-left-align">
+    <h4><c:out value="${user.login}"/>
+        <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/user/profile'">My profile</button>
+        <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/logout'">Log out</button>
+    </h4>
     <h2><c:out value="${message}"/></h2>
     <h1>Your cart: </h1>
 </div>
@@ -47,6 +51,6 @@
 <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/user/buy'">Buy all in cart</button><br /><br />
 <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/user/cleanCart'">Clean cart</button><br /><br />
 <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/user/goods'">Back to goods</button><br /><br />
-<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='..'">Back to main</button><br /><br />
+<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/main'">Back to main page</button><br /><br />
 </body>
 </html>

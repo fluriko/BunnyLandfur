@@ -15,8 +15,11 @@
 </head>
 <body class="w3-light-blue">
 <div class="w3-container w3-blue w3-opacity w3-right-align">
+    <h4><c:out value="${user.login}"/>
+        <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/logout'">Log out</button>
+    </h4>
     <h2><c:out value="${message}"/> </h2>
-    <h2><c:out value="${user.login}"/>, you can change your info: <c:out value="${id}"/> </h2>
+    <h2>You can change your info:</h2>
 </div>
 <form method="post" class="w3-selection w3-light-blue w3-padding">
     <label> password:
@@ -28,7 +31,7 @@
 
     <button type="submit" class="w3-btn w3-blue w3-round-large w3-margin-bottom">Submit</button>
 </form>
-<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/'">Back to main page</button><br /><br />
+<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/main'">Back to main page</button><br /><br />
 </body>
 </html>
 

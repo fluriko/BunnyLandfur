@@ -10,6 +10,7 @@ import mate.academy.service.MailService;
 import mate.academy.util.PurchaseCodeCleaner;
 import mate.academy.util.RandomGenerator;
 import org.apache.log4j.Logger;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

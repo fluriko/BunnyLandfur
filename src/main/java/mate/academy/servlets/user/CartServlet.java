@@ -17,12 +17,17 @@ public class CartServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
-        logger.debug(user.getInfo() + " on cart page");
-        List<Good> goodsInCart = user.getGoodsInCart();
-        request.setAttribute("goodsInCart", goodsInCart);
-        double totalPrice = user.getCart().getGoodsInCart().stream().mapToDouble(Good::getTotalPrice).sum();
-        request.setAttribute("total", totalPrice);
-        request.getRequestDispatcher("/user/cart.jsp").forward(request, response);
+        if (!user.getGoodsInCart().isEmpty()) {
+            logger.debug(user.getInfo() + " on cart page");
+            List<Good> goodsInCart = user.getGoodsInCart();
+            request.setAttribute("goodsInCart", goodsInCart);
+            double totalPrice = user.getCart().getGoodsInCart().stream().mapToDouble(Good::getTotalPrice).sum();
+            request.setAttribute("total", totalPrice);
+            request.getRequestDispatcher("/user/cart.jsp").forward(request, response);
+        } else {
+            request.setAttribute("message", "Your cart is empty!");
+            request.getRequestDispatcher("/user/goods").forward(request, response);
+        }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
