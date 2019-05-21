@@ -21,7 +21,11 @@ public class CartServlet extends HttpServlet {
             logger.debug(user.getInfo() + " on cart page");
             List<Good> goodsInCart = user.getGoodsInCart();
             request.setAttribute("goodsInCart", goodsInCart);
-            double totalPrice = user.getCart().getGoodsInCart().stream().mapToDouble(Good::getTotalPrice).sum();
+            double totalPrice = user
+                    .getGoodsInCart()
+                    .stream()
+                    .mapToDouble(Good::getTotalPrice)
+                    .sum();
             request.setAttribute("total", totalPrice);
             request.getRequestDispatcher("/user/cart.jsp").forward(request, response);
         } else {

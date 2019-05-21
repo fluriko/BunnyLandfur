@@ -2,12 +2,15 @@ package mate.academy.database.impl;
 
 import mate.academy.database.GenericDao;
 import mate.academy.util.HibernateSessionFactoryUtil;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public abstract class GenericDaoImpl<T> implements GenericDao<T> {
+    private static final Logger logger = Logger.getLogger(GenericDaoImpl.class);
     Class<T> clazz;
 
     public GenericDaoImpl(Class<T> clazz) {
@@ -16,43 +19,68 @@ public abstract class GenericDaoImpl<T> implements GenericDao<T> {
 
     @Override
     public void add(T object) {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        Transaction transaction = session.beginTransaction();
-        session.save(object);
-        transaction.commit();
-        session.close();
+        try (Session session = HibernateSessionFactoryUtil
+                .getSessionFactory()
+                .openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.save(object);
+            transaction.commit();
+        } catch (Exception e) {
+            logger.error("Error in adding: " + clazz.getName(), e);
+        }
     }
 
     @Override
     public void remove(T object) {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        Transaction transaction = session.beginTransaction();
-        session.delete(object);
-        transaction.commit();
-        session.close();
+        try (Session session = HibernateSessionFactoryUtil
+                .getSessionFactory()
+                .openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.delete(object);
+            transaction.commit();
+        } catch (Exception e) {
+            logger.error("Error in removing: " + clazz.getName(), e);
+        }
     }
 
     @Override
     public void edit(T object) {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        Transaction transaction = session.beginTransaction();
-        session.update(object);
-        transaction.commit();
-        session.close();
+        try (Session session = HibernateSessionFactoryUtil
+                .getSessionFactory()
+                .openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.update(object);
+            transaction.commit();
+        } catch (Exception e) {
+            logger.error("Error in editing: " + clazz.getName(), e);
+        }
     }
 
     @Override
     public Optional<T> get(long id) {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        T object = session.get(clazz, id);
-        session.close();
-        return Optional.ofNullable(object);
+        try (Session session = HibernateSessionFactoryUtil
+                .getSessionFactory()
+                .openSession()) {
+            T object = session.get(clazz, id);
+            return Optional.ofNullable(object);
+        } catch (Exception e) {
+            logger.error("Error in getting: " + clazz.getName(), e);
+            return Optional.empty();
+        }
     }
 
     @Override
     public List<T> getAll() {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        List<T> objects = session.createQuery("From " + clazz.getName()).list();
-        return objects;
+        try (Session session = HibernateSessionFactoryUtil
+                .getSessionFactory()
+                .openSession()) {
+            List<T> objects = session
+                    .createQuery("From " + clazz.getName())
+                    .list();
+            return objects;
+        } catch (Exception e) {
+            logger.error("Error in getting all: " + clazz.getName(), e);
+            return new ArrayList<>();
+        }
     }
 }
