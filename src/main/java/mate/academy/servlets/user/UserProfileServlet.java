@@ -34,7 +34,7 @@ public class UserProfileServlet extends HttpServlet {
         String message = "You changed your data successfully!";
         logger.warn(user.getInfo() + " changed his data");
         request.setAttribute("message", message);
-        request.getRequestDispatcher("/user/profile.jsp").forward(request, response);
+        request.getRequestDispatcher("/main").forward(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

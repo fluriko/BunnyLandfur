@@ -25,9 +25,10 @@ public class EditServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long userId = Long.parseLong(req.getParameter("id"));
-        User user = userDao.get(userId).get();
-        req.setAttribute("user", user);
+        User userToEdit = userDao.get(userId).get();
+        req.setAttribute("userToEdit", userToEdit);
         List<Role> roles = roleDaoHib.getAll();
+        roles.remove(userToEdit.getRole());
         req.setAttribute("roles", roles);
         req.getRequestDispatcher("/admin/edit.jsp").forward(req, resp);
     }
@@ -53,10 +54,8 @@ public class EditServlet extends HttpServlet {
         }
         String message = "You have changed data for " + userToEdit.getRole() + " " + userToEdit.getId();
         String roleIdString = req.getParameter("role");
-        if (roleIdString != null) {
-            Long roleId = Long.parseLong(roleIdString);
-            userToEdit.setRole(roleDaoHib.get(roleId).get());
-        }
+        Long roleId = Long.parseLong(roleIdString);
+        userToEdit.setRole(roleDaoHib.get(roleId).get());
         userDao.edit(userToEdit);
         User admin = (User) req.getSession().getAttribute("user");
         logger.warn(admin.getInfo() + "changed data for" + userToEdit.getInfo());

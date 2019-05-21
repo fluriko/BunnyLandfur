@@ -24,18 +24,21 @@
 </div>
 <form method="post" class="w3-selection w3-light-blue w3-padding">
     <label> login:
-        <input type="text" name="login" value = "<c:out value="${user.login}"/>" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
+        <input type="text" name="login" value = "<c:out value="${userToEdit.login}"/>" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>
 <label> password:
     <input type="password" name="password" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
 </label>
     <label> mail:
-        <input type="text" name="mail" value = "<c:out value="${user.mail}"/>" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
+        <input type="text" name="mail" value = "<c:out value="${userToEdit.mail}"/>" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>
     <label>Set role:</label><br /><br />
 <c:forEach items="${roles}" var="role">
     <input type="radio" name="role" value="<c:out value="${role.id}"/>">   <c:out value="${role.name}"/><br /><br />
 </c:forEach>
+    <input type="radio" name="role"
+           value="<c:out value="${userToEdit.role.id}"/>" checked>
+    <c:out value="${userToEdit.role}"/><br /><br />
     <button type="submit" class="w3-btn w3-blue w3-round-large w3-margin-bottom">Submit</button>
 </form>
 <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/admin/list'">Back to user list</button><br /><br />

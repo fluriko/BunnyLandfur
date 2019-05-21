@@ -33,7 +33,7 @@
     </label>
     <label>Set role:</label><br /><br />
     <c:forEach items="${roles}" var="role">
-        <input type="radio" name="role" value="<c:out value="${role.id}"/>">   <c:out value="${role.name}"/><br /><br />
+        <input type="radio" name="role" value="<c:out value="${role.id}"/>" checked>   <c:out value="${role.name}"/><br /><br />
     </c:forEach>
     <button type="submit" class="w3-btn w3-blue w3-round-large w3-margin-bottom">Submit</button>
 </form>
