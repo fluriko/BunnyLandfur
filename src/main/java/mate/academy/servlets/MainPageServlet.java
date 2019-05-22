@@ -2,7 +2,6 @@ package mate.academy.servlets;
 
 import mate.academy.model.User;
 import org.apache.log4j.Logger;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -25,5 +24,10 @@ public class MainPageServlet extends HttpServlet {
         } else {
             logger.error("No action for " +  user.getInfo());
         }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doGet(req, resp);
     }
 }

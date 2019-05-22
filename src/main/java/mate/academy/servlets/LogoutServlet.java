@@ -17,6 +17,6 @@ public class LogoutServlet extends HttpServlet {
         User user = (User) request.getSession().getAttribute("user");
         logger.debug(user.getInfo() + " logged out");
         request.getSession().invalidate();
-        response.sendRedirect("/");
+        response.sendRedirect("/main");
     }
 }
