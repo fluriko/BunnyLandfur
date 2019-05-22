@@ -10,13 +10,13 @@
 <div class="w3-container w3-blue w3-opacity w3-right-align">
     <h1>Guest, we are glad to see you in BunnyLand!</h1>
     <h2>You can register of log in to have more actions</h2>
-    <h3><c:out value="${message}"/></h3>
+    <h7><c:out value="${message}"/></h7>
 </div>
 <br /><br />
 <div class="w3-container w3-center">
     <div class="w3-bar w3-padding-large w3-padding-24">
-    <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/registration'">Register</button><br /><br />
-    <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/login'">Log in</button><br /><br />
+    <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/registration'"><h2>Register</h2></button>
+        <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/login'"><h2>Log in</h2></button>
 </div>
         <div class="w3-container w3-center">
     <h2>Some cool paragraph</h2> <br />

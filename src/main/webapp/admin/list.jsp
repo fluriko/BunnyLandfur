@@ -12,18 +12,41 @@
 <head>
     <title>List of users</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+        table {
+            width:100%;
+        }
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+        table#t01 tr:nth-child(even) {
+            background-color: #eee;
+        }
+        table#t01 tr:nth-child(odd) {
+            background-color: #fff;
+        }
+        table#t01 th {
+            background-color: black;
+            color: white;
+        }
+    </style>
 </head>
 <body >
-<div class="w3-container w3-left-align">
+<div class="w3-container  w3-opacity w3-right-align">
     <h4>Admin <c:out value="${user.login}"/>
         <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/user/profile'">My profile</button>
         <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/logout'">Log out</button>
     </h4>
-    <h2><c:out value="${message}"/></h2>
-    <h1>List of users</h1>
 </div>
 <div class="w3-container w3-left-align">
-<table border='2' width='80%'>
+    <h2><c:out value="${message}"/></h2>
+    <h1>List of users</h1>
+<table id="t01">
 <tr>
     <th>ID</th>
     <th>Name</th>

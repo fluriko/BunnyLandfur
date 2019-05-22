@@ -31,7 +31,7 @@ public class BuyServlet extends HttpServlet {
         Long codeId = Long.parseLong(request.getParameter("codeId"));
         Code code = new Code(codeId, codeValue, user.getCart());
         Code codeFromDb = purchaseCodeDao.get(codeId).get();
-        if (codeFromDb.equals(code)) {
+        if (code.equals(codeFromDb)) {
             logger.info(user.getInfo() + " paid the purchase " + user.getCart());
             request.setAttribute("message", "successful purchase");
             user.cleanCart();
@@ -39,7 +39,7 @@ public class BuyServlet extends HttpServlet {
         } else {
             request.setAttribute("message", "you entered wrong code");
         }
-        purchaseCodeDao.remove(code);
+        purchaseCodeDao.remove(codeFromDb);
         request.getRequestDispatcher("/user/result.jsp").forward(request, response);
     }
 

@@ -12,19 +12,45 @@
 <head>
     <title>All goods</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+        table {
+            width:100%;
+        }
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+        table#t01 tr:nth-child(even) {
+            background-color: #eee;
+        }
+        table#t01 tr:nth-child(odd) {
+            background-color: #fff;
+        }
+        table#t01 th {
+            background-color: black;
+            color: white;
+        }
+    </style>
 </head>
 <body >
-<div class="w3-container w3-left-align">
-    <h4><c:out value="${user.login}"/>
+<div class="w3-container w3-right-align">
+    <h9><c:out value="${user.login}"/>
         <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/user/profile'">My profile</button>
         <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/logout'">Log out</button>
-    </h4>
-    <h3><c:out value="${message}"/></h3>
-    <h3><c:out value="${cartInfo}"/> goods in your cart</h3>
-    <h1>Choose what you want to buy!</h1>
+    </h9>
+</div>
+<div class="w3-container w3-right-align">
+<h7><c:out value="${cartInfo}"/> goods in your cart</h7><br />
+    <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/user/cart'"> Go to cart</button>
 </div>
 <div class="w3-container w3-left-align">
-    <table border='2' width='80%'>
+    <h3>Choose what you want to buy:</h3>
+    <h7><c:out value="${message}"/></h7><br /><br />
+    <table id="t01">
         <tr>
             <th>ID</th>
             <th>label</th>
@@ -45,7 +71,6 @@
         </c:forEach>
     </table>
 </div><br />
-<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/user/cart'">Cart</button><br /><br />
-<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/main'">Back to main</button><br /><br />
+<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/main'">Back to main</button>
 </body>
 </html>

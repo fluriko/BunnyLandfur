@@ -16,16 +16,16 @@
 </head>
 <body class="w3-light-blue">
 <div class="w3-container w3-blue w3-opacity w3-right-align">
-    <h4><c:out value="${user.login}"/>
+    <h9><c:out value="${user.login}"/>
         <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/user/profile'">My profile</button>
         <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/logout'">Log out</button>
-    </h4>
-    <h1>Result of your purchase:</h1>
-    <h2><c:out value="${message}"/></h2>
+    </h9>
 </div>
-<div class="w3-container w3-blue w3-opacity w3-right-align w3-padding">
-    <button class="w3-btn w3-round-large" onclick="location.href='/user/goods'">Back to goods page</button><br /><br />
-    <button class="w3-btn w3-round-large" onclick="location.href='/main'">Back to main page</button><br /><br />
+<div class="w3-container w3-center">
+    <br />
+<h1><c:out value="${message}"/></h1><br />
+    <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/user/goods'">Back to goods page</button>
+    <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/main'">Back to main page</button>
 </div>
 </body>
 </html>

@@ -14,11 +14,11 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 <body class="w3-light-blue">
-<div class="w3-container w3-blue w3-opacity w3-right-align">
-    <h1>Fill the form below to log in!</h1>
-    <h2><c:out value="${message}"/></h2>
+<div class="w3-container w3-blue w3-opacity w3-left-align">
+    <h2>Fill the form below to log in:</h2>
 </div>
 <form method="post" class="w3-selection w3-light-blue w3-padding">
+    <h7><c:out value="${message}"/></h7><br /><br />
     <label> Login:
         <input type="text" name="login" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>
@@ -27,9 +27,7 @@
     </label>
     <button type="submit" class="w3-btn w3-blue w3-round-large w3-margin-bottom">Submit</button>
 </form>
-<div class="w3-container w3-blue w3-opacity w3-right-align w3-padding">
-    <button class="w3-btn w3-round-large" onclick="location.href='/main'">Back to main</button>
-    <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/registration'">Register</button><br /><br />
-</div>
+    <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/main'">Back to main</button>
+    <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/registration'">Register</button>
 </body>
 </html>

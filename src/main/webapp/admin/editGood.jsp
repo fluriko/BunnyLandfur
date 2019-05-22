@@ -15,14 +15,13 @@
 </head>
 <body class="w3-light-blue">
 <div class="w3-container w3-blue w3-opacity w3-right-align">
-    <h4>Admin <c:out value="${user.login}"/>
+    <h9>Admin <c:out value="${user.login}"/>
         <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/user/profile'">My profile</button>
         <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/logout'">Log out</button>
-    </h4>
-    <h2>Enter new data for good: <c:out value="${id}"/> </h2>
-
+    </h9>
 </div>
 <form method="post" class="w3-selection w3-light-blue w3-padding">
+    <h3>Enter new data for good: <c:out value="${good.id}"/> </h3>
     <label> label:
         <input type="text" name="label" value = "<c:out value="${good.label}"/>" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>
@@ -37,7 +36,9 @@
     </label>
     <button type="submit" class="w3-btn w3-blue w3-round-large w3-margin-bottom">Submit</button>
 </form>
-<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/admin/goods'">Back to goods list</button><br /><br />
+<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/admin/goods'">Back to goods list</button>
+<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/admin'">Back to admin page</button>
+<button class="w3-btn w3-round-large" onclick="location.href='/main'">Back to main</button>
 </body>
 </html>
 
