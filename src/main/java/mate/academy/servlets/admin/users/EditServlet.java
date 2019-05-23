@@ -6,6 +6,8 @@ import mate.academy.database.impl.RoleDaoHibImpl;
 import mate.academy.database.impl.UserDaoHibImpl;
 import mate.academy.model.Role;
 import mate.academy.model.User;
+import mate.academy.service.validator.UserValidationService;
+import mate.academy.service.validator.GenericValidationService;
 import mate.academy.util.HashUtil;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
@@ -18,50 +20,56 @@ import java.util.List;
 
 @WebServlet(value = "/admin/edit")
 public class EditServlet extends HttpServlet {
+    private static final GenericValidationService validationService = new UserValidationService();
     private static final UserDao userDao = new UserDaoHibImpl();
-    private static final RoleDao roleDaoHib = new RoleDaoHibImpl();
+    private static final RoleDao roleDao = new RoleDaoHibImpl();
     private static final Logger logger = Logger.getLogger(EditServlet.class);
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long userId = Long.parseLong(req.getParameter("id"));
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Long userId = Long.parseLong(request.getParameter("id"));
         User userToEdit = userDao.get(userId).get();
-        req.setAttribute("userToEdit", userToEdit);
-        List<Role> roles = roleDaoHib.getAll();
+        request.setAttribute("userToEdit", userToEdit);
+        List<Role> roles = roleDao.getAll();
         roles.remove(userToEdit.getRole());
-        req.setAttribute("roles", roles);
-        req.getRequestDispatcher("/admin/edit.jsp").forward(req, resp);
+        request.setAttribute("roles", roles);
+        request.getRequestDispatcher("/admin/edit.jsp").forward(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long userId = Long.parseLong(req.getParameter("id"));
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String login = request.getParameter("login").trim();
+        String password = request.getParameter("password").trim();
+        String mail = request.getParameter("mail").trim();
+        Long roleId = Long.parseLong(request.getParameter("role"));
+        Role role = roleDao.get(roleId).get();
+        Long userId = Long.parseLong(request.getParameter("id"));
         User userToEdit = userDao.get(userId).get();
-        String newLog = req.getParameter("login").trim();
-        String newPass = req.getParameter("password").trim();
-        String newMail = req.getParameter("mail").trim();
-        if (newLog.length() > 3 && !userDao.getUserByLogin(newLog).isPresent()) {
-            userToEdit.setLogin(newLog);
+        setUserFields(userToEdit, login, password, mail, role);
+        String violations = validationService.validate(userToEdit);
+        User admin = (User) request.getSession().getAttribute("user");
+        if (violations.isEmpty() && userDao.edit(userToEdit)) {
+            logger.info(userToEdit.getInfo() + " edited by " + admin.getInfo());
+            String message = userToEdit.getInfo() + " edited successfully";
+            request.setAttribute("message", message);
+            request.getRequestDispatcher("/admin/list").forward(request, response);
+        } else {//TODO NOT UNIQ DATA MESSAGE
+            logger.debug(admin.getInfo() + " :editing user failed: " + violations);
+            request.setAttribute("violations", violations);
+            doGet(request, response);
         }
-        if (newPass.length() > 5 && !newPass.equals(userToEdit.getPassword())) {
-            userToEdit.setSalt(HashUtil.getRandomSalt());
-            userToEdit.setPassword(newPass);
+    }
+
+    private static void setUserFields(User user, String login, String password, String mail, Role role) {
+        user.setLogin(login);
+        if (password.isEmpty()) {
+            user.setPasswordLength(6);
+        } else {
+            user.setSalt(HashUtil.getRandomSalt());
+            user.setPassword(password);
+            user.setPasswordLength(password.length());
         }
-        if (newMail.endsWith("@gmail.com")
-                && newMail.length() > 15
-                && !userDao.getUserByMail(newMail).isPresent()) {
-            userToEdit.setMail(newMail);
-        }
-        //TODO ADD NORMAL CHECK OF PASSWORD LENGTH
-        userToEdit.setPasswordLength(6);
-        String message = "You have changed data for " + userToEdit.getRole() + " " + userToEdit.getId();
-        String roleIdString = req.getParameter("role");
-        Long roleId = Long.parseLong(roleIdString);
-        userToEdit.setRole(roleDaoHib.get(roleId).get());
-        userDao.edit(userToEdit);
-        User admin = (User) req.getSession().getAttribute("user");
-        logger.warn(admin.getInfo() + "changed data for" + userToEdit.getInfo());
-        req.setAttribute("message", message);
-        req.getRequestDispatcher("/admin/list").forward(req, resp);
+        user.setMail(mail);
+        user.setRole(role);
     }
 }

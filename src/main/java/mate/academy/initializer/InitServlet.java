@@ -30,7 +30,7 @@ public class InitServlet extends HttpServlet {
 
     @Override
     public void init() {
-        logger.debug("INITIALIZATION DATABASE");
+        logger.info("INITIALIZATION DATABASE");
         Role admin = new Role(1L, "ADMIN");
         Role user = new Role(2L, "USER");
         roleDao.add(admin);

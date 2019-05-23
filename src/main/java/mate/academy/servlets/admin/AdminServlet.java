@@ -13,12 +13,14 @@ import java.io.IOException;
 public class AdminServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(AdminServlet.class);
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User admin = (User) request.getSession().getAttribute("user");
-        logger.info(admin.getInfo() + " is on main admin page");
+        logger.debug(admin.getInfo() + " is on main admin page");
         request.getRequestDispatcher("/admin/admin.jsp").forward(request, response);
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response); //TODO ADD LIST OF PAID ORDERS
     }

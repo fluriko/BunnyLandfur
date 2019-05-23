@@ -18,16 +18,16 @@ public class ListServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(ListServlet.class);
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doPost(req, resp);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doPost(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User admin = (User) req.getSession().getAttribute("user");
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        User admin = (User) request.getSession().getAttribute("user");
         logger.info(admin.getInfo() + " is on users list page");
         List<User> users = userDao.getAll();
-        req.setAttribute("users", users);
-        req.getRequestDispatcher("/admin/list.jsp").forward(req, resp);
+        request.setAttribute("users", users);
+        request.getRequestDispatcher("/admin/list.jsp").forward(request, response);
     }
 }

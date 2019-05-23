@@ -18,6 +18,7 @@ public class GoodsServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(GoodsServlet.class);
     private static final GoodDao goodDao = new GoodDaoHibImpl();
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
         logger.debug(user.getInfo() + " is on goods page");
@@ -27,6 +28,7 @@ public class GoodsServlet extends HttpServlet {
         request.getRequestDispatcher("/user/goods.jsp").forward(request, response);
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response);
     }

@@ -18,47 +18,47 @@ public abstract class GenericDaoImpl<T> implements GenericDao<T> {
     }
 
     @Override
-    public int add(T object) {
+    public boolean add(T object) {
         try (Session session = HibernateSessionFactoryUtil
                 .getSessionFactory()
                 .openSession()) {
             Transaction transaction = session.beginTransaction();
             session.save(object);
             transaction.commit();
-            return 1;
+            return true;
         } catch (Exception e) {
             logger.error("Error in adding: " + clazz.getName(), e);
-            return 0;
+            return false;
         }
     }
 
     @Override
-    public int remove(T object) {
+    public boolean remove(T object) {
         try (Session session = HibernateSessionFactoryUtil
                 .getSessionFactory()
                 .openSession()) {
             Transaction transaction = session.beginTransaction();
             session.delete(object);
             transaction.commit();
-            return 1;
+            return true;
         } catch (Exception e) {
             logger.error("Error in removing: " + clazz.getName(), e);
-            return 0;
+            return false;
         }
     }
 
     @Override
-    public int edit(T object) {
+    public boolean edit(T object) {
         try (Session session = HibernateSessionFactoryUtil
                 .getSessionFactory()
                 .openSession()) {
             Transaction transaction = session.beginTransaction();
             session.update(object);
             transaction.commit();
-            return 1;
+            return true;
         } catch (Exception e) {
             logger.error("Error in editing: " + clazz.getName(), e);
-            return 0;
+            return false;
         }
     }
 

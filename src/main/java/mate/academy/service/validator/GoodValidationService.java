@@ -2,5 +2,5 @@ package mate.academy.service.validator;
 
 import mate.academy.model.Good;
 
-public class GoodValidationService extends ValidationService<Good> {
+public class GoodValidationService extends GenericValidationService<Good> {
 }

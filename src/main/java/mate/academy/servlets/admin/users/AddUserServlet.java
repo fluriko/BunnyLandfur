@@ -7,7 +7,7 @@ import mate.academy.database.impl.UserDaoHibImpl;
 import mate.academy.model.Role;
 import mate.academy.model.User;
 import mate.academy.service.validator.UserValidationService;
-import mate.academy.service.validator.ValidationService;
+import mate.academy.service.validator.GenericValidationService;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,7 +19,7 @@ import java.util.List;
 
 @WebServlet(value = "/admin/addUser")
 public class AddUserServlet extends HttpServlet {
-    private static final ValidationService validationService = new UserValidationService();
+    private static final GenericValidationService validationService = new UserValidationService();
     private static final Logger logger = Logger.getLogger(AddUserServlet.class);
     private static final UserDao userDao = new UserDaoHibImpl();
     private static final RoleDao roleDao = new RoleDaoHibImpl();
@@ -32,26 +32,25 @@ public class AddUserServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String login = req.getParameter("login").trim();
-        String password = req.getParameter("password").trim();
-        String mail = req.getParameter("mail").trim();
-        Long roleId = Long.parseLong(req.getParameter("role"));
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String login = request.getParameter("login").trim();
+        String password = request.getParameter("password").trim();
+        String mail = request.getParameter("mail").trim();
+        Long roleId = Long.parseLong(request.getParameter("role"));
         Role role = roleDao.get(roleId).get();
         User user = new User(login, password, role, mail);
         String violations = validationService.validate(user);
-        User admin = (User) req.getSession().getAttribute("user");
-        if (violations.isEmpty()) {
-            userDao.add(user);
+        User admin = (User) request.getSession().getAttribute("user");
+        if (violations.isEmpty() && userDao.add(user)) {
             User userJustRegistered = userDao.getUserByLogin(user.getLogin()).get();
             logger.info(userJustRegistered.getInfo() + " registered by " + admin.getInfo());
             String message = userJustRegistered.getInfo() + " added successfully";
-            req.setAttribute("message", message);
-            req.getRequestDispatcher("/admin/list").forward(req, resp);
-        } else {
+            request.setAttribute("message", message);
+            request.getRequestDispatcher("/admin/list").forward(request, response);
+        } else { //TODO NOT UNIQ DATA MESSAGE
             logger.debug(admin.getInfo() + " :adding user failed: " + violations);
-            req.setAttribute("message", violations);
-            doGet(req, resp);
+            request.setAttribute("message", violations);
+            doGet(request, response);
         }
     }
 }

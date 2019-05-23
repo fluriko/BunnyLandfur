@@ -22,6 +22,7 @@
 </div>
 <form method="post" class="w3-selection w3-light-blue w3-padding">
     <h3>Enter new data for user: <c:out value="${userToEdit.id}"/> </h3>
+    <h7><c:out value="${violations}"/></h7><br /><br />
     <label> login:
         <input type="text" name="login" value = "<c:out value="${userToEdit.login}"/>" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>

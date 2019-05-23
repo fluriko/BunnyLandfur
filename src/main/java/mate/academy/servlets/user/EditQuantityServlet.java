@@ -17,7 +17,6 @@ import java.io.IOException;
 @WebServlet(value = "/user/changeQuantity")
 public class EditQuantityServlet extends HttpServlet {
     private static final GoodDao goodDao = new GoodDaoHibImpl();
-    private static final CartDao cartDao = new CartDaoHibImpl();
     private static final Logger logger = Logger.getLogger(EditQuantityServlet.class);
 
     @Override
@@ -28,11 +27,11 @@ public class EditQuantityServlet extends HttpServlet {
         Good good = goodDao.get(goodId).get();
         good.setQuantity(quantity);
         user.editGoodInCart(good);
-        cartDao.edit(user.getCart());
         logger.debug(user.getInfo() + " edited quantity for " + good.getId());
         request.getRequestDispatcher("/user/cart").forward(request, response);
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long goodId = Long.parseLong(request.getParameter("goodId"));
         request.setAttribute("goodId", goodId);

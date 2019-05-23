@@ -7,7 +7,7 @@ import javax.validation.ValidatorFactory;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public abstract class ValidationService<T> {
+public abstract class GenericValidationService<T> {
     public String validate(T object) {
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
         Validator validator = validatorFactory.getValidator();

@@ -13,6 +13,7 @@ import java.io.IOException;
 public class MainPageServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(MainPageServlet.class);
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
@@ -27,7 +28,7 @@ public class MainPageServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doGet(req, resp); //TODO SERVLETS CHANGE TO DOGET WHERE RESTART THIS PAGE
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doGet(request, response);
     }
 }

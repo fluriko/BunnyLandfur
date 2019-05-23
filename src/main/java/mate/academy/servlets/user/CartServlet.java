@@ -15,6 +15,7 @@ import java.util.List;
 public class CartServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(CartServlet.class);
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
         if (!user.getGoodsInCart().isEmpty()) {
@@ -34,6 +35,7 @@ public class CartServlet extends HttpServlet {
         }
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response);
     }

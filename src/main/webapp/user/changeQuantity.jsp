@@ -24,7 +24,7 @@
 <form method="post" class="w3-selection w3-light-blue w3-padding">
     <h7><c:out value="${message}"/></h7>
     <label> Enter new quantity:
-        <input type="number" name="quantity" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
+        <input type="number" min="1" name="quantity" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>
     <input type="hidden" name="goodId" value="<c:out value="${goodId}"/>">
     <button type="submit" class="w3-btn w3-blue w3-round-large w3-margin-bottom">Submit</button>

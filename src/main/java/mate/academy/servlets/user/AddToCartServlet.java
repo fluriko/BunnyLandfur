@@ -20,6 +20,7 @@ public class AddToCartServlet extends HttpServlet {
     private static final GoodDao goodDao = new GoodDaoHibImpl();
     private static final CartDao cartDao = new CartDaoHibImpl();
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long goodId = Long.parseLong(request.getParameter("goodId"));
         Good good = goodDao.get(goodId).get();

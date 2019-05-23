@@ -4,7 +4,7 @@ import mate.academy.database.UserDao;
 import mate.academy.database.impl.UserDaoHibImpl;
 import mate.academy.model.User;
 import mate.academy.service.validator.UserValidationService;
-import mate.academy.service.validator.ValidationService;
+import mate.academy.service.validator.GenericValidationService;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,36 +15,36 @@ import java.io.IOException;
 
 @WebServlet(value = "/registration")
 public class RegServlet extends HttpServlet {
-    private static final ValidationService validationService = new UserValidationService();
+    private static final GenericValidationService validationService = new UserValidationService();
     private static final UserDao userDao = new UserDaoHibImpl();
     private static final Logger logger = Logger.getLogger(RegServlet.class);
-    private static final String INSTRUCTION = "login should be 4-16 chars,\n" +
-            "password should be 6-16 chars,\n" +
-            "mail should be real mail address\n";
+    private static final String INSTRUCTION = "login should be 4-16 chars, " +
+            "password should be 6-16 chars, " +
+            "mail should be real mail address, " +
+            "all data should be uniq ";
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         logger.debug("Guest started registration");
-        req.setAttribute("instruction", INSTRUCTION);
-        req.getRequestDispatcher("/registration.jsp").forward(req, resp);
+        request.setAttribute("instruction", INSTRUCTION);
+        request.getRequestDispatcher("/registration.jsp").forward(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String login = req.getParameter("login").trim();
-        String password = req.getParameter("password").trim();
-        String mail = req.getParameter("mail").trim();
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String login = request.getParameter("login").trim();
+        String password = request.getParameter("password").trim();
+        String mail = request.getParameter("mail").trim();
         User user = new User(login, password, mail);
         String violations = validationService.validate(user);
-        if (violations.isEmpty()) {
-            userDao.add(user);
+        if (violations.isEmpty() && userDao.add(user)) {
             User userJustRegistered = userDao.getUserByLogin(user.getLogin()).get();
             logger.info(userJustRegistered.getInfo() + " registered successfully");
-            resp.sendRedirect("/login");
-        } else {
+            response.sendRedirect("/login");
+        } else {//TODO NOT UNIQ DATA MESSAGE
             logger.debug("Registration failed: " + violations);
-            req.setAttribute("violations", violations);
-            doGet(req, resp);
+            request.setAttribute("violations", violations);
+            doGet(request, response);
         }
     }
 }

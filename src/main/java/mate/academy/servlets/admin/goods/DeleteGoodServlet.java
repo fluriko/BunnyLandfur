@@ -18,14 +18,14 @@ public class DeleteGoodServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(DeleteGoodServlet.class);
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long goodId = Long.parseLong(req.getParameter("id"));
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Long goodId = Long.parseLong(request.getParameter("id"));
         Good good = goodDao.get(goodId).get();
         goodDao.remove(good);
         String message = "Good " + goodId + " was deleted successfully!";
-        User admin = (User) req.getSession().getAttribute("user");
+        User admin = (User) request.getSession().getAttribute("user");
         logger.info(admin.getInfo() + " deleted good " + good);
-        req.setAttribute("message", message);
-        req.getRequestDispatcher("/admin/goods").forward(req, resp);
+        request.setAttribute("message", message);
+        request.getRequestDispatcher("/admin/goods").forward(request, response);
     }
 }

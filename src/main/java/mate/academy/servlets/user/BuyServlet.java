@@ -10,7 +10,6 @@ import mate.academy.service.MailService;
 import mate.academy.util.PurchaseCodeCleaner;
 import mate.academy.util.RandomGenerator;
 import org.apache.log4j.Logger;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -25,6 +24,7 @@ public class BuyServlet extends HttpServlet {
     private static final CartDao cartDao = new CartDaoHibImpl();
     private static final MailService mailService = new MailService();
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String codeValue = request.getParameter("codeValue");
         User user = (User) request.getSession().getAttribute("user");
@@ -34,7 +34,7 @@ public class BuyServlet extends HttpServlet {
         if (code.equals(codeFromDb)) {
             logger.info(user.getInfo() + " paid the purchase " + user.getCart());
             request.setAttribute("message", "successful purchase");
-            user.cleanCart();
+            user.cleanCart();//TODO CHANGE SYSTEM OF PAID ORDERS
             cartDao.edit(user.getCart());
         } else {
             request.setAttribute("message", "you entered wrong code");
@@ -43,6 +43,7 @@ public class BuyServlet extends HttpServlet {
         request.getRequestDispatcher("/user/result.jsp").forward(request, response);
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
         String codeValue = RandomGenerator.generateCode();

@@ -17,10 +17,10 @@ public class DeleteServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(DeleteServlet.class);
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long id = Long.parseLong(req.getParameter("id"));
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Long id = Long.parseLong(request.getParameter("id"));
         User user = userDao.get(id).get();
-        User admin = (User) req.getSession().getAttribute("user");
+        User admin = (User) request.getSession().getAttribute("user");
         String message;
         if (user.getRole().getId().equals(1L)) {
             logger.debug(admin.getInfo() + " can't delete " + user.getInfo());
@@ -30,7 +30,7 @@ public class DeleteServlet extends HttpServlet {
             logger.warn(admin.getInfo() +  " deleted " + user);
             message = user.getRole() + " " + id + " was deleted successfully!";
         }
-        req.setAttribute("message", message);
-        req.getRequestDispatcher("/admin/list").forward(req, resp);
+        request.setAttribute("message", message);
+        request.getRequestDispatcher("/admin/list").forward(request, response);
     }
 }

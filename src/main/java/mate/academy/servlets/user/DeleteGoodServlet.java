@@ -20,6 +20,7 @@ public class DeleteGoodServlet extends HttpServlet {
     private static final CartDao cartDao = new CartDaoHibImpl();
     private static final Logger logger = Logger.getLogger(DeleteGoodServlet.class);
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
         Long goodId = Long.parseLong(request.getParameter("goodId"));

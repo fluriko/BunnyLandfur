@@ -17,6 +17,7 @@ public class AddGoodServlet extends HttpServlet {
     private static final GoodDao goodDao = new GoodDaoHibImpl();
     private static final Logger logger = Logger.getLogger(AddGoodServlet.class);
 
+    @Override //TODO VALIDATION
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String label = request.getParameter("label").trim();
         String description = request.getParameter("description").trim();
@@ -47,6 +48,7 @@ public class AddGoodServlet extends HttpServlet {
         request.getRequestDispatcher("/admin/goods").forward(request, response);
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getRequestDispatcher("/admin/addGood.jsp").forward(request, response);
     }

@@ -13,6 +13,7 @@ import java.io.IOException;
 public class LogoutServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(LogoutServlet.class);
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
         logger.debug(user.getInfo() + " logged out");

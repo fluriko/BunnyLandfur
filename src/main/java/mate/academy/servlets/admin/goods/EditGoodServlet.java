@@ -18,22 +18,22 @@ public class EditGoodServlet extends HttpServlet {
     private static final GoodDao goodDao = new GoodDaoHibImpl();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long goodId = Long.parseLong(req.getParameter("id"));
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Long goodId = Long.parseLong(request.getParameter("id"));
         Good good = goodDao.get(goodId).get();
-        req.setAttribute("good", good);
-        req.getRequestDispatcher("/admin/editGood.jsp").forward(req, resp);
+        request.setAttribute("good", good);
+        request.getRequestDispatcher("/admin/editGood.jsp").forward(request, response);
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long goodId = Long.parseLong(req.getParameter("id"));
+    @Override //TODO VALIDATION
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Long goodId = Long.parseLong(request.getParameter("id"));
         Good goodToEdit = goodDao.get(goodId).get();
         String oldGoodInfo = goodToEdit.toString();
-        String newLabel = req.getParameter("label").trim();
-        String newDescription = req.getParameter("description").trim();
-        String newCategory = req.getParameter("category").trim();
-        Double newPrice = Double.parseDouble(req.getParameter("price"));
+        String newLabel = request.getParameter("label").trim();
+        String newDescription = request.getParameter("description").trim();
+        String newCategory = request.getParameter("category").trim();
+        Double newPrice = Double.parseDouble(request.getParameter("price"));
         if (newLabel.length() >= 3) {
             goodToEdit.setLabel(newLabel);
         }
@@ -48,10 +48,10 @@ public class EditGoodServlet extends HttpServlet {
         }
         goodDao.edit(goodToEdit);
         String message = "Good was edited: " + goodId;
-        User admin = (User) req.getSession().getAttribute("user");
+        User admin = (User) request.getSession().getAttribute("user");
         logger.info(admin.getInfo() + " edited good " + goodId);
         logger.info("Old fields: " + oldGoodInfo);
-        req.setAttribute("message", message);
-        req.getRequestDispatcher("/admin/goods").forward(req, resp);
+        request.setAttribute("message", message);
+        request.getRequestDispatcher("/admin/goods").forward(request, response);
     }
 }
