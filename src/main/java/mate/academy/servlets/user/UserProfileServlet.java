@@ -7,6 +7,7 @@ import mate.academy.service.validator.GenericValidationService;
 import mate.academy.service.validator.UserValidationService;
 import mate.academy.util.HashUtil;
 import org.apache.log4j.Logger;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,7 +19,7 @@ import java.io.IOException;
 public class UserProfileServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(UserProfileServlet.class);
     private static final UserDao userDao = new UserDaoHibImpl();
-    private static final GenericValidationService validationService = new UserValidationService();
+    private static final UserValidationService validationService = new UserValidationService();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -32,11 +33,13 @@ public class UserProfileServlet extends HttpServlet {
             String message = "You changed your data successfully!";
             request.setAttribute("message", message);
             request.getRequestDispatcher("/main").forward(request, response);
-        } else {//TODO NOT UNIQ DATA MESSAGE
-            logger.debug(user.getInfo() + ": changing profile failed " + violations);
-            request.setAttribute("violations", violations);
-            doGet(request, response);
+            return;
+        } else if (violations.isEmpty()) {
+            violations = "mail is not unique | ";
         }
+        logger.debug(user.getInfo() + ": changing profile failed " + violations);
+        request.setAttribute("violations", violations);
+        doGet(request, response);
     }
 
     @Override

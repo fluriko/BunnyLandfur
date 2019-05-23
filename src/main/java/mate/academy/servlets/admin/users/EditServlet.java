@@ -10,6 +10,7 @@ import mate.academy.service.validator.UserValidationService;
 import mate.academy.service.validator.GenericValidationService;
 import mate.academy.util.HashUtil;
 import org.apache.log4j.Logger;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,7 +21,7 @@ import java.util.List;
 
 @WebServlet(value = "/admin/edit")
 public class EditServlet extends HttpServlet {
-    private static final GenericValidationService validationService = new UserValidationService();
+    private static final UserValidationService validationService = new UserValidationService();
     private static final UserDao userDao = new UserDaoHibImpl();
     private static final RoleDao roleDao = new RoleDaoHibImpl();
     private static final Logger logger = Logger.getLogger(EditServlet.class);
@@ -53,11 +54,14 @@ public class EditServlet extends HttpServlet {
             String message = userToEdit.getInfo() + " edited successfully";
             request.setAttribute("message", message);
             request.getRequestDispatcher("/admin/list").forward(request, response);
-        } else {//TODO NOT UNIQ DATA MESSAGE
-            logger.debug(admin.getInfo() + " :editing user failed: " + violations);
-            request.setAttribute("violations", violations);
-            doGet(request, response);
+            return;
+        } else if (violations.isEmpty()) {
+            violations = "login/mail is not unique | ";
         }
+        logger.debug(admin.getInfo() + " :editing user failed: " + violations);
+        request.setAttribute("violations", violations);
+        doGet(request, response);
+
     }
 
     private static void setUserFields(User user, String login, String password, String mail, Role role) {
