@@ -22,16 +22,16 @@
 <form method="post" class="w3-selection w3-light-blue w3-padding">
     <h3>Fill the form below to add new user: </h3>
     <h7><c:out value="${message}"/></h7><br /><br />
-    <label> Name:
-        <input type="text" name="login" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
+    <label> login:
+        <input type="text" minlength="4" maxlength="16" name="login" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>
-    <label> Password:
-        <input type="password" name="password" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
+    <label> password:
+        <input type="password" minlength="6" maxlength="16" name="password" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>
-    <label> Gmail:
-        <input type="text" name="mail" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
+    <label> mail:
+        <input type="email" name="mail" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>
-    <label>Set role:</label><br /><br />
+    <label>set role:</label><br /><br />
     <c:forEach items="${roles}" var="role">
         <input type="radio" name="role" value="<c:out value="${role.id}"/>" checked>   <c:out value="${role.name}"/><br /><br />
     </c:forEach>

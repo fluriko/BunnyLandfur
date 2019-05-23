@@ -22,14 +22,15 @@
 </div>
 <form method="post" class="w3-selection w3-light-blue w3-padding">
     <h3>Enter new data for good: <c:out value="${good.id}"/> </h3>
+    <h7><c:out value="${violations}"/></h7><br /><br />
     <label> label:
-        <input type="text" name="label" value = "<c:out value="${good.label}"/>" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
+        <input type="text" minlength="4" maxlength="100" name="label" value = "<c:out value="${good.label}"/>" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>
     <label> description:
         <input type="text" name="description" value = "<c:out value="${good.description}"/>" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>
     <label> category:
-        <input type="text" name="category" value = "<c:out value="${good.category}"/>" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
+        <input type="text" minlength="3" maxlength="16" name="category" value = "<c:out value="${good.category}"/>" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>
     <label> price:
         <input type="number" step="0.01" min="0.1" name="price" value = "<c:out value="${good.price}"/>" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />

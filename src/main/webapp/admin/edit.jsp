@@ -24,15 +24,15 @@
     <h3>Enter new data for user: <c:out value="${userToEdit.id}"/> </h3>
     <h7><c:out value="${violations}"/></h7><br /><br />
     <label> login:
-        <input type="text" name="login" value = "<c:out value="${userToEdit.login}"/>" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
+        <input type="text" minlength="4" maxlength="16" name="login" value = "<c:out value="${userToEdit.login}"/>" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>
 <label> password:
-    <input type="password" name="password" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
+    <input type="password" minlength="6" maxlength="16" name="password" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
 </label>
     <label> mail:
-        <input type="text" name="mail" value = "<c:out value="${userToEdit.mail}"/>" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
+        <input type="email" name="mail" value = "<c:out value="${userToEdit.mail}"/>" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>
-    <label>Set role:</label><br /><br />
+    <label>set role:</label><br /><br />
 <c:forEach items="${roles}" var="role">
     <input type="radio" name="role" value="<c:out value="${role.id}"/>">   <c:out value="${role.name}"/><br /><br />
 </c:forEach>

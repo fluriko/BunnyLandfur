@@ -19,11 +19,11 @@
 </div>
 <form method="post" class="w3-selection w3-light-blue w3-padding">
     <h7><c:out value="${violations}"/></h7><br /><br />
-    <label> Login:
-        <input type="text" name="login" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
+    <label> login:
+        <input type="text" minlength="4" maxlength="16" name="login" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>
-    <label> Password:
-        <input type="password" name="password" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
+    <label> password:
+        <input type="password" minlength="6" maxlength="16" name="password" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>
     <button type="submit" class="w3-btn w3-blue w3-round-large w3-margin-bottom">Submit</button>
 </form>

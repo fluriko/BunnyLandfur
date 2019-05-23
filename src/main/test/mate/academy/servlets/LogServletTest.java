@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-//TODO ADD OTHER TESTS
+
 public class LogServletTest {
     UserDao userDao;
     LogServlet logServlet;
