@@ -18,6 +18,13 @@
 
 
   <dependencies>
+    <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-validator -->
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <version>${hibernate-version}</version>
+    </dependency>
+
 
     <!-- Hibernate -->
     <!-- to start need only this -->

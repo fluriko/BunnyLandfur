@@ -1,6 +1,8 @@
 package mate.academy.model;
 
 import mate.academy.util.HashUtil;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +14,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,6 +29,7 @@ public class User {
     @Column(name = "ID", unique = true)
     private Long id;
 
+    @Length(min = 4, max = 16, message = "incorrect login ")
     @Column(name = "LOGIN", unique = true, nullable = false)
     private String login;
 
@@ -34,6 +40,7 @@ public class User {
     @JoinColumn(name = "ROLE_ID")
     private Role role;
 
+    @Email(message = "incorrect mail ")
     @Column(name = "MAIL", unique = true, nullable = false)
     private String mail;
 
@@ -44,6 +51,11 @@ public class User {
     @JoinColumn(name = "CART_ID")
     private Cart cart;
 
+    @Transient
+    @Min(value = 6, message = "too short password")
+    @Max(value = 16, message = "too long password")
+    private int passwordLength;
+
     public User(String login, String password, Role role, String mail) {
         this.salt = HashUtil.getRandomSalt();
         this.login = login;
@@ -51,6 +63,7 @@ public class User {
         this.role = role;
         this.mail = mail;
         cart = new Cart(this);
+        passwordLength = password.length();
     }
 
     public User(String login, String password, String mail) {
@@ -58,6 +71,14 @@ public class User {
     }
 
     public User() {
+    }
+
+    public int getPasswordLength() {
+        return passwordLength;
+    }
+
+    public void setPasswordLength(int passwordLength) {
+        this.passwordLength = passwordLength;
     }
 
     public void addGoodToCart(Good good) {

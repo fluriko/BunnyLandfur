@@ -1,11 +1,14 @@
 package mate.academy.model;
 
+import org.hibernate.validator.constraints.Length;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
 import java.util.Objects;
 
 @Entity
@@ -17,18 +20,22 @@ public class Good {
     @Column(name = "ID", unique = true)
     private Long id;
 
+    @Length(min = 4, max = 100, message = "incorrect label ")
     @Column(name = "LABEL", nullable = false)
     private String label;
 
     @Column(name = "DESCRIPTION")
     private String description;
 
+    @Length(min = 3, max = 16, message = "incorrect category ")
     @Column(name = "CATEGORY", nullable = false)
     private String category;
 
+    @DecimalMin(value = "0.1", message = "negative price")
     @Column(name = "PRICE", nullable = false)
     private double price;
 
+    @Min(value = 1, message = "incorrect quantity")
     @Column(name = "QUANTITY", nullable = false)
     private long quantity;
 
