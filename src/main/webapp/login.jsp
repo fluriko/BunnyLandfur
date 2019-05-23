@@ -15,10 +15,10 @@
 </head>
 <body class="w3-light-blue">
 <div class="w3-container w3-blue w3-opacity w3-left-align">
-    <h2>Fill the form below to log in:</h2>
+    <h2>Here you can log in:</h2>
 </div>
 <form method="post" class="w3-selection w3-light-blue w3-padding">
-    <h7><c:out value="${message}"/></h7><br /><br />
+    <h7><c:out value="${violations}"/></h7><br /><br />
     <label> Login:
         <input type="text" name="login" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>

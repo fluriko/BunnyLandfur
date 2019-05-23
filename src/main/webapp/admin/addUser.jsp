@@ -21,7 +21,7 @@
 </div>
 <form method="post" class="w3-selection w3-light-blue w3-padding">
     <h3>Fill the form below to add new user: </h3>
-    <h7><c:out value="${message}"/></h7>
+    <h7><c:out value="${message}"/></h7><br /><br />
     <label> Name:
         <input type="text" name="login" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>

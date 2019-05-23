@@ -20,22 +20,22 @@ public class Good {
     @Column(name = "ID", unique = true)
     private Long id;
 
-    @Length(min = 4, max = 100, message = "incorrect label ")
+    @Length(min = 4, max = 100, message = "incorrect label |")
     @Column(name = "LABEL", nullable = false)
     private String label;
 
     @Column(name = "DESCRIPTION")
     private String description;
 
-    @Length(min = 3, max = 16, message = "incorrect category ")
+    @Length(min = 3, max = 16, message = "incorrect category |")
     @Column(name = "CATEGORY", nullable = false)
     private String category;
 
-    @DecimalMin(value = "0.1", message = "negative price")
+    @DecimalMin(value = "0.1", message = "negative price |")
     @Column(name = "PRICE", nullable = false)
     private double price;
 
-    @Min(value = 1, message = "incorrect quantity")
+    @Min(value = 1, message = "incorrect quantity |")
     @Column(name = "QUANTITY", nullable = false)
     private long quantity;
 

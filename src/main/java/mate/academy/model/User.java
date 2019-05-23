@@ -1,7 +1,6 @@
 package mate.academy.model;
 
 import mate.academy.util.HashUtil;
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.List;
@@ -29,7 +29,7 @@ public class User {
     @Column(name = "ID", unique = true)
     private Long id;
 
-    @Length(min = 4, max = 16, message = "incorrect login ")
+    @Length(min = 4, max = 16, message = "incorrect login |")
     @Column(name = "LOGIN", unique = true, nullable = false)
     private String login;
 
@@ -40,7 +40,7 @@ public class User {
     @JoinColumn(name = "ROLE_ID")
     private Role role;
 
-    @Email(message = "incorrect mail ")
+    @Email(message = "incorrect mail |")
     @Column(name = "MAIL", unique = true, nullable = false)
     private String mail;
 
@@ -52,8 +52,8 @@ public class User {
     private Cart cart;
 
     @Transient
-    @Min(value = 6, message = "too short password")
-    @Max(value = 16, message = "too long password")
+    @Min(value = 6, message = "too short password |")
+    @Max(value = 16, message = "too long password |")
     private int passwordLength;
 
     public User(String login, String password, Role role, String mail) {

@@ -52,6 +52,8 @@ public class EditServlet extends HttpServlet {
                 && !userDao.getUserByMail(newMail).isPresent()) {
             userToEdit.setMail(newMail);
         }
+        //TODO ADD NORMAL CHECK OF PASSWORD LENGTH
+        userToEdit.setPasswordLength(6);
         String message = "You have changed data for " + userToEdit.getRole() + " " + userToEdit.getId();
         String roleIdString = req.getParameter("role");
         Long roleId = Long.parseLong(roleIdString);

@@ -38,15 +38,15 @@
 </head>
 <body >
 <div class="w3-container  w3-opacity w3-right-align">
-    <h4>Admin <c:out value="${user.login}"/>
+    <h9>Admin <c:out value="${user.login}"/>
         <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/user/profile'">My profile</button>
         <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/logout'">Log out</button>
-    </h4>
+    </h9>
 </div>
 <div class="w3-container w3-left-align">
-    <h2><c:out value="${message}"/></h2>
-    <h1>List of users</h1>
-<table id="t01">
+    <h3>List of users</h3>
+    <h7><c:out value="${message}"/></h7>
+    <table id="t01">
 <tr>
     <th>ID</th>
     <th>Name</th>
@@ -67,8 +67,8 @@
     </c:forEach>
 </table>
 </div><br />
-<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/admin/addUser'">Add new user</button><br /><br />
-<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/admin'">Back to admin</button><br /><br />
-<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/main'">Back to main</button><br /><br />
+<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/admin/addUser'">Add new user</button>
+<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/admin'">Back to admin page</button>
+<button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/main'">Back to main</button>
 </body>
 </html>
