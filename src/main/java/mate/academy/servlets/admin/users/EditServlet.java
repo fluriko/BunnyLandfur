@@ -7,10 +7,8 @@ import mate.academy.database.impl.UserDaoHibImpl;
 import mate.academy.model.Role;
 import mate.academy.model.User;
 import mate.academy.service.validator.UserValidationService;
-import mate.academy.service.validator.GenericValidationService;
 import mate.academy.util.HashUtil;
 import org.apache.log4j.Logger;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -64,8 +62,8 @@ public class EditServlet extends HttpServlet {
 
     }
 
-    private static void setUserFields(User user, String login, String password, String mail, Role role) {
-        user.setLogin(login);
+    private void setUserFields(User user, String login, String password, String mail, Role role) {
+        user.setLogin(login); //TODO REPLACE THIS LOGIC
         if (password.isEmpty()) {
             user.setPasswordLength(6);
         } else {

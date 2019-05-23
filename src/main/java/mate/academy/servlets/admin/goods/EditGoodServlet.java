@@ -4,7 +4,6 @@ import mate.academy.database.GoodDao;
 import mate.academy.database.impl.GoodDaoHibImpl;
 import mate.academy.model.Good;
 import mate.academy.model.User;
-import mate.academy.service.validator.GenericValidationService;
 import mate.academy.service.validator.GoodValidationService;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
@@ -18,7 +17,7 @@ import java.io.IOException;
 public class EditGoodServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(EditGoodServlet.class);
     private static final GoodDao goodDao = new GoodDaoHibImpl();
-    private static final GenericValidationService validationService = new GoodValidationService();
+    private static final GoodValidationService validationService = new GoodValidationService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -37,7 +36,7 @@ public class EditGoodServlet extends HttpServlet {
         String newDescription = request.getParameter("description").trim();
         String newCategory = request.getParameter("category").trim();
         Double newPrice = Double.parseDouble(request.getParameter("price"));
-        setGoodFields(goodToEdit, newLabel, newDescription, newCategory, newPrice);
+        goodToEdit.setAll(newLabel, newDescription, newCategory, newPrice);
         String violations = validationService.validate(goodToEdit);
         if (violations.isEmpty()) {
             goodDao.edit(goodToEdit);
@@ -52,12 +51,5 @@ public class EditGoodServlet extends HttpServlet {
             request.setAttribute("violations", violations);
             doGet(request, response);
         }
-    }
-
-    private void setGoodFields(Good good, String label, String description, String category, Double price) {
-        good.setLabel(label);
-        good.setDescription(description);
-        good.setCategory(category);
-        good.setPrice(price);
     }
 }

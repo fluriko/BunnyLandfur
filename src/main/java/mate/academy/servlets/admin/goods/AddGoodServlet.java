@@ -4,7 +4,6 @@ import mate.academy.database.GoodDao;
 import mate.academy.database.impl.GoodDaoHibImpl;
 import mate.academy.model.Good;
 import mate.academy.model.User;
-import mate.academy.service.validator.GenericValidationService;
 import mate.academy.service.validator.GoodValidationService;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
@@ -17,7 +16,7 @@ import java.io.IOException;
 @WebServlet(value = "/admin/addGood")
 public class AddGoodServlet extends HttpServlet {
     private static final GoodDao goodDao = new GoodDaoHibImpl();
-    private static final GenericValidationService validationService = new GoodValidationService();
+    private static final GoodValidationService validationService = new GoodValidationService();
     private static final Logger logger = Logger.getLogger(AddGoodServlet.class);
 
     @Override

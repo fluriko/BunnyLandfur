@@ -50,6 +50,13 @@ public class Good {
     public Good() {
     }
 
+    public void setAll(String label, String description, String category, double price) {
+        setLabel(label);
+        setDescription(description);
+        setCategory(category);
+        setPrice(price);
+    }
+
     public long getQuantity() {
         return quantity;
     }
