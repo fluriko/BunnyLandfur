@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(value = "/user/profile")
+@WebServlet(value = "/user/profile") //TODO CONFIRM PASSWORD TO CHANGE
 public class UserProfileServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(UserProfileServlet.class);
     private static final UserDao userDao = new UserDaoHibImpl();

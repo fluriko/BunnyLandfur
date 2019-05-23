@@ -49,7 +49,7 @@ public class User {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "CART_ID")
-    private Cart cart;
+    private Cart cart; //TODO STUFF WHEN ORDER IS PAID
 
     @Transient
     @Min(value = 6, message = "too short password |")
