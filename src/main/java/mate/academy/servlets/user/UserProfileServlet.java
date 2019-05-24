@@ -24,7 +24,7 @@ public class UserProfileServlet extends HttpServlet {
         String newPass = request.getParameter("password").trim();
         String newMail = request.getParameter("mail").trim();
         User user = (User) request.getSession().getAttribute("user");
-        setUserFields(user, newPass, newMail);
+        user.setFields(newPass, newMail);
         String violations = validationService.validate(user);
         if (violations.isEmpty() && userDao.edit(user)) {
             logger.info(user.getInfo() + " changed his data ");
@@ -44,15 +44,5 @@ public class UserProfileServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getRequestDispatcher("/user/profile.jsp").forward(request, response);
     }
-
-    private void setUserFields(User user, String password, String mail) {
-        if (password.isEmpty()) { //TODO REPLACE THIS LOGIC
-            user.setPasswordLength(6);
-        } else {
-            user.setSalt(HashUtil.getRandomSalt());
-            user.setPassword(password);
-            user.setPasswordLength(password.length());
-        }
-        user.setMail(mail);
-    }
 }
+//TODO MY ORDERS SERVLET

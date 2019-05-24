@@ -3,6 +3,7 @@ package mate.academy.util;
 import mate.academy.model.Cart;
 import mate.academy.model.Code;
 import mate.academy.model.Good;
+import mate.academy.model.Order;
 import mate.academy.model.Role;
 import mate.academy.model.User;
 import org.apache.log4j.Logger;
@@ -25,6 +26,7 @@ public class HibernateSessionFactoryUtil {
                 configuration.addAnnotatedClass(Role.class);
                 configuration.addAnnotatedClass(Code.class);
                 configuration.addAnnotatedClass(Cart.class);
+                configuration.addAnnotatedClass(Order.class);
                 StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
                         .applySettings(configuration.getProperties());
                 sessionFactory = configuration.buildSessionFactory(builder.build());

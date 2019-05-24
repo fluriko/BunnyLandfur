@@ -1,10 +1,13 @@
 package mate.academy.servlets.user;
 
 import mate.academy.database.CartDao;
+import mate.academy.database.OrderDao;
 import mate.academy.database.PurchaseCodeDao;
 import mate.academy.database.impl.CartDaoHibImpl;
+import mate.academy.database.impl.OrderDaoHibImpl;
 import mate.academy.database.impl.PurchaseCodeDaoHibImpl;
 import mate.academy.model.Code;
+import mate.academy.model.Order;
 import mate.academy.model.User;
 import mate.academy.service.MailService;
 import mate.academy.util.PurchaseCodeCleaner;
@@ -22,6 +25,7 @@ public class BuyServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(BuyServlet.class);
     private static final PurchaseCodeDao purchaseCodeDao = new PurchaseCodeDaoHibImpl();
     private static final CartDao cartDao = new CartDaoHibImpl();
+    private static final OrderDao orderDao = new OrderDaoHibImpl();
     private static final MailService mailService = new MailService();
 
     @Override
@@ -32,10 +36,13 @@ public class BuyServlet extends HttpServlet {
         Code code = new Code(codeId, codeValue, user.getCart());
         Code codeFromDb = purchaseCodeDao.get(codeId).get();
         if (code.equals(codeFromDb)) {
+            Order order = new Order(user.getCart());
+            user.addOrder(order);
+            user.cleanCart();
+            cartDao.edit(user.getCart());
+            orderDao.add(order);
             logger.info(user.getInfo() + " paid the purchase " + user.getCart());
             request.setAttribute("message", "successful purchase");
-            user.cleanCart();//TODO CHANGE SYSTEM OF PAID ORDERS
-            cartDao.edit(user.getCart());
         } else {
             request.setAttribute("message", "you entered wrong code");
         }

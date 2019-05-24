@@ -2,16 +2,19 @@ package mate.academy.initializer;
 
 import mate.academy.database.CartDao;
 import mate.academy.database.GoodDao;
+import mate.academy.database.OrderDao;
 import mate.academy.database.PurchaseCodeDao;
 import mate.academy.database.RoleDao;
 import mate.academy.database.UserDao;
 import mate.academy.database.impl.CartDaoHibImpl;
 import mate.academy.database.impl.GoodDaoHibImpl;
+import mate.academy.database.impl.OrderDaoHibImpl;
 import mate.academy.database.impl.PurchaseCodeDaoHibImpl;
 import mate.academy.database.impl.RoleDaoHibImpl;
 import mate.academy.database.impl.UserDaoHibImpl;
 import mate.academy.model.Code;
 import mate.academy.model.Good;
+import mate.academy.model.Order;
 import mate.academy.model.Role;
 import mate.academy.model.User;
 import mate.academy.util.PurchaseCodeCleaner;
@@ -26,6 +29,7 @@ public class InitServlet extends HttpServlet {
     private static final GoodDao goodDao = new GoodDaoHibImpl();
     private static final RoleDao roleDao = new RoleDaoHibImpl();
     private static final CartDao cartDao = new CartDaoHibImpl();
+    private static final OrderDao orderDao = new OrderDaoHibImpl();
     private static final PurchaseCodeDao purchaseCodeDao = new PurchaseCodeDaoHibImpl();
 
     @Override
@@ -50,7 +54,10 @@ public class InitServlet extends HttpServlet {
         goodDao.add(cinnamon);
         goodDao.add(hay);
         sweetie.addGoodToCart(hay);
+        Order order = new Order(sweetie.getCart());
+        sweetie.addOrder(order);
         cartDao.edit(sweetie.getCart());
+        orderDao.edit(order);
         Code testCode = new Code("1212", sweetie.getCart());
         purchaseCodeDao.add(testCode);
         PurchaseCodeCleaner.clean(testCode);

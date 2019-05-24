@@ -1,6 +1,8 @@
 package mate.academy.model;
 
 import mate.academy.util.HashUtil;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.Length;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,13 +12,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,7 +41,7 @@ public class User {
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
-    @ManyToOne(optional=false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "ROLE_ID")
     private Role role;
 
@@ -49,7 +54,11 @@ public class User {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "CART_ID")
-    private Cart cart; //TODO STUFF WHEN ORDER IS PAID
+    private Cart cart;
+
+    @OneToMany(mappedBy = "user", fetch= FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    private List<Order> orders;
 
     @Transient
     @Min(value = 6, message = "too short password |")
@@ -63,6 +72,7 @@ public class User {
         this.role = role;
         this.mail = mail;
         cart = new Cart(this);
+        orders = new ArrayList<>();
         passwordLength = password.length();
     }
 
@@ -161,6 +171,42 @@ public class User {
         return role.getName() + " " + id;
     }
 
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
+    public void addOrder(Order order) {
+        orders.add(order);
+    }
+
+    public void removeOrder(Order order) {
+        orders.remove(order);
+    }
+
+    public void setFields(String login, String password, String mail, Role role) {
+        setLogin(login);
+        if (!password.isEmpty()) {
+            setSalt(HashUtil.getRandomSalt());
+            setPassword(password);
+            setPasswordLength(password.length());
+        }
+        setMail(mail);
+        setRole(role);
+    }
+
+    public void setFields(String password, String mail) {
+        if (!password.isEmpty()) {
+            setSalt(HashUtil.getRandomSalt());
+            setPassword(password);
+            setPasswordLength(password.length());
+        }
+        setMail(mail);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -171,13 +217,12 @@ public class User {
                 Objects.equals(password, user.password) &&
                 Objects.equals(role.getId(), user.role.getId()) &&
                 Objects.equals(mail, user.mail) &&
-                Objects.equals(salt, user.salt) &&
-                Objects.equals(cart.getId(), user.cart.getId());
+                Objects.equals(salt, user.salt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, login, password, role.getId(), mail, salt, cart.getId());
+        return Objects.hash(id, login, password, role.getId(), mail, salt);
     }
 
     @Override
@@ -189,7 +234,6 @@ public class User {
                 ", role=" + role.getId() +
                 ", mail='" + mail + '\'' +
                 ", salt='" + salt + '\'' +
-                ", cart=" + cart.getId() +
                 '}';
     }
 }

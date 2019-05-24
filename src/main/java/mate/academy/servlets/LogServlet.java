@@ -4,7 +4,6 @@ import mate.academy.database.UserDao;
 import mate.academy.database.impl.UserDaoHibImpl;
 import mate.academy.model.User;
 import mate.academy.service.validator.UserValidationService;
-import mate.academy.util.HashUtil;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Optional;
 
 @WebServlet(value = "/login")
 public class LogServlet extends HttpServlet {
@@ -33,6 +31,7 @@ public class LogServlet extends HttpServlet {
         String violations = validationService.validateDataForLogIn(login, password);
         if (violations.isEmpty()) {
             User user = userDao.getUserByLogin(login).get();
+            user.setPasswordLength(6);
             request.getSession().setAttribute("user", user);
             logger.info(login + " logged in and started session");
             response.sendRedirect("/main");

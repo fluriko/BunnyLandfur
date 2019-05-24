@@ -8,5 +8,5 @@ public interface GenericDao<T> {
     boolean remove(T object);
     boolean edit(T object);
     Optional<T> get(long id);
-    List<T> getAll(); //TODO MAKE SETS
+    List<T> getAll();
 }

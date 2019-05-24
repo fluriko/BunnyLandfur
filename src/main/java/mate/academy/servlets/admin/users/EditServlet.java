@@ -9,6 +9,7 @@ import mate.academy.model.User;
 import mate.academy.service.validator.UserValidationService;
 import mate.academy.util.HashUtil;
 import org.apache.log4j.Logger;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -44,7 +45,7 @@ public class EditServlet extends HttpServlet {
         Role role = roleDao.get(roleId).get();
         Long userId = Long.parseLong(request.getParameter("id"));
         User userToEdit = userDao.get(userId).get();
-        setUserFields(userToEdit, login, password, mail, role);
+        userToEdit.setFields(login, password, mail, role);
         String violations = validationService.validate(userToEdit);
         User admin = (User) request.getSession().getAttribute("user");
         if (violations.isEmpty() && userDao.edit(userToEdit)) {
@@ -59,19 +60,5 @@ public class EditServlet extends HttpServlet {
         logger.debug(admin.getInfo() + " :editing user failed: " + violations);
         request.setAttribute("violations", violations);
         doGet(request, response);
-
-    }
-
-    private void setUserFields(User user, String login, String password, String mail, Role role) {
-        user.setLogin(login); //TODO REPLACE THIS LOGIC
-        if (password.isEmpty()) {
-            user.setPasswordLength(6);
-        } else {
-            user.setSalt(HashUtil.getRandomSalt());
-            user.setPassword(password);
-            user.setPasswordLength(password.length());
-        }
-        user.setMail(mail);
-        user.setRole(role);
     }
 }
