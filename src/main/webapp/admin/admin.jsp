@@ -26,7 +26,8 @@
     <br /><br />
     <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/admin/list'">List of users</button><br /><br />
 <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/admin/goods'">List of goods</button><br /><br />
-<button class="w3-btn w3-round-large" onclick="location.href='/main'">Back to main</button>
+    <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/admin/orders'">List of orders</button><br /><br />
+    <button class="w3-btn w3-round-large" onclick="location.href='/main'">Back to main</button>
 </div>
 </body>
 </html>
