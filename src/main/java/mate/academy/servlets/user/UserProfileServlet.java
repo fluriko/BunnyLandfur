@@ -23,9 +23,16 @@ public class UserProfileServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String newPass = request.getParameter("password").trim();
         String newMail = request.getParameter("mail").trim();
+        String passwordOld = request.getParameter("passwordOld").trim();
         User user = (User) request.getSession().getAttribute("user");
+        String violations = validationService.validateDataForLogIn(user.getLogin(), passwordOld);
+        if (!violations.isEmpty()) {
+            request.setAttribute("violations", "wrong old password | ");
+            doGet(request, response);
+            return;
+        }
         user.setFields(newPass, newMail);
-        String violations = validationService.validate(user);
+        violations = validationService.validate(user);
         if (violations.isEmpty() && userDao.edit(user)) {
             logger.info(user.getInfo() + " changed his data ");
             String message = "You changed your data successfully!";

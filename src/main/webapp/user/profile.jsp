@@ -28,7 +28,9 @@
     <label> mail:
         <input type="email" name="mail" value = "<c:out value="${user.mail}"/>" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
     </label>
-
+    <label> Old password to confirm changes:
+        <input type="password" minlength="6" maxlength="16" name="passwordOld" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br /><br />
+    </label>
     <button type="submit" class="w3-btn w3-blue w3-round-large w3-margin-bottom">Submit</button>
 </form>
 <button class="w3-btn w3-hover-blue w3-round-large" onclick="location.href='/main'">Back to main page</button><br /><br />
