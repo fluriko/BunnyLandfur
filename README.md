@@ -1,3 +1,3 @@
 Project BunnyLand.fur
 Internet shop project.
-Using Servlets and jsp
+Technologies used: Servlets, jsp, MySql, Hibernate, Maven, JUnit
