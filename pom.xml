@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>mate.academy</groupId>
-  <artifactId>homework-13</artifactId>
+  <artifactId>BunnyLandfur</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>war</packaging>
 
@@ -143,7 +143,7 @@
   </dependencies>
 
   <build>
-    <finalName>homework-13</finalName>
+    <finalName>BunnyLandfur</finalName>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
         <plugin>
